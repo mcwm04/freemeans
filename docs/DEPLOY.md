@@ -11,7 +11,9 @@ This guide puts the whole Step 2 stack online on free plans. None of the service
 
 **The one thing that costs money is the domain.** freemeans.com is registered with Cloudflare Registrar (bought 8 Nov 2026). It already uses Cloudflare's free DNS, so no nameserver change is needed.
 
-Commands below are shown for **Windows PowerShell** first, then macOS/Linux. You need Node.js 22, Python 3.12 and Git.
+Commands below are shown for **Windows PowerShell** first, then macOS/Linux. You need Node.js 22 or newer, Python 3.12 or newer, and Git. Use a normal PowerShell window, not "Run as Administrator".
+
+> **Windows: "running scripts is disabled on this system"?** Run this once: `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`. It affects only your Windows account. Or type `npm.cmd` and `npx.cmd` instead of `npm` and `npx`.
 
 ---
 
@@ -36,7 +38,7 @@ Commands below are shown for **Windows PowerShell** first, then macOS/Linux. You
 
 1. Sign up at neon.com with your GitHub account. No card is needed.
 2. **Create project.** Name: `freemeans`. Postgres version: the default. Region: **AWS Asia Pacific (Singapore)**, the closest to Pakistan.
-3. Open **Dashboard → Connect**. Turn on **Connection pooling** and copy the connection string. It looks like `postgresql://...@ep-xxxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require`.
+3. Open **Dashboard → Connect**. Turn on **Connection pooling** and copy the connection string. It looks like `postgresql://...@ep-xxxx-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require`. Change `sslmode=require` to `sslmode=verify-full`: the connection is already encrypted and the server certificate checked, and the explicit spelling stops a "SECURITY WARNING" from the `pg` driver.
 4. Create the tables and load the catalog:
 
    ```powershell
@@ -56,7 +58,7 @@ Commands below are shown for **Windows PowerShell** first, then macOS/Linux. You
 
    Run `npm run load-seed` again whenever `data/catalog/seed.json` changes. The loader replaces the catalog in one transaction, so it is safe to repeat.
 
-> Keep the connection string secret. It goes only into your terminal and into Cloudflare's secret store (step 3), never into a file in the repo.
+> Keep the connection string secret. It goes only into your terminal and into Cloudflare's secret store (step 3), never into a file in the repo, a chat or a screenshot. If it leaks, reset the password: **Branches → main → Roles & Databases → neondb_owner → Reset password**. Then update the Cloudflare secret (step 3).
 
 ## 3. Deploy the API on Cloudflare Workers
 
@@ -93,21 +95,24 @@ Commands below are shown for **Windows PowerShell** first, then macOS/Linux. You
 
 If Neon cannot be reached, catalog reads fall back to the copy bundled into the Worker and add the header `x-freemeans-fallback: seed`. Waitlist sign-ups never fall back: they fail loudly instead, so no email is lost silently.
 
-## 4. Deploy the website on Cloudflare Pages
+## 4. Deploy the website on Cloudflare (static-assets Worker)
 
-1. In the Cloudflare dashboard, open **Workers & Pages → Create → Pages → Connect to Git**, then pick your `freemeans` repository. (Cloudflare changes this menu from time to time. If the wording differs, look for "Pages" and "Import a Git repository".)
-2. Build settings:
+Cloudflare now creates new sites as **Workers that serve static files**. For a static site this works the same as Pages: requests for static files are free and unlimited, and no Worker code runs. The settings are in `apps/web/wrangler.jsonc`.
+
+1. In the Cloudflare dashboard, open **Compute (Workers) → Workers & Pages → Create → Import a repository**. Connect GitHub and pick your `freemeans` repository.
+2. Build settings (later: the project's **Settings → Build**):
 
    | Setting | Value |
    | --- | --- |
-   | Framework preset | Astro |
+   | Project name | `freemeans` (it must match `name` in `apps/web/wrangler.jsonc`) |
    | Root directory | `apps/web` |
    | Build command | `npm run build` |
-   | Build output directory | `dist` |
-   | Environment variable `NODE_VERSION` | `22` |
-   | Environment variable `PUBLIC_API_URL` | your Worker address from step 3 (later `https://api.freemeans.com`) |
+   | Deploy command | `npx wrangler deploy` |
+   | Build variable `NODE_VERSION` | `22` |
 
-3. Click **Save and Deploy**. The site appears at `https://<project>.pages.dev`. Every push to `main` redeploys it, and every pull request gets its own preview address.
+   The waitlist form already posts to `https://api.freemeans.com`. Set a build variable `PUBLIC_API_URL` only to point it somewhere else.
+
+3. **Deploy.** The deploy step also connects `freemeans.com` and `www.freemeans.com` (the `routes` in `wrangler.jsonc`), and Cloudflare issues their HTTPS certificates. Every push to `main` rebuilds and redeploys the site.
 
 The pages are built from `data/catalog/seed.json`. To change what the site shows, edit that file and push.
 
@@ -119,10 +124,9 @@ The domain was bought on Cloudflare, so it already sits in your Cloudflare accou
    - **Auto-renew:** make sure it is on, so the domain never lapses.
    - **Registrar lock:** make sure it is on. It stops anyone transferring the domain away.
    - **DNSSEC:** in the domain's **DNS → Settings**, enable DNSSEC. On Cloudflare Registrar domains this is one click.
-2. **Website:** open the Pages project → **Custom domains** → add `freemeans.com`, then `www.freemeans.com`. Cloudflare creates the DNS records and the HTTPS certificate.
-3. **API:** in `services/api/wrangler.toml`, uncomment the `routes` block for `api.freemeans.com`, then run `npx wrangler deploy` again.
-4. In the Pages project, set `PUBLIC_API_URL` to `https://api.freemeans.com`, then **Retry deployment**.
-5. Check that `ALLOWED_ORIGINS` in `wrangler.toml` lists every address the site is served from. Otherwise the browser blocks the waitlist form.
+2. **Website:** `freemeans.com` and `www.freemeans.com` are connected by the website's own deploy (step 4, `routes` in `apps/web/wrangler.jsonc`).
+3. **API:** `services/api/wrangler.toml` serves the API at `api.freemeans.com`. Run `npx wrangler deploy` in `services/api` after any change.
+4. Check that `ALLOWED_ORIGINS` in `services/api/wrangler.toml` lists every address the site is served from. Otherwise the browser blocks the waitlist form.
 
 ### Free email at hello@freemeans.com
 

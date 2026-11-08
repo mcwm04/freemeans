@@ -1,6 +1,6 @@
 # apps/web: freemeans.com
 
-A static Astro site, built from `data/catalog/seed.json` and hosted on Cloudflare Pages.
+A static Astro site, built from `data/catalog/seed.json` and served by Cloudflare as a static-assets Worker (`wrangler.jsonc`; free, unlimited static requests).
 
 | Page | Built from |
 | --- | --- |

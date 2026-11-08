@@ -17,8 +17,8 @@ routes = [
 
 [vars]
 SITE_URL = "https://freemeans.com"
-# Comma-separated. Add your Pages preview domain while testing, e.g. https://freemeans.pages.dev
-ALLOWED_ORIGINS = "https://freemeans.com,https://www.freemeans.com,https://freemeans.pages.dev,http://localhost:4321"
+# Comma-separated: every address the website is served from.
+ALLOWED_ORIGINS = "https://freemeans.com,https://www.freemeans.com,https://freemeans.nexusuaf.workers.dev,http://localhost:4321"
 
 # Secret (never in this file):  npx wrangler secret put DATABASE_URL
 # Use Neon's *pooled* connection string (host contains "-pooler").

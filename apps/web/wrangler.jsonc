@@ -1,0 +1,19 @@
+// freemeans.com as a static-assets Worker (Cloudflare's current way to host a static site).
+// Requests for static files are free and unlimited; no Worker code runs.
+// Cloudflare build settings: root directory apps/web · build `npm run build` · deploy `npx wrangler deploy`
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "freemeans",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  },
+  "workers_dev": true,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "freemeans.com", "custom_domain": true },
+    { "pattern": "www.freemeans.com", "custom_domain": true }
+  ]
+}
