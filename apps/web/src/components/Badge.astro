@@ -1,0 +1,8 @@
+---
+import { BADGES } from '../lib/catalog.js';
+interface Props { type: string; showMeaning?: boolean }
+const { type, showMeaning = false } = Astro.props;
+const b = BADGES[type] ?? { label: type, tone: 'info', meaning: '' };
+---
+<span class={`badge ${b.tone}`} title={b.meaning} data-badge={type}>{b.label}</span>
+{showMeaning && b.meaning && <span class="small muted"> {b.meaning}</span>}

@@ -1,0 +1,305 @@
+{
+  "version": "0.1.0-seed",
+  "generated_at": "2026-11-08",
+  "resources": [
+    {
+      "id": "groq.gpt-oss-120b",
+      "provider": "Groq",
+      "name": "GPT-OSS 120B on Groq (Free plan)",
+      "kind": "llm_api",
+      "tier_type": "free",
+      "endpoint": { "style": "openai_compatible", "base_url": "https://api.groq.com/openai/v1" },
+      "models": ["openai/gpt-oss-120b"],
+      "limit_rules": [
+        { "metric": "rpm", "value": 30, "window": "minute", "reset": { "kind": "rolling" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "rpd", "value": 1000, "window": "day", "reset": { "kind": "unknown" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "tpm", "value": 8000, "window": "minute", "reset": { "kind": "rolling" }, "scope": "organization", "conditions": "The 8K tokens/minute cap is usually the first one hit.", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "tpd", "value": 200000, "window": "day", "reset": { "kind": "unknown" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [],
+      "notes": "Groq publishes sample Free-plan limits; an organization's exact limits are on its Limits page. Every response carries x-ratelimit-* headers, so the router can read live remaining values.",
+      "last_verified": "2026-10-22",
+      "sources": [
+        { "url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" },
+        { "url": "https://console.groq.com/docs/rate-limits", "fetched_at": "2026-11-08", "signal_type": "official_docs" }
+      ]
+    },
+    {
+      "id": "groq.gpt-oss-20b",
+      "provider": "Groq",
+      "name": "GPT-OSS 20B on Groq (Free plan)",
+      "kind": "llm_api",
+      "tier_type": "free",
+      "endpoint": { "style": "openai_compatible", "base_url": "https://api.groq.com/openai/v1" },
+      "models": ["openai/gpt-oss-20b"],
+      "limit_rules": [
+        { "metric": "rpm", "value": 30, "window": "minute", "reset": { "kind": "rolling" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "rpd", "value": 1000, "window": "day", "reset": { "kind": "unknown" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "tpm", "value": 8000, "window": "minute", "reset": { "kind": "rolling" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "tpd", "value": 200000, "window": "day", "reset": { "kind": "unknown" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [],
+      "last_verified": "2026-10-22",
+      "sources": [
+        { "url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "groq.qwen3-8-27b",
+      "provider": "Groq",
+      "name": "Qwen3.8 27B on Groq (Free plan)",
+      "kind": "llm_api",
+      "tier_type": "free",
+      "endpoint": { "style": "openai_compatible", "base_url": "https://api.groq.com/openai/v1" },
+      "models": ["qwen3.8-27b"],
+      "limit_rules": [
+        { "metric": "rpm", "value": 30, "window": "minute", "reset": { "kind": "rolling" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "rpd", "value": 1000, "window": "day", "reset": { "kind": "unknown" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "tpm", "value": 8000, "window": "minute", "reset": { "kind": "rolling" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "tpd", "value": 200000, "window": "day", "reset": { "kind": "unknown" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [],
+      "notes": "Model ID as written in the source; confirm against Groq's model list before use.",
+      "last_verified": "2026-10-22",
+      "sources": [
+        { "url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "groq.llama-3-1-8b-instant",
+      "provider": "Groq",
+      "name": "Llama 3.1 8B Instant on Groq (Free plan)",
+      "kind": "llm_api",
+      "tier_type": "free",
+      "endpoint": { "style": "openai_compatible", "base_url": "https://api.groq.com/openai/v1" },
+      "models": ["llama-3.1-8b-instant"],
+      "limit_rules": [
+        { "metric": "rpm", "value": 30, "window": "minute", "reset": { "kind": "rolling" }, "scope": "organization", "published": true, "verified_at": "2026-05-30", "source_url": "https://dev.to/0012303/9-free-llm-apis-in-2026-you-can-use-without-a-credit-card-26g8", "signal_type": "third_party_snapshot" },
+        { "metric": "rpd", "value": 14400, "window": "day", "reset": { "kind": "unknown" }, "scope": "organization", "published": true, "verified_at": "2026-05-30", "source_url": "https://dev.to/0012303/9-free-llm-apis-in-2026-you-can-use-without-a-credit-card-26g8", "signal_type": "third_party_snapshot" },
+        { "metric": "tpd", "value": 500000, "window": "day", "reset": { "kind": "unknown" }, "scope": "organization", "published": true, "verified_at": "2026-05-30", "source_url": "https://dev.to/0012303/9-free-llm-apis-in-2026-you-can-use-without-a-credit-card-26g8", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [],
+      "notes": "Snapshot is over 5 months old: high priority for re-verification.",
+      "last_verified": "2026-05-30",
+      "sources": [
+        { "url": "https://dev.to/0012303/9-free-llm-apis-in-2026-you-can-use-without-a-credit-card-26g8", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "groq.whisper-large-v3",
+      "provider": "Groq",
+      "name": "Whisper Large v3 on Groq (Free plan)",
+      "kind": "speech_api",
+      "tier_type": "free",
+      "endpoint": { "style": "openai_compatible", "base_url": "https://api.groq.com/openai/v1" },
+      "models": ["whisper-large-v3"],
+      "limit_rules": [
+        { "metric": "rpm", "value": 20, "window": "minute", "reset": { "kind": "rolling" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "rpd", "value": 2000, "window": "day", "reset": { "kind": "unknown" }, "scope": "organization", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [],
+      "last_verified": "2026-10-22",
+      "sources": [
+        { "url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "openrouter.free-models",
+      "provider": "OpenRouter",
+      "name": "OpenRouter :free model variants",
+      "kind": "inference_platform",
+      "tier_type": "free",
+      "endpoint": { "style": "openai_compatible", "base_url": "https://openrouter.ai/api/v1" },
+      "models": ["google/gemma-4-31b-it:free"],
+      "limit_rules": [
+        { "metric": "rpm", "value": 20, "window": "minute", "reset": { "kind": "rolling" }, "scope": "account", "published": true, "verified_at": "2026-11-08", "source_url": "https://openrouter.ai/docs/api-reference/limits.md", "signal_type": "official_docs" },
+        { "metric": "rpd", "value": 50, "window": "day", "reset": { "kind": "fixed_daily", "tz": "UTC", "at": "00:00" }, "scope": "account", "conditions": "Until the account has bought at least 10 credits in its lifetime.", "published": true, "verified_at": "2026-11-08", "source_url": "https://openrouter.ai/docs/api-reference/limits.md", "signal_type": "official_docs" },
+        { "metric": "rpd", "value": 1000, "window": "day", "reset": { "kind": "fixed_daily", "tz": "UTC", "at": "00:00" }, "scope": "account", "conditions": "After a lifetime purchase of at least 10 credits.", "published": true, "verified_at": "2026-11-08", "source_url": "https://openrouter.ai/docs/api-reference/limits.md", "signal_type": "official_docs" }
+      ],
+      "badges": [
+        { "type": "not_for_production", "note": "OpenRouter describes free models as low-limit and usually not suitable for production.", "source_url": "https://openrouter.ai/docs/faq.md" }
+      ],
+      "notes": "Extra accounts or keys do not raise limits (capacity is governed globally), and the terms forbid multiple accounts to bypass limits. The :free list rotates; ~18 :free IDs on 2026-10-22. Usage is readable via GET /api/v1/key. The UTC daily reset comes from a third-party docs mirror; confirm.",
+      "last_verified": "2026-11-08",
+      "sources": [
+        { "url": "https://openrouter.ai/docs/api-reference/limits.md", "fetched_at": "2026-11-08", "signal_type": "official_docs" },
+        { "url": "https://openrouter.ai/docs/api_reference/limits", "fetched_at": "2026-11-08", "signal_type": "official_docs" },
+        { "url": "https://www.developersdigest.tech/rate-limits/openrouter", "fetched_at": "2026-11-08", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "google.gemini-api-free",
+      "provider": "Google",
+      "name": "Gemini API free tier (Google AI Studio)",
+      "kind": "llm_api",
+      "tier_type": "free",
+      "endpoint": { "style": "openai_compatible", "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/" },
+      "models": ["gemini-3.8-flash"],
+      "limit_rules": [
+        { "metric": "rpm", "value": null, "window": "minute", "reset": { "kind": "rolling" }, "scope": "project", "conditions": "Not published in docs; shown per project in AI Studio.", "published": false, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "rpd", "value": null, "window": "day", "reset": { "kind": "fixed_daily", "tz": "America/Los_Angeles", "at": "00:00" }, "scope": "project", "conditions": "Not published in docs; shown per project in AI Studio. Resets at midnight Pacific.", "published": false, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [
+        { "type": "trains_on_data", "note": "Unpaid services: prompts and responses may be used to improve Google products and read by human reviewers.", "source_url": "https://ai.google.dev/gemini-api/terms" },
+        { "type": "age_18_plus", "note": "Users must be 18+; not for apps aimed at or likely used by under-18s.", "source_url": "https://ai.google.dev/gemini-api/terms" },
+        { "type": "eu_restricted", "note": "Apps made available to users in the EEA, Switzerland or UK must use Paid Services.", "source_url": "https://ai.google.dev/gemini-api/terms" }
+      ],
+      "notes": "Pro models moved to paid in April 2026. Set your project's limits from AI Studio in freemeans.yaml so the router can estimate headroom.",
+      "last_verified": "2026-10-22",
+      "sources": [
+        { "url": "https://ai.google.dev/gemini-api/terms", "fetched_at": "2026-11-07", "signal_type": "official_docs" },
+        { "url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" },
+        { "url": "https://benchlm.ai/md/free-tier.md", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "google.colab-free",
+      "provider": "Google",
+      "name": "Google Colab free runtimes",
+      "kind": "gpu_notebook",
+      "tier_type": "free",
+      "endpoint": { "style": "none", "base_url": "https://colab.research.google.com/" },
+      "limit_rules": [
+        { "metric": "session_hours", "value": 12, "window": "session", "reset": { "kind": "none" }, "scope": "account", "conditions": "Maximum; depends on availability and usage patterns. Idle runtimes time out. Other limits are unpublished and fluctuate.", "published": true, "verified_at": "2026-11-07", "source_url": "https://research.google.com/colaboratory/faq.html", "signal_type": "official_docs" }
+      ],
+      "badges": [
+        { "type": "manual_only", "note": "Free runtimes disallow remote control (SSH/remote desktop), bypassing the notebook UI and distributed workers; multiple accounts to get around limits are banned. Freemeans never automates Colab.", "source_url": "https://research.google.com/colaboratory/faq.html" }
+      ],
+      "last_verified": "2026-11-07",
+      "sources": [
+        { "url": "https://research.google.com/colaboratory/faq.html", "fetched_at": "2026-11-07", "signal_type": "official_docs" }
+      ]
+    },
+    {
+      "id": "cloudflare.workers-ai",
+      "provider": "Cloudflare",
+      "name": "Cloudflare Workers AI (free allocation)",
+      "kind": "inference_platform",
+      "tier_type": "free",
+      "endpoint": { "style": "native", "base_url": "https://api.cloudflare.com/client/v4/" },
+      "limit_rules": [
+        { "metric": "neurons_per_day", "value": 10000, "window": "day", "reset": { "kind": "fixed_daily", "tz": "UTC", "at": "00:00" }, "scope": "account", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "rpm", "value": 300, "window": "minute", "reset": { "kind": "rolling" }, "scope": "account", "conditions": "Text generation.", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [],
+      "notes": "Some newer models require a paid billing method.",
+      "last_verified": "2026-10-22",
+      "sources": [
+        { "url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "mistral.free-mode",
+      "provider": "Mistral",
+      "name": "Mistral La Plateforme (Free mode)",
+      "kind": "llm_api",
+      "tier_type": "free",
+      "endpoint": { "style": "openai_compatible", "base_url": "https://api.mistral.ai/v1" },
+      "limit_rules": [
+        { "metric": "rps", "value": null, "window": "second", "reset": { "kind": "rolling" }, "scope": "organization", "conditions": "Not published in docs; shown on the Limits page of the admin console. An older community list cited 1 request/second and 500,000 tokens/minute.", "published": false, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [
+        { "type": "trains_on_data", "note": "Community list states the free tier requires phone verification and opting into data training.", "source_url": "https://docsearch.algolia.com/mcp/docs/repo/cheahjs/free-llm-api-resources" }
+      ],
+      "notes": "Some models or volumes may return HTTP 402 without a payment method.",
+      "last_verified": "2026-10-22",
+      "sources": [
+        { "url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" },
+        { "url": "https://docsearch.algolia.com/mcp/docs/repo/cheahjs/free-llm-api-resources", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "cohere.trial-key",
+      "provider": "Cohere",
+      "name": "Cohere Trial API key",
+      "kind": "llm_api",
+      "tier_type": "trial",
+      "endpoint": { "style": "native", "base_url": "https://api.cohere.com/" },
+      "limit_rules": [
+        { "metric": "requests_per_month", "value": 1000, "window": "month", "reset": { "kind": "unknown" }, "scope": "key", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "rpm", "value": 20, "window": "minute", "reset": { "kind": "rolling" }, "scope": "model", "conditions": "Chat, per model.", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "inputs_per_minute", "value": 2000, "window": "minute", "reset": { "kind": "rolling" }, "scope": "key", "conditions": "Embed inputs.", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [
+        { "type": "non_commercial", "note": "Trial keys are not for production or commercial use.", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5" },
+        { "type": "not_for_production", "note": "Trial keys are not for production or commercial use.", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5" }
+      ],
+      "last_verified": "2026-10-22",
+      "sources": [
+        { "url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "sambanova.cloud-free",
+      "provider": "SambaNova",
+      "name": "SambaNova Cloud (free access)",
+      "kind": "llm_api",
+      "tier_type": "free",
+      "endpoint": { "style": "openai_compatible", "base_url": "https://api.sambanova.ai/v1" },
+      "limit_rules": [
+        { "metric": "rpm", "value": 20, "window": "minute", "reset": { "kind": "rolling" }, "scope": "model", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "rpd", "value": 20, "window": "day", "reset": { "kind": "unknown" }, "scope": "model", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" },
+        { "metric": "tpd", "value": 200000, "window": "day", "reset": { "kind": "unknown" }, "scope": "model", "published": true, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [],
+      "notes": "The plans page says a payment method is needed for first requests, which conflicts with the rate-limit docs. Verify before recommending.",
+      "last_verified": "2026-10-22",
+      "sources": [
+        { "url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "nvidia.api-catalog",
+      "provider": "NVIDIA",
+      "name": "NVIDIA API catalog (Developer Program)",
+      "kind": "inference_platform",
+      "tier_type": "free",
+      "endpoint": { "style": "openai_compatible", "base_url": "https://integrate.api.nvidia.com/v1" },
+      "limit_rules": [
+        { "metric": "rpm", "value": null, "window": "minute", "reset": { "kind": "unknown" }, "scope": "model", "conditions": "Rate varies per model; no official RPM published.", "published": false, "verified_at": "2026-10-22", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [
+        { "type": "not_for_production", "note": "Free prototyping access for Developer Program members; not for production.", "source_url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5" }
+      ],
+      "last_verified": "2026-10-22",
+      "sources": [
+        { "url": "https://dev.to/hassann/top-8-free-ai-apis-in-october-2026-5bb5", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "cerebras.signup-credit",
+      "provider": "Cerebras",
+      "name": "Cerebras sign-up credit",
+      "kind": "cloud_credit",
+      "tier_type": "credit",
+      "limit_rules": [
+        { "metric": "credit_usd", "value": 5, "window": "one_time", "reset": { "kind": "none" }, "scope": "account", "conditions": "Granted after adding a verified payment method; expires 30 days after grant.", "published": true, "verified_at": "2026-10-16", "source_url": "https://benchlm.ai/md/free-tier.md", "signal_type": "third_party_snapshot" }
+      ],
+      "badges": [
+        { "type": "payment_method_required", "source_url": "https://benchlm.ai/md/free-tier.md" }
+      ],
+      "last_verified": "2026-10-16",
+      "sources": [
+        { "url": "https://benchlm.ai/md/free-tier.md", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
+      ]
+    },
+    {
+      "id": "digitalocean.signup-credit",
+      "provider": "DigitalOcean",
+      "name": "DigitalOcean new-account credit",
+      "kind": "cloud_credit",
+      "tier_type": "credit",
+      "limit_rules": [
+        { "metric": "credit_usd", "value": 200, "window": "one_time", "reset": { "kind": "none" }, "scope": "account", "conditions": "60-day credit, granted after adding a valid payment method (via referral link).", "published": true, "verified_at": "2026-11-07", "source_url": "https://docs.digitalocean.com/platform/teams/refer-others", "signal_type": "official_docs" }
+      ],
+      "badges": [
+        { "type": "payment_method_required", "source_url": "https://docs.digitalocean.com/platform/teams/refer-others" }
+      ],
+      "notes": "Also a graduate-path option: DigitalOcean runs a referral program and an affiliate program.",
+      "last_verified": "2026-11-07",
+      "sources": [
+        { "url": "https://docs.digitalocean.com/platform/teams/refer-others", "fetched_at": "2026-11-07", "signal_type": "official_docs" }
+      ]
+    }
+  ]
+}

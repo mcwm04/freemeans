@@ -1,0 +1,47 @@
+# Runs every test suite on each push and pull request. All free on GitHub Actions.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request: {}
+
+permissions:
+  contents: read
+
+jobs:
+  agent-and-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Agent tests + catalog validation
+        working-directory: agent
+        run: |
+          pip install -e ".[dev]"
+          python -m pytest -q
+          freemeans validate-catalog ../data/catalog/seed.json
+      - name: Pipeline tests
+        working-directory: services/pipeline
+        run: |
+          pip install pytest
+          python -m pytest -q
+
+  web-api-db:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Database (migration + seed loader on PGlite)
+        working-directory: db
+        run: npm ci && npm test
+      - name: API (Workers)
+        working-directory: services/api
+        run: npm ci && npm test && npm run check-bundle
+      - name: Website (Astro build + checks)
+        working-directory: apps/web
+        run: npm ci && npm test

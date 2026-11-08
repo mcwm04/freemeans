@@ -1,0 +1,94 @@
+---
+import Base from '../../layouts/Base.astro';
+import Badge from '../../components/Badge.astro';
+import {
+  resources, KIND_LABELS, TIER_LABELS, METRICS, SIGNALS,
+  formatValue, formatDate, resetLabel, isOfficial, hostOf,
+} from '../../lib/catalog.js';
+
+export function getStaticPaths() {
+  return resources().map((r) => ({ params: { id: r.id }, props: { r } }));
+}
+
+const { r } = Astro.props;
+const official = isOfficial(r);
+const description = `${r.name}: ${r.limit_rules.length} free-tier limits with sources, checked ${formatDate(r.last_verified)}.`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: r.name,
+  brand: { '@type': 'Brand', name: r.provider },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: TIER_LABELS[r.tier_type] },
+  dateModified: r.last_verified,
+};
+---
+<Base title={r.name} description={description}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+  <p class="small"><a href="/catalog/">← Catalog</a></p>
+  <div class="detail-head">
+    <div>
+      <p class="small muted">{r.provider} · {KIND_LABELS[r.kind] ?? r.kind} · {TIER_LABELS[r.tier_type] ?? r.tier_type}</p>
+      <h1>{r.name}</h1>
+      <p class="small muted">Last checked <span class="num">{formatDate(r.last_verified)}</span> · ID <code>{r.id}</code></p>
+    </div>
+    {r.badges.length > 0 && <div class="badges">{r.badges.map((b) => <Badge type={b.type} />)}</div>}
+  </div>
+
+  {official ? (
+    <p class="notice ok">Every limit below comes from an official source.</p>
+  ) : (
+    <p class="notice">Some limits below come from third-party snapshots, not the provider's own docs. Check the provider's page before you rely on them.</p>
+  )}
+
+  {r.badges.length > 0 && (
+    <section aria-labelledby="rules">
+      <h2 id="rules">Usage rules</h2>
+      <ul>
+        {r.badges.map((b) => (
+          <li><Badge type={b.type} showMeaning />{b.note && <span class="small"> {b.note}</span>} <a class="small" href={b.source_url} rel="nofollow noopener">source ({hostOf(b.source_url)})</a></li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section aria-labelledby="limits">
+    <h2 id="limits">Limits</h2>
+    <div class="table-scroll">
+      <table class="ledger">
+        <thead><tr><th scope="col">Limit</th><th scope="col">Value</th><th scope="col">Reset</th><th scope="col">Checked</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          {r.limit_rules.map((l) => (
+            <tr>
+              <td>{METRICS[l.metric] ?? l.metric}{l.scope && <span class="small muted"> · per {l.scope}</span>}{l.conditions && <div class="small muted">{l.conditions}</div>}</td>
+              <td class="value">{formatValue(l)}</td>
+              <td class="small">{resetLabel(l.reset)}</td>
+              <td class="small num">{formatDate(l.verified_at)}</td>
+              <td class="small"><a href={l.source_url} rel="nofollow noopener">{hostOf(l.source_url)}</a><div class="muted">{SIGNALS[l.signal_type]?.label ?? l.signal_type}</div></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  {r.models && r.models.length > 0 && (
+    <section aria-labelledby="models">
+      <h2 id="models">Models</h2>
+      <p>{r.models.map((m, i) => <><code>{m}</code>{i < r.models.length - 1 ? ', ' : ''}</>)}</p>
+      {r.endpoint && <p class="small muted">Endpoint ({r.endpoint.style.replace(/_/g, ' ')}): <code>{r.endpoint.base_url}</code></p>}
+    </section>
+  )}
+
+  {r.notes && (
+    <section aria-labelledby="notes"><h2 id="notes">Notes</h2><p>{r.notes}</p></section>
+  )}
+
+  <section aria-labelledby="sources">
+    <h2 id="sources">Sources</h2>
+    <ul>
+      {r.sources.map((src) => (
+        <li><a href={src.url} rel="nofollow noopener">{hostOf(src.url)}</a> <span class="small muted">· {SIGNALS[src.signal_type]?.label ?? src.signal_type} · fetched {formatDate(src.fetched_at)}</span></li>
+      ))}
+    </ul>
+  </section>
+</Base>

@@ -1,0 +1,42 @@
+---
+// Waitlist form. Posts JSON to the Workers API (services/api) at PUBLIC_API_URL.
+// Without JavaScript the form still posts, and the API answers with a short HTML page.
+const api = (import.meta.env.PUBLIC_API_URL || 'https://api.freemeans.com').replace(/\/$/, '');
+---
+<section class="waitlist" id="waitlist" aria-labelledby="waitlist-title">
+  <h2 id="waitlist-title">Join the Pakistan beta</h2>
+  <p class="muted">Get the $0 stack planner and quota tracker first. One email when the beta opens, then only if you ask for more.</p>
+  <form method="post" action={`${api}/waitlist`} data-waitlist>
+    <label class="hp" aria-hidden="true">Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    <label for="wl-email" class="hp">Email</label>
+    <input id="wl-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email" />
+    <input type="hidden" name="source" value="home" />
+    <button class="btn" type="submit">Join the beta</button>
+    <label class="consent small muted"><input type="checkbox" name="consent" value="true" required /> I agree to get emails about the Freemeans beta. I can leave at any time.</label>
+    <p class="small" role="status" aria-live="polite" data-message></p>
+  </form>
+</section>
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-waitlist]');
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const msg = form.querySelector<HTMLElement>('[data-message]')!;
+    const data = Object.fromEntries(new FormData(form));
+    msg.dataset.state = '';
+    msg.textContent = 'Sending…';
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ...data, consent: data.consent === 'true' }),
+      });
+      const body = await res.json().catch(() => ({}));
+      msg.dataset.state = res.ok ? 'ok' : 'error';
+      msg.textContent = res.ok ? 'You’re on the list. We’ll email you when the beta opens.' : body.error || 'Something went wrong. Please try again.';
+      if (res.ok) form.reset();
+    } catch {
+      msg.dataset.state = 'error';
+      msg.textContent = 'Could not reach Freemeans. Check your connection and try again.';
+    }
+  });
+</script>

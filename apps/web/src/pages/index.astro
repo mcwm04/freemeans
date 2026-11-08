@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import Waitlist from '../components/Waitlist.astro';
+import Badge from '../components/Badge.astro';
+import { stats, resources, formatDate, KIND_LABELS } from '../lib/catalog.js';
+
+const s = stats();
+const kinds = [...new Set(resources().map((r) => r.kind))];
+---
+<Base title="Freemeans" current="home">
+  <section class="hero">
+    <div class="stack-bars" aria-hidden="true"><span></span><span></span><span></span></div>
+    <p class="display">Free means you can build.</p>
+    <p class="urdu" lang="ur">مفت کا مطلب: آپ بنا سکتے ہیں</p>
+    <p class="lead">Freemeans finds the free tiers your project can use, checks their rules, and tracks your own quotas, so you build at $0 and upgrade only when you must.</p>
+    <p><a class="btn" href="/catalog/">Browse the catalog</a><a class="btn secondary" href="#waitlist">Join the beta</a></p>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><span class="num">{s.resources}</span><span class="small muted">free resources tracked</span></div>
+    <div class="stat"><span class="num">{s.providers}</span><span class="small muted">providers</span></div>
+    <div class="stat"><span class="num">{s.official}</span><span class="small muted">confirmed from official sources</span></div>
+    <div class="stat"><span class="num">{formatDate(s.latest)}</span><span class="small muted">latest check</span></div>
+  </div>
+
+  <section aria-labelledby="how">
+    <h2 id="how">How Freemeans works</h2>
+    <div class="cards">
+      <div class="card"><h3>1. Plan a $0 stack</h3><p class="muted">Tell us what you're building. We pick free tiers that fit, and show the rules that apply: <Badge type="trains_on_data" />, <Badge type="non_commercial" />, <Badge type="eu_restricted" />.</p></div>
+      <div class="card"><h3>2. Track your own quotas</h3><p class="muted">The local agent reads each provider's rate-limit headers. Your keys stay on your machine; only usage numbers sync.</p></div>
+      <div class="card"><h3>3. Upgrade at the right moment</h3><p class="muted">When a free tier runs out for good, Freemeans shows the cheapest next step, before your app breaks.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="covers">
+    <h2 id="covers">What the catalog covers</h2>
+    <p class="muted">{kinds.map((k) => KIND_LABELS[k] ?? k).join(' · ')}</p>
+    <p>Every limit shows its source link, the date we checked it, and whether it came from official docs or a third-party snapshot.</p>
+  </section>
+
+  <Waitlist />
+</Base>

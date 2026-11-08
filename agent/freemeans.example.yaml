@@ -1,0 +1,63 @@
+# Freemeans local agent configuration (prototype)
+# Copy to freemeans.yaml and edit. Keys are NOT stored here:
+# set environment variables or run `freemeans keys set GROQ_API_KEY`.
+
+listen:
+  host: 127.0.0.1   # keep it local: anyone who can reach this port can spend your quotas
+  port: 4000
+
+catalog: ../data/catalog/seed.json
+db_path: ~/.freemeans/usage.sqlite3
+
+# One deployment = one model on one provider's free tier.
+# Rule: ONE key per provider. The agent refuses configs that pool accounts.
+deployments:
+  - name: groq-gpt-oss-120b
+    resource: groq.gpt-oss-120b
+    model: openai/gpt-oss-120b
+    key_env: GROQ_API_KEY
+    quality: 1.0
+
+  - name: groq-llama-8b
+    resource: groq.llama-3-1-8b-instant
+    model: llama-3.1-8b-instant
+    key_env: GROQ_API_KEY      # same key as above: same Groq account
+    quality: 0.6
+
+  - name: gemini-flash
+    resource: google.gemini-api-free
+    model: gemini-3.8-flash    # check the current model ID in AI Studio
+    key_env: GEMINI_API_KEY
+    quality: 1.0
+    # Gemini does not publish free limits in its docs. Copy your project's
+    # numbers from the AI Studio console so the router can estimate headroom:
+    # limits_override:
+    #   rpm: <from AI Studio>
+    #   rpd: <from AI Studio>
+
+  - name: openrouter-gemma
+    resource: openrouter.free-models
+    model: google/gemma-4-31b-it:free   # the :free list rotates monthly
+    key_env: OPENROUTER_API_KEY
+    quality: 0.8
+    # Catalog default is the conservative 50 requests/day.
+    # If your account has bought >= 10 credits in its lifetime, uncomment:
+    # limits_override:
+    #   rpd: 1000
+
+# Logical model names your apps call. Order does not matter: the router ranks by headroom x quality.
+models:
+  freemeans/auto: [groq-gpt-oss-120b, gemini-flash, openrouter-gemma, groq-llama-8b]
+  freemeans/fast: [groq-llama-8b, groq-gpt-oss-120b]
+
+# Project policies, chosen per request with the header  X-Freemeans-Project: <name>
+projects:
+  default:
+    client_project: false
+    commercial: false
+  client-work:
+    client_project: true    # never routed to tiers that may train on prompts (e.g. Gemini free)
+    commercial: true
+  eu-app:
+    eu_end_users: true      # skips EU-restricted free tiers
+    commercial: true

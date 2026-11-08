@@ -1,0 +1,22 @@
+{
+  "name": "@freemeans/db",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Neon Postgres schema, migrations and the seed-catalog loader.",
+  "scripts": {
+    "migrate": "node scripts/migrate.mjs",
+    "load-seed": "node scripts/load-seed.mjs",
+    "setup": "node scripts/migrate.mjs && node scripts/load-seed.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.15"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

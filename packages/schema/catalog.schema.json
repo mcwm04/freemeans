@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://freemeans.com/schema/catalog.schema.json",
+  "title": "Catalog",
+  "description": "A versioned catalog bundle, as published to local agents (Chapter 6.4 step 6).",
+  "type": "object",
+  "required": ["version", "generated_at", "resources"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date" },
+    "resources": { "type": "array", "items": { "$ref": "resource.schema.json" } }
+  }
+}

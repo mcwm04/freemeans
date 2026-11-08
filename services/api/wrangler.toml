@@ -1,0 +1,26 @@
+# Cloudflare Workers config for the Freemeans API (free plan, no card needed).
+# Deploy:  npx wrangler login  →  npx wrangler secret put DATABASE_URL  →  npx wrangler deploy
+name = "freemeans-api"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Gives you https://freemeans-api.<your-subdomain>.workers.dev straight away.
+workers_dev = true
+
+# Once freemeans.com uses Cloudflare DNS, uncomment to serve the API at api.freemeans.com.
+# Cloudflare creates the DNS record and the HTTPS certificate for you.
+# routes = [
+#   { pattern = "api.freemeans.com", custom_domain = true }
+# ]
+
+[vars]
+SITE_URL = "https://freemeans.com"
+# Comma-separated. Add your Pages preview domain while testing, e.g. https://freemeans.pages.dev
+ALLOWED_ORIGINS = "https://freemeans.com,https://www.freemeans.com,https://freemeans.pages.dev,http://localhost:4321"
+
+# Secret (never in this file):  npx wrangler secret put DATABASE_URL
+# Use Neon's *pooled* connection string (host contains "-pooler").
+
+[observability]
+enabled = true

@@ -1,0 +1,11 @@
+---
+// The Freemeans lockup: the "F." mark (an F of stack bars plus a full stop) and the wordmark.
+// Drawn in currentColor so CSS decides brand or ink. Wordmark is live text in Bricolage Grotesque.
+interface Props { markOnly?: boolean }
+const { markOnly = false } = Astro.props;
+---
+{markOnly ? (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Freemeans"><g fill="currentColor"><rect x="12" y="10" width="11" height="44" rx="5.5"/><rect x="12" y="10" width="40" height="11" rx="5.5"/><rect x="12" y="27" width="28" height="11" rx="5.5"/><circle cx="46.5" cy="48.5" r="5.5"/></g></svg>
+) : (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" role="img" aria-label="Freemeans"><g fill="currentColor"><rect x="12" y="10" width="11" height="44" rx="5.5"/><rect x="12" y="10" width="40" height="11" rx="5.5"/><rect x="12" y="27" width="28" height="11" rx="5.5"/><circle cx="46.5" cy="48.5" r="5.5"/><text x="68" y="45" font-family="'Bricolage Grotesque', 'IBM Plex Sans', system-ui, sans-serif" font-size="38" font-weight="700" letter-spacing="-1">freemeans</text></g></svg>
+)}

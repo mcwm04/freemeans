@@ -1,0 +1,15 @@
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.venv/
+agent/freemeans.yaml
+*.sqlite3
+.env
+node_modules/
+dist/
+.astro/
+.wrangler/
+.bundle/
+.dev.vars
+apps/web/src/styles/tokens.css
+data/source-checks/latest.json

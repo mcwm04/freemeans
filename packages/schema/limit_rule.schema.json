@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://freemeans.com/schema/limit_rule.schema.json",
+  "title": "LimitRule",
+  "description": "One measurable limit of a free resource. Every rule carries the evidence it came from.",
+  "type": "object",
+  "required": ["metric", "value", "window", "scope", "published", "verified_at", "source_url", "signal_type"],
+  "additionalProperties": false,
+  "properties": {
+    "metric": {
+      "type": "string",
+      "enum": [
+        "rps", "rpm", "rpd", "requests_per_month",
+        "tpm", "tpd", "itpm", "otpm",
+        "neurons_per_day", "inputs_per_minute",
+        "session_hours", "credit_usd"
+      ]
+    },
+    "value": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "null = the provider does not publish this number (shown only in its console)."
+    },
+    "window": {
+      "type": "string",
+      "enum": ["second", "minute", "day", "month", "session", "one_time"]
+    },
+    "reset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {
+        "kind": { "type": "string", "enum": ["rolling", "fixed_daily", "fixed_monthly", "none", "unknown"] },
+        "tz": { "type": "string", "description": "IANA time zone of a fixed reset, e.g. UTC or America/Los_Angeles" },
+        "at": { "type": "string", "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]$" }
+      }
+    },
+    "scope": {
+      "type": "string",
+      "enum": ["account", "organization", "project", "key", "model"],
+      "description": "What the limit is counted against. OpenRouter governs capacity per account, Gemini per project, Groq per organization."
+    },
+    "applies_to": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Model IDs the rule applies to. Empty or missing = the whole resource."
+    },
+    "conditions": { "type": "string", "description": "Plain-language conditions, e.g. 'after a one-time purchase of 10 credits'." },
+    "published": { "type": "boolean", "description": "false when the provider only shows the value inside its console." },
+    "verified_at": { "type": "string", "format": "date" },
+    "source_url": { "type": "string", "format": "uri" },
+    "signal_type": {
+      "type": "string",
+      "enum": ["official_docs", "official_api", "canary_call", "third_party_snapshot", "community_report"],
+      "description": "Trust order (Chapter 6.4). third_party_snapshot entries must be upgraded by the freshness pipeline."
+    }
+  }
+}

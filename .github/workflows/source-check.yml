@@ -1,0 +1,62 @@
+# Nightly source check: fetches every limit's source page and opens (or updates) ONE pull
+# request when a number on file is no longer on its page. A person reviews and edits
+# data/catalog/seed.json in that PR; the bot never changes limits itself.
+#
+# Free: GitHub Actions minutes are unlimited on public repos and 2,000/month on private ones.
+# A run takes about 1 minute. One-time setup: Settings → Actions → General → Workflow
+# permissions → tick "Allow GitHub Actions to create and approve pull requests".
+name: Source check
+
+on:
+  schedule:
+    - cron: "17 21 * * *"   # 21:17 UTC = 02:17 in Pakistan, off the busy top of the hour
+  workflow_dispatch: {}      # "Run workflow" button for a manual check
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: source-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check sources
+        id: check
+        working-directory: services/pipeline
+        run: python -m source_check --catalog ../../data/catalog/seed.json --out-dir ../../data/source-checks
+
+      - name: Job summary
+        if: always()
+        run: cat data/source-checks/latest.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the full run as an artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-check-${{ github.run_id }}
+          path: data/source-checks/latest.*
+          retention-days: 14
+
+      - name: Open or update the review PR
+        if: steps.check.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: bot/source-check
+          delete-branch: true
+          add-paths: |
+            data/source-checks/*.md
+          commit-message: "Source check: ${{ steps.check.outputs.missing }} limit(s) to review"
+          title: "Source check: ${{ steps.check.outputs.missing }} limit(s) may have changed"
+          body-path: ${{ steps.check.outputs.report }}
+          labels: catalog, source-check

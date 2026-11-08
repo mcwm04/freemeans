@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "freemeans-source-check"
+version = "0.2.0"
+description = "Nightly check that Freemeans catalog limits still appear on their source pages."
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+dependencies = []          # standard library only
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools]
+packages = ["source_check"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

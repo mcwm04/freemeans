@@ -1,0 +1,45 @@
+---
+import '../styles/global.css';
+import Logo from '../components/Logo.astro';
+
+interface Props { title: string; description?: string; current?: 'home' | 'catalog' }
+const { title, description = 'Every free tier for AI builders, dated and tracked. Plan a $0 stack, track your own quotas, upgrade only when you must.', current } = Astro.props;
+const fullTitle = title === 'Freemeans' ? 'Freemeans: free means you can build' : `${title} · Freemeans`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Freemeans" />
+    <meta name="theme-color" content="#0B6E69" />
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="logo" href="/" aria-label="Freemeans home"><Logo /></a>
+        <nav aria-label="Main">
+          <a href="/catalog/" aria-current={current === 'catalog' ? 'page' : undefined}>Catalog</a>
+          <a href="/#waitlist">Join the beta</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <div class="wrap"><slot /></div>
+    </main>
+    <footer class="site-footer">
+      <div class="wrap small muted">
+        <p>Freemeans gives information, not a guarantee: providers can change free tiers without notice. Every limit links to its source and the date we checked it.</p>
+        <p>One account per provider. Freemeans never pools accounts or bypasses limits. · <a href="/catalog.json">catalog.json</a> · A <a href="https://tekdigix.com">TEKDIGIX</a> product</p>
+      </div>
+    </footer>
+  </body>
+</html>

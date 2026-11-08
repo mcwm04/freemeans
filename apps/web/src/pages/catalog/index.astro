@@ -1,0 +1,70 @@
+---
+import Base from '../../layouts/Base.astro';
+import Badge from '../../components/Badge.astro';
+import { resources, stats, KIND_LABELS, TIER_LABELS, BADGES, formatDate, isOfficial } from '../../lib/catalog.js';
+
+const list = resources();
+const s = stats();
+const kinds = [...new Set(list.map((r) => r.kind))];
+---
+<Base title="Catalog" current="catalog" description={`${s.resources} free AI and cloud tiers from ${s.providers} providers, each with dated limits, usage rules and sources.`}>
+  <h1>Free-tier catalog</h1>
+  <p class="muted">{s.resources} resources from {s.providers} providers. Catalog version {s.version}. Latest check {formatDate(s.latest)}.</p>
+
+  <form class="filters" data-filters aria-label="Filter the catalog">
+    <label>Search <input type="search" name="q" placeholder="Groq, Whisper, credit…" /></label>
+    <label>Type
+      <select name="kind">
+        <option value="">All types</option>
+        {kinds.map((k) => <option value={k}>{KIND_LABELS[k] ?? k}</option>)}
+      </select>
+    </label>
+    <label><input type="checkbox" name="client" /> Safe for client work</label>
+    <label><input type="checkbox" name="eu" /> Serves EU users</label>
+    <span class="small muted" data-count role="status" aria-live="polite">{list.length} shown</span>
+  </form>
+
+  <ul class="cards">
+    {list.map((r) => (
+      <li class="card" data-kind={r.kind} data-badges={r.badges.map((b) => b.type).join(' ')} data-text={`${r.provider} ${r.name} ${(r.models ?? []).join(' ')}`.toLowerCase()}>
+        <div class="meta small muted"><span>{r.provider}</span><span>{TIER_LABELS[r.tier_type] ?? r.tier_type}</span></div>
+        <h3><a href={`/resources/${r.id}/`}>{r.name}</a></h3>
+        <p class="small muted">{KIND_LABELS[r.kind] ?? r.kind} · {r.limit_rules.length} limit{r.limit_rules.length === 1 ? '' : 's'} · checked {formatDate(r.last_verified)}</p>
+        <div class="badges">
+          {r.badges.map((b) => <Badge type={b.type} />)}
+          {isOfficial(r) ? <span class="badge ok">Official source</span> : <span class="badge info">Snapshot source</span>}
+        </div>
+      </li>
+    ))}
+  </ul>
+  <p class="small muted" data-empty hidden>No resource matches these filters.</p>
+</Base>
+
+<script>
+  // Client-side filtering. Badge rules mirror the agent's policy engine (Chapter 4):
+  // client work excludes trains_on_data and non_commercial; EU users exclude eu_restricted.
+  const form = document.querySelector<HTMLFormElement>('[data-filters]')!;
+  const cards = [...document.querySelectorAll<HTMLElement>('.cards .card')];
+  const count = document.querySelector<HTMLElement>('[data-count]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const apply = () => {
+    const f = new FormData(form);
+    const q = String(f.get('q') || '').trim().toLowerCase();
+    const kind = String(f.get('kind') || '');
+    let shown = 0;
+    for (const c of cards) {
+      const badges = (c.dataset.badges || '').split(' ');
+      let ok = true;
+      if (q && !(c.dataset.text || '').includes(q)) ok = false;
+      if (kind && c.dataset.kind !== kind) ok = false;
+      if (f.get('client') && (badges.includes('trains_on_data') || badges.includes('non_commercial') || badges.includes('manual_only'))) ok = false;
+      if (f.get('eu') && badges.includes('eu_restricted')) ok = false;
+      c.hidden = !ok;
+      if (ok) shown++;
+    }
+    count.textContent = `${shown} shown`;
+    empty.hidden = shown > 0;
+  };
+  form.addEventListener('input', apply);
+  form.addEventListener('submit', (e) => e.preventDefault());
+</script>
