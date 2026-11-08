@@ -7,12 +7,13 @@ compatibility_flags = ["nodejs_compat"]
 
 # Gives you https://freemeans-api.<your-subdomain>.workers.dev straight away.
 workers_dev = true
+# One stable address only: no per-version preview URLs.
+preview_urls = false
 
-# Once freemeans.com uses Cloudflare DNS, uncomment to serve the API at api.freemeans.com.
-# Cloudflare creates the DNS record and the HTTPS certificate for you.
-# routes = [
-#   { pattern = "api.freemeans.com", custom_domain = true }
-# ]
+# Serve the API at api.freemeans.com. Cloudflare creates the DNS record and HTTPS certificate.
+routes = [
+  { pattern = "api.freemeans.com", custom_domain = true }
+]
 
 [vars]
 SITE_URL = "https://freemeans.com"
