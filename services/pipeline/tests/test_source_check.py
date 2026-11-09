@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from source_check import __main__ as cli
-from source_check.check import Page, check_catalog, summary
+from source_check.check import Page, Robots, check_catalog, summary
 from source_check.extract import find_limit, number_variants, page_text
 from source_check.report import markdown
 
@@ -162,3 +162,55 @@ def test_cli_no_changes_writes_no_dated_report(tmp_path, monkeypatch):
     assert "changes=false" in gh.read_text()
     assert not (tmp_path / "out/2026-11-09.md").exists()
     assert (tmp_path / "out/latest.md").exists()
+
+
+# --- robots.txt (RFC 9309) ----------------------------------------------------
+
+def robots_from(table):
+    calls = []
+
+    def fetch(url):
+        calls.append(url)
+        return table.get(url, (404, ""))
+    return fetch, calls
+
+
+def test_robots_403_on_robots_txt_means_allowed_not_blocked():
+    """The bug from the first live run: a 403 on robots.txt itself is not a ban (RFC 9309 §2.3.1.3)."""
+    fetch, _ = robots_from({"https://docs.example.com/robots.txt": (403, "")})
+    assert Robots(fetch)("https://docs.example.com/limits.md") is True
+
+
+def test_robots_rules_are_obeyed_for_our_agent_and_for_everyone():
+    fetch, _ = robots_from({
+        "https://a.example/robots.txt": (200, "User-agent: FreemeansBot\nDisallow: /private/\n"),
+        "https://b.example/robots.txt": (200, "User-agent: *\nDisallow: /\n"),
+        "https://c.example/robots.txt": (200, "User-agent: GPTBot\nDisallow: /\n"),
+    })
+    r = Robots(fetch)
+    assert r("https://a.example/private/x") == "robots.txt does not allow this page"
+    assert r("https://a.example/docs/limits") is True
+    assert r("https://b.example/anything") == "robots.txt does not allow this page"
+    assert r("https://c.example/limits") is True  # a rule for another bot does not apply to us
+
+
+def test_robots_server_error_or_no_connection_means_closed():
+    fetch, _ = robots_from({"https://down.example/robots.txt": (503, ""), "https://gone.example/robots.txt": (None, "")})
+    r = Robots(fetch)
+    assert "HTTP 503" in r("https://down.example/x")
+    assert "no connection" in r("https://gone.example/x")
+
+
+def test_robots_txt_is_fetched_once_per_site():
+    fetch, calls = robots_from({"https://a.example/robots.txt": (200, "User-agent: *\nAllow: /\n")})
+    r = Robots(fetch)
+    r("https://a.example/1"), r("https://a.example/2")
+    assert calls == ["https://a.example/robots.txt"]
+
+
+def test_check_reports_the_robots_reason():
+    url = "https://b.example/limits"
+    fetch, _ = robots_from({"https://b.example/robots.txt": (200, "User-agent: *\nDisallow: /\n")})
+    res = check_catalog(catalog(rule("rpm", 30, url)), fetch=pages({url: "30 requests per minute"}), allowed=Robots(fetch), pause=0)
+    assert res[0].status == "unreachable"
+    assert res[0].detail == "robots.txt does not allow this page"

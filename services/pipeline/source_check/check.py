@@ -11,7 +11,7 @@ from urllib.parse import urlsplit
 
 from .extract import Match, find_limit, page_text
 
-USER_AGENT = "FreemeansBot/0.2 (+https://freemeans.com/bot; source freshness check)"
+USER_AGENT = "FreemeansBot/0.3 (+https://freemeans.com/bot; source freshness check)"
 MAX_BYTES = 3_000_000
 TIMEOUT = 25
 
@@ -41,7 +41,7 @@ class RuleResult:
 
 
 Fetcher = Callable[[str], Page]
-RobotsCheck = Callable[[str], bool]
+RobotsCheck = Callable[[str], "bool | str"]
 
 
 def http_fetch(url: str) -> Page:
@@ -62,22 +62,58 @@ def http_fetch(url: str) -> Page:
         return Page(url, False, error=f"{type(e).__name__}: {e}"[:200])
 
 
-_robots_cache: dict[str, urllib.robotparser.RobotFileParser | None] = {}
+RobotsFetcher = Callable[[str], tuple[int | None, str]]
 
 
-def robots_allows(url: str) -> bool:
-    """Honour robots.txt. If robots.txt cannot be read, treat the page as allowed."""
-    parts = urlsplit(url)
-    base = f"{parts.scheme}://{parts.netloc}"
-    if base not in _robots_cache:
-        rp = urllib.robotparser.RobotFileParser(base + "/robots.txt")
-        try:
-            rp.read()
-        except Exception:
-            rp = None
-        _robots_cache[base] = rp
-    rp = _robots_cache[base]
-    return True if rp is None else rp.can_fetch(USER_AGENT, url)
+def http_robots(url: str) -> tuple[int | None, str]:
+    """Fetch robots.txt as FreemeansBot (not Python's default agent, which many sites block)."""
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    try:
+        with urllib.request.urlopen(req, timeout=TIMEOUT) as res:
+            return res.status, res.read(500_000).decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as e:
+        return e.code, ""
+    except Exception:
+        return None, ""  # DNS, timeout, TLS: robots.txt unreachable
+
+
+class Robots:
+    """robots.txt rules per site, following RFC 9309:
+    2xx → obey the file · 4xx (none available, incl. 401/403) → allowed ·
+    5xx or unreachable → assume everything is disallowed."""
+
+    def __init__(self, fetch: RobotsFetcher = http_robots, agent: str = "FreemeansBot"):
+        self.fetch = fetch
+        self.agent = agent
+        self.cache: dict[str, tuple[urllib.robotparser.RobotFileParser | None, str | None]] = {}
+
+    def _site(self, url: str):
+        parts = urlsplit(url)
+        base = f"{parts.scheme}://{parts.netloc}"
+        if base not in self.cache:
+            status, text = self.fetch(base + "/robots.txt")
+            if status is not None and 200 <= status < 300:
+                rp = urllib.robotparser.RobotFileParser()
+                rp.parse(text.splitlines())
+                self.cache[base] = (rp, None)
+            elif status is not None and 400 <= status < 500:
+                self.cache[base] = (None, None)  # no rules: allowed
+            else:
+                why = f"HTTP {status}" if status else "no connection"
+                self.cache[base] = (None, f"robots.txt could not be read ({why}), so the site is treated as closed")
+        return self.cache[base]
+
+    def __call__(self, url: str) -> bool | str:
+        """True when allowed; otherwise a short reason."""
+        rp, closed = self._site(url)
+        if closed:
+            return closed
+        if rp is None or rp.can_fetch(self.agent, url):
+            return True
+        return "robots.txt does not allow this page"
+
+
+robots_allows = Robots()
 
 
 def _classify(m: Match) -> tuple[str, str]:
@@ -95,8 +131,10 @@ def check_catalog(catalog: dict, fetch: Fetcher = http_fetch, allowed: RobotsChe
     last_host = None
     for url in urls:
         host = urlsplit(url).netloc
-        if not allowed(url):
-            pages[url] = Page(url, False, error="robots.txt does not allow this page")
+        verdict = allowed(url)
+        if verdict is not True:
+            reason = verdict if isinstance(verdict, str) else "robots.txt does not allow this page"
+            pages[url] = Page(url, False, error=reason)
             continue
         if pause and host == last_host:
             time.sleep(pause)  # be gentle: one request at a time, a pause between pages on one host

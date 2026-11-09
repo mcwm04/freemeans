@@ -15,7 +15,7 @@ The repo so far (Step 1 + Step 2):
 | Website (Astro, static) for Cloudflare Pages | `apps/web/` | ✅ Step 2, 9 tests |
 | API (`/catalog`, `/resources/:id`, `/waitlist`) on Cloudflare Workers | `services/api/` | ✅ Step 2, 12 tests |
 | Neon Postgres schema, migration, seed loader | `db/` | ✅ Step 2, 7 tests |
-| Nightly source check + GitHub Actions PR | `services/pipeline/`, `.github/workflows/` | ✅ Step 2, 12 tests |
+| Nightly source check + GitHub Actions PR | `services/pipeline/`, `.github/workflows/` | ✅ Step 2, 17 tests |
 | Alerts, recipes, dashboard, admin console | `services/alerts/`, `recipes/` | ⏳ later steps |
 
 **Deploy everything for $0, no card:** [docs/DEPLOY.md](docs/DEPLOY.md).
@@ -174,7 +174,7 @@ infra/             (later)
 
 ```bash
 cd agent && pip install -e ".[dev]" && python -m pytest -q && cd ..        # 41
-cd services/pipeline && python -m pytest -q && cd ../..                     # 12
+cd services/pipeline && python -m pytest -q && cd ../..                     # 17
 cd db && npm ci && npm test && cd ..                                        # 7
 cd services/api && npm ci && npm test && cd ../..                           # 12
 cd apps/web && npm ci && npm test && cd ../..                               # 9

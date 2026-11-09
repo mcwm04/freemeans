@@ -2,7 +2,7 @@
 
 Every night, GitHub Actions runs `python -m source_check`. For each limit in the catalog it:
 
-1. fetches the limit's `source_url`, once per page, honouring robots.txt, with a pause between pages on the same site and the user agent `FreemeansBot/0.2`;
+1. fetches the limit's `source_url`, once per page, honouring robots.txt as FreemeansBot (RFC 9309: a 4xx on robots.txt means allowed, a 5xx means closed), with a pause between pages on the same site and the user agent `FreemeansBot/0.3`;
 2. turns the page into plain text (drops scripts and styles; Markdown passes through);
 3. looks for the number on file in any common spelling (`14400`, `14,400`, `14.4K`), but never as part of a bigger number;
 4. sorts the result into one of five groups:
@@ -19,7 +19,7 @@ When something is **missing**, the workflow opens one pull request (branch `bot/
 
 ```bash
 python -m source_check --catalog ../../data/catalog/seed.json --out-dir ../../data/source-checks
-python -m pytest -q     # 12 tests, no network
+python -m pytest -q     # 17 tests, no network
 ```
 
 Standard library only: no packages to install for the check itself.
