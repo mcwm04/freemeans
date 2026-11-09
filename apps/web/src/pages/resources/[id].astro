@@ -1,8 +1,9 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Badge from '../../components/Badge.astro';
+import Icon from '../../components/Icon.astro';
 import {
-  resources, KIND_LABELS, TIER_LABELS, METRICS, SIGNALS,
+  resources, KIND_LABELS, BADGES, TIER_LABELS, METRICS, SIGNALS,
   formatValue, formatDate, resetLabel, isOfficial, hostOf,
 } from '../../lib/catalog.js';
 import { graph, breadcrumbLd, webPageLd } from '../../lib/seo.js';
@@ -40,72 +41,101 @@ const jsonLd = graph([
   breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Catalog', path: '/catalog/' }, { name: r.name, path }]),
 ]);
 ---
-<Base title={title} description={description} jsonLd={jsonLd}>
-  <p class="small"><a href="/catalog/">← Catalog</a></p>
-  <div class="detail-head">
-    <div>
-      <p class="small muted">{r.provider} · {KIND_LABELS[r.kind] ?? r.kind} · {TIER_LABELS[r.tier_type] ?? r.tier_type}</p>
-      <h1>{r.name}</h1>
-      <p class="small muted">Last checked <span class="num">{formatDate(r.last_verified)}</span> · ID <code>{r.id}</code></p>
+<Base title={title} description={description} jsonLd={jsonLd} current="catalog">
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/catalog/">Catalog</a><span aria-hidden="true">/</span><span>{r.provider}</span></nav>
+      <div class="detail-head">
+        <span class="mono-mark lg" aria-hidden="true">{r.provider[0]}</span>
+        <div>
+          <p class="small muted" style="margin:0 0 6px">{r.provider} · {KIND_LABELS[r.kind] ?? r.kind} · {TIER_LABELS[r.tier_type] ?? r.tier_type}</p>
+          <h1>{r.name}</h1>
+          <p class="small muted" style="margin:0">Last checked <span class="num">{formatDate(r.last_verified)}</span> · ID <code>{r.id}</code></p>
+          {r.badges.length > 0 && <div class="badges">{r.badges.map((b) => <Badge type={b.type} />)}</div>}
+        </div>
+      </div>
+      {official ? (
+        <p class="notice ok"><Icon name="shield" /><span>Every limit below comes from an official source.</span></p>
+      ) : (
+        <p class="notice"><Icon name="alert" /><span>Some limits below come from third-party snapshots, not the provider's own docs. Check the provider's page before you rely on them.</span></p>
+      )}
     </div>
-    {r.badges.length > 0 && <div class="badges">{r.badges.map((b) => <Badge type={b.type} />)}</div>}
+  </header>
+
+  <div class="page-body">
+    <div class="wrap detail-layout">
+      <div>
+        <section aria-labelledby="limits">
+          <h2 id="limits">Limits</h2>
+          <div class="table-scroll">
+            <table class="ledger">
+              <thead><tr><th scope="col">Limit</th><th scope="col">Value</th><th scope="col">Reset</th><th scope="col">Checked</th><th scope="col">Source</th></tr></thead>
+              <tbody>
+                {r.limit_rules.map((l) => (
+                  <tr>
+                    <td>{METRICS[l.metric] ?? l.metric}{l.scope && <span class="small muted"> · per {l.scope}</span>}{l.conditions && <div class="small muted">{l.conditions}</div>}</td>
+                    <td class="value">{formatValue(l)}</td>
+                    <td class="small">{resetLabel(l.reset)}</td>
+                    <td class="small num">{formatDate(l.verified_at)}</td>
+                    <td class="small"><a href={l.source_url} rel="nofollow noopener">{hostOf(l.source_url)}</a><div class="muted">{SIGNALS[l.signal_type]?.label ?? l.signal_type}</div></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {r.badges.length > 0 && (
+          <section aria-labelledby="rules">
+            <h2 id="rules">Usage rules</h2>
+            <ul class="rules">
+              {r.badges.map((b) => (
+                <li><Badge type={b.type} /><div>{BADGES[b.type]?.meaning}{b.note && <> {b.note}</>} <a href={b.source_url} rel="nofollow noopener">Source ({hostOf(b.source_url)})</a></div></li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {r.models && r.models.length > 0 && (
+          <section aria-labelledby="models">
+            <h2 id="models">Models</h2>
+            <p>{r.models.map((m, i) => <><code>{m}</code>{i < r.models.length - 1 ? ' ' : ''}</>)}</p>
+            {r.endpoint && <p class="small muted">Endpoint ({r.endpoint.style.replace(/_/g, ' ')}): <code>{r.endpoint.base_url}</code></p>}
+          </section>
+        )}
+
+        {r.notes && (
+          <section aria-labelledby="notes"><h2 id="notes">Notes</h2><p>{r.notes}</p></section>
+        )}
+
+        <section aria-labelledby="sources">
+          <h2 id="sources">Sources</h2>
+          <ul class="src-list">
+            {r.sources.map((src) => (
+              <li><a href={src.url} rel="nofollow noopener">{hostOf(src.url)}</a> <span class="small muted">{SIGNALS[src.signal_type]?.label ?? src.signal_type} · fetched {formatDate(src.fetched_at)}</span></li>
+            ))}
+          </ul>
+        </section>
+      </div>
+
+      <aside class="aside" aria-label="Summary">
+        <div class="panel">
+          <h3>At a glance</h3>
+          <dl>
+            <div><dt>Provider</dt><dd>{r.provider}</dd></div>
+            <div><dt>Type</dt><dd>{KIND_LABELS[r.kind] ?? r.kind}</dd></div>
+            <div><dt>Plan</dt><dd>{TIER_LABELS[r.tier_type] ?? r.tier_type}</dd></div>
+            <div><dt>Limits tracked</dt><dd class="num">{r.limit_rules.length}</dd></div>
+            <div><dt>Sources</dt><dd>{official ? 'Official' : 'Includes snapshots'}</dd></div>
+            <div><dt>Last checked</dt><dd>{formatDate(r.last_verified)}</dd></div>
+          </dl>
+        </div>
+        <div class="panel cta">
+          <h3>Track this quota</h3>
+          <p>The Freemeans agent watches your usage of {r.provider} and warns you before you hit the limit.</p>
+          <a class="btn" href="/#waitlist">Join the beta</a>
+        </div>
+      </aside>
+    </div>
   </div>
-
-  {official ? (
-    <p class="notice ok">Every limit below comes from an official source.</p>
-  ) : (
-    <p class="notice">Some limits below come from third-party snapshots, not the provider's own docs. Check the provider's page before you rely on them.</p>
-  )}
-
-  {r.badges.length > 0 && (
-    <section aria-labelledby="rules">
-      <h2 id="rules">Usage rules</h2>
-      <ul>
-        {r.badges.map((b) => (
-          <li><Badge type={b.type} showMeaning />{b.note && <span class="small"> {b.note}</span>} <a class="small" href={b.source_url} rel="nofollow noopener">source ({hostOf(b.source_url)})</a></li>
-        ))}
-      </ul>
-    </section>
-  )}
-
-  <section aria-labelledby="limits">
-    <h2 id="limits">Limits</h2>
-    <div class="table-scroll">
-      <table class="ledger">
-        <thead><tr><th scope="col">Limit</th><th scope="col">Value</th><th scope="col">Reset</th><th scope="col">Checked</th><th scope="col">Source</th></tr></thead>
-        <tbody>
-          {r.limit_rules.map((l) => (
-            <tr>
-              <td>{METRICS[l.metric] ?? l.metric}{l.scope && <span class="small muted"> · per {l.scope}</span>}{l.conditions && <div class="small muted">{l.conditions}</div>}</td>
-              <td class="value">{formatValue(l)}</td>
-              <td class="small">{resetLabel(l.reset)}</td>
-              <td class="small num">{formatDate(l.verified_at)}</td>
-              <td class="small"><a href={l.source_url} rel="nofollow noopener">{hostOf(l.source_url)}</a><div class="muted">{SIGNALS[l.signal_type]?.label ?? l.signal_type}</div></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  {r.models && r.models.length > 0 && (
-    <section aria-labelledby="models">
-      <h2 id="models">Models</h2>
-      <p>{r.models.map((m, i) => <><code>{m}</code>{i < r.models.length - 1 ? ', ' : ''}</>)}</p>
-      {r.endpoint && <p class="small muted">Endpoint ({r.endpoint.style.replace(/_/g, ' ')}): <code>{r.endpoint.base_url}</code></p>}
-    </section>
-  )}
-
-  {r.notes && (
-    <section aria-labelledby="notes"><h2 id="notes">Notes</h2><p>{r.notes}</p></section>
-  )}
-
-  <section aria-labelledby="sources">
-    <h2 id="sources">Sources</h2>
-    <ul>
-      {r.sources.map((src) => (
-        <li><a href={src.url} rel="nofollow noopener">{hostOf(src.url)}</a> <span class="small muted">· {SIGNALS[src.signal_type]?.label ?? src.signal_type} · fetched {formatDate(src.fetched_at)}</span></li>
-      ))}
-    </ul>
-  </section>
 </Base>

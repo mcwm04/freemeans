@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Badge from '../../components/Badge.astro';
+import Icon from '../../components/Icon.astro';
 import { resources, stats, KIND_LABELS, TIER_LABELS, BADGES, formatDate, isOfficial } from '../../lib/catalog.js';
 import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
 
@@ -16,36 +17,60 @@ const jsonLd = graph([
 ]);
 ---
 <Base title={title} current="catalog" description={description} jsonLd={jsonLd}>
-  <h1>Free-tier catalog</h1>
-  <p class="muted">{s.resources} resources from {s.providers} providers. Catalog version {s.version}. Latest check {formatDate(s.latest)}.</p>
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">Catalog</p>
+      <h1>Free-tier catalog</h1>
+      <p class="lede">{s.resources} resources from {s.providers} providers. Every limit is dated and linked to its source.</p>
+      <div class="meta-row">
+        <span>Catalog version <b class="num">{s.version}</b></span>
+        <span>Latest check <b>{formatDate(s.latest)}</b></span>
+        <span><b>{s.official}</b> confirmed from official sources</span>
+      </div>
+    </div>
+  </header>
 
-  <form class="filters" data-filters aria-label="Filter the catalog">
-    <label>Search <input type="search" name="q" placeholder="Groq, Whisper, credit…" /></label>
-    <label>Type
-      <select name="kind">
-        <option value="">All types</option>
-        {kinds.map((k) => <option value={k}>{KIND_LABELS[k] ?? k}</option>)}
-      </select>
-    </label>
-    <label><input type="checkbox" name="client" /> Safe for client work</label>
-    <label><input type="checkbox" name="eu" /> Serves EU users</label>
-    <span class="small muted" data-count role="status" aria-live="polite">{list.length} shown</span>
-  </form>
+  <div class="page-body">
+    <div class="wrap">
+      <form class="toolbar" data-filters aria-label="Filter the catalog">
+        <label class="search">
+          <span class="sr-only">Search</span>
+          <Icon name="search" />
+          <input type="search" name="q" placeholder="Search Groq, Whisper, credit…" />
+        </label>
+        <label class="sr-only" for="f-kind">Type</label>
+        <select id="f-kind" name="kind">
+          <option value="">All types</option>
+          {kinds.map((k) => <option value={k}>{KIND_LABELS[k] ?? k}</option>)}
+        </select>
+        <label class="chip"><input type="checkbox" name="client" /><span>Safe for client work</span></label>
+        <label class="chip"><input type="checkbox" name="eu" /><span>Serves EU users</span></label>
+        <span class="count" data-count role="status" aria-live="polite"><b>{list.length}</b> shown</span>
+      </form>
 
-  <ul class="cards">
-    {list.map((r) => (
-      <li class="card" data-kind={r.kind} data-badges={r.badges.map((b) => b.type).join(' ')} data-text={`${r.provider} ${r.name} ${(r.models ?? []).join(' ')}`.toLowerCase()}>
-        <div class="meta small muted"><span>{r.provider}</span><span>{TIER_LABELS[r.tier_type] ?? r.tier_type}</span></div>
-        <h3><a href={`/resources/${r.id}/`}>{r.name}</a></h3>
-        <p class="small muted">{KIND_LABELS[r.kind] ?? r.kind} · {r.limit_rules.length} limit{r.limit_rules.length === 1 ? '' : 's'} · checked {formatDate(r.last_verified)}</p>
-        <div class="badges">
-          {r.badges.map((b) => <Badge type={b.type} />)}
-          {isOfficial(r) ? <span class="badge ok">Official source</span> : <span class="badge info">Snapshot source</span>}
-        </div>
-      </li>
-    ))}
-  </ul>
-  <p class="small muted" data-empty hidden>No resource matches these filters.</p>
+      <ul class="cards">
+        {list.map((r) => (
+          <li class="card res-card" data-kind={r.kind} data-badges={r.badges.map((b) => b.type).join(' ')} data-text={`${r.provider} ${r.name} ${(r.models ?? []).join(' ')}`.toLowerCase()}>
+            <div class="top">
+              <span class="mono-mark" aria-hidden="true">{r.provider[0]}</span>
+              <div class="who"><div class="prov">{r.provider} · {KIND_LABELS[r.kind] ?? r.kind}</div></div>
+            </div>
+            <h3><a href={`/resources/${r.id}/`}>{r.name}</a></h3>
+            <div class="facts">
+              <span>{TIER_LABELS[r.tier_type] ?? r.tier_type}</span>
+              <span>{r.limit_rules.length} limit{r.limit_rules.length === 1 ? '' : 's'}</span>
+              <span>Checked {formatDate(r.last_verified)}</span>
+            </div>
+            <div class="badges">
+              {r.badges.map((b) => <Badge type={b.type} />)}
+              {isOfficial(r) ? <span class="badge ok">Official source</span> : <span class="badge">Snapshot source</span>}
+            </div>
+          </li>
+        ))}
+      </ul>
+      <p class="empty" data-empty hidden>No resource matches these filters. Try clearing the search or a filter.</p>
+    </div>
+  </div>
 </Base>
 
 <script>
@@ -70,9 +95,15 @@ const jsonLd = graph([
       c.hidden = !ok;
       if (ok) shown++;
     }
-    count.textContent = `${shown} shown`;
+    count.innerHTML = `<b>${shown}</b> shown`;
     empty.hidden = shown > 0;
   };
+  // Deep links from the home page, e.g. /catalog/?kind=llm_api
+  const params = new URLSearchParams(location.search);
+  const kindSel = form.elements.namedItem('kind') as HTMLSelectElement;
+  if (params.get('kind') && [...kindSel.options].some((o) => o.value === params.get('kind'))) kindSel.value = params.get('kind')!;
+  if (params.get('q')) (form.elements.namedItem('q') as HTMLInputElement).value = params.get('q')!;
+  apply();
   form.addEventListener('input', apply);
   form.addEventListener('submit', (e) => e.preventDefault());
 </script>

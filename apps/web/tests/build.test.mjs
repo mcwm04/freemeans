@@ -13,7 +13,7 @@ const read = (p) => readFileSync(resolve(dist, p), 'utf8');
 test('home page carries the Freemeans brand', () => {
   const html = read('index.html');
   assert.match(html, /<title>Freemeans: free means you can build<\/title>/);
-  assert.match(html, /Free means you can build\./);
+  assert.match(html, /Free means you can (<[^>]+>)?build\./);
   assert.match(html, /مفت کا مطلب/);
   assert.match(html, /aria-label="Freemeans"/);
   assert.match(html, /id="waitlist"/);
