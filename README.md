@@ -16,6 +16,8 @@ The repo so far (Step 1 + Step 2):
 | API (`/catalog`, `/resources/:id`, `/waitlist`) on Cloudflare Workers | `services/api/` | ✅ Step 2, 12 tests |
 | Neon Postgres schema, migration, seed loader | `db/` | ✅ Step 2, 7 tests |
 | Nightly source check + GitHub Actions PR | `services/pipeline/`, `.github/workflows/` | ✅ Step 2, 17 tests |
+| AI tools directory, Phase 0: tool schema, taxonomy (25 categories, 80 tasks), `toolcheck` | `packages/schema/`, `data/`, `services/toolcheck/` | ✅ 33 tests · [docs/DIRECTORY.md](docs/DIRECTORY.md) |
+| Directory tables (`002_directory.sql`) + nightly signal collector with 2-year backfill | `db/`, `services/signals/` | ✅ 30 tests |
 | Alerts, recipes, dashboard, admin console | `services/alerts/`, `recipes/` | ⏳ later steps |
 
 **Deploy everything for $0, no card:** [docs/DEPLOY.md](docs/DEPLOY.md).

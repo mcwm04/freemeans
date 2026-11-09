@@ -1,0 +1,66 @@
+{
+  "best_for": [
+    "Custom image pipelines",
+    "Running open image models locally"
+  ],
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-09",
+  "changelog": [
+    {
+      "date": "2026-11-09",
+      "field": "listed",
+      "note": "Starter record for the Phase 0 signal collector; editor review due before pages go live"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false,
+  "pricing": null,
+  "slug": "comfyui",
+  "name": "ComfyUI",
+  "url": "https://www.comfy.org",
+  "tagline": "Node-based app for building image and video generation workflows",
+  "description": "ComfyUI is an open-source app for generating images and videos with AI models. Instead of a single prompt box, you connect nodes into a graph, so every step of a workflow, from the model to the final output, can be seen and changed. It supports many open models and is built to run on ordinary consumer hardware, including graphics cards with little video memory. You can run it on Windows, Linux or macOS through a desktop app or a portable install, and complex workflows can be shared as files or exposed through an API. A paid cloud version and partner nodes for closed models are offered separately.",
+  "categories": [
+    "image",
+    "video",
+    "local-ai"
+  ],
+  "tasks": [
+    "text-to-image",
+    "image-to-video",
+    "run-image-models-locally"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "api",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/comfyanonymous/ComfyUI",
+  "license": "GPL-3.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "card_required": false,
+    "signup_required": false,
+    "watermark": false,
+    "commercial_use": true,
+    "works_in_pk": null,
+    "notes": "Free to run locally under GPL-3.0; the cloud version and partner nodes are paid services.",
+    "source_url": "https://github.com/comfyanonymous/ComfyUI/blob/master/LICENSE",
+    "verified_at": "2026-11-09"
+  },
+  "signals": {
+    "trends_term": "ComfyUI",
+    "wikipedia_article": null,
+    "github_repo": "comfyanonymous/ComfyUI",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/comfyanonymous/comfyui",
+    "hn_query": null
+  }
+}

@@ -13,3 +13,7 @@ dist/
 .dev.vars
 apps/web/src/styles/tokens.css
 data/source-checks/latest.json
+
+# Python build output
+build/
+*.egg-info/

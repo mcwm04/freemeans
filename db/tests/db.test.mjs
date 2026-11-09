@@ -2,6 +2,9 @@
 // in memory, no server and no network. Same SQL that runs on Neon.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { copyFileSync, mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { PGlite } from '@electric-sql/pglite';
 import { migrate, loadCatalog, readSeed, checkCatalog } from '../scripts/lib.mjs';
 
@@ -13,13 +16,15 @@ async function freshDb() {
 
 test('migration creates every table and is idempotent', async () => {
   const db = await freshDb();
-  assert.deepEqual(await migrate(db), ['001_init.sql']);
+  assert.deepEqual(await migrate(db), ['001_init.sql', '002_directory.sql']);
   assert.deepEqual(await migrate(db), []);
   const { rows } = await db.query(
     `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name`,
   );
   assert.deepEqual(rows.map((r) => r.table_name), [
-    'badges', 'catalog_versions', 'limit_rules', 'resources', 'schema_migrations', 'sources', 'waitlist',
+    'badges', 'catalog_versions', 'job_runs', 'limit_rules', 'resources', 'schema_migrations',
+    'signal_backfills', 'signal_snapshots', 'sources', 'sponsorships', 'tool_candidates',
+    'tool_clicks_daily', 'trending_scores', 'vendor_claims', 'waitlist',
   ]);
 });
 
@@ -103,4 +108,40 @@ test('waitlist keeps one lower-case row per email', async () => {
   await db.query(ins, ['ali@example.pk']);
   assert.equal((await db.query('SELECT count(*)::int AS n FROM waitlist')).rows[0].n, 1);
   await assert.rejects(db.query(ins, ['Ali@Example.pk'])); // must be lower-cased by the API first
+});
+
+// ---- 002_directory.sql (AI tools directory) ----
+
+test('002 can run on a database that already has 001 applied (the live Neon case)', async () => {
+  const db = await freshDb();
+  const dir001 = mkdtempSync(join(tmpdir(), 'mig-'));
+  copyFileSync(new URL('../migrations/001_init.sql', import.meta.url), join(dir001, '001_init.sql'));
+  assert.deepEqual(await migrate(db, dir001), ['001_init.sql']);
+  await db.query(`INSERT INTO waitlist (email, consent_at) VALUES ('old@example.com', now())`);
+  assert.deepEqual(await migrate(db), ['002_directory.sql']);
+  const { rows } = await db.query(`SELECT lists FROM waitlist WHERE email = 'old@example.com'`);
+  assert.deepEqual(rows[0].lists, ['waitlist']);
+});
+
+test('signal_snapshots keeps NULL for unmeasured signals and rejects bad rows', async () => {
+  const db = await freshDb();
+  await migrate(db);
+  await db.query(`INSERT INTO signal_snapshots (slug, day, wiki_views) VALUES ('ollama', '2026-11-08', 1200)`);
+  const { rows } = await db.query(`SELECT wiki_views, gh_stars, hn_points FROM signal_snapshots`);
+  assert.deepEqual(rows[0], { wiki_views: 1200, gh_stars: null, hn_points: null });
+  await assert.rejects(db.query(`INSERT INTO signal_snapshots (slug, day) VALUES ('ollama', '2026-11-08')`), /duplicate key/);
+  await assert.rejects(db.query(`INSERT INTO signal_snapshots (slug, day, gh_stars) VALUES ('ollama', '2026-11-09', -1)`), /check constraint/);
+  await assert.rejects(db.query(`INSERT INTO signal_snapshots (slug, day) VALUES ('Bad Slug', '2026-11-09')`), /check constraint/);
+});
+
+test('directory enums are enforced', async () => {
+  const db = await freshDb();
+  await migrate(db);
+  await assert.rejects(db.query(`INSERT INTO trending_scores (slug, window_kind, period, score, breakdown) VALUES ('a', 'decade', '2026', 50, '{}')`), /check constraint/);
+  await assert.rejects(db.query(`INSERT INTO trending_scores (slug, window_kind, period, score, breakdown) VALUES ('a', 'week', '2026-W46', 101, '{}')`), /check constraint/);
+  await assert.rejects(db.query(`INSERT INTO tool_candidates (url, domain, source) VALUES ('https://x.ai', 'x.ai', 'twitter')`), /check constraint/);
+  await assert.rejects(db.query(`INSERT INTO tool_clicks_daily (slug, day, country) VALUES ('a', '2026-11-09', 'pk')`), /check constraint/);
+  await assert.rejects(db.query(`INSERT INTO job_runs (job) VALUES ('mystery')`), /check constraint/);
+  await db.query(`INSERT INTO tool_candidates (url, domain, source) VALUES ('https://x.ai', 'x.ai', 'hn')`);
+  await assert.rejects(db.query(`INSERT INTO tool_candidates (url, domain, source) VALUES ('https://www.x.ai', 'x.ai', 'github')`), /duplicate key/);
 });

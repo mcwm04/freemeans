@@ -1,0 +1,559 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2026-11-09",
+  "note": "Edited by the editor only. The crawler and the LLM may pick from this list but never add to it (PRD 5.2).",
+  "categories": [
+    {
+      "id": "chat",
+      "name": "Chat assistants",
+      "description": "General AI assistants you talk to in plain language.",
+      "icon": "message-square"
+    },
+    {
+      "id": "writing",
+      "name": "Writing and editing",
+      "description": "Draft, rewrite, shorten and proofread text.",
+      "icon": "pen-line"
+    },
+    {
+      "id": "coding",
+      "name": "Coding assistants",
+      "description": "Write, explain, review and fix code.",
+      "icon": "code"
+    },
+    {
+      "id": "image",
+      "name": "Image generation",
+      "description": "Create pictures and art from a text prompt.",
+      "icon": "image"
+    },
+    {
+      "id": "image-editing",
+      "name": "Image editing",
+      "description": "Change existing photos: cut-outs, upscaling, retouching.",
+      "icon": "wand-2"
+    },
+    {
+      "id": "video",
+      "name": "Video generation and editing",
+      "description": "Make, edit and clip videos with AI.",
+      "icon": "clapperboard"
+    },
+    {
+      "id": "voice",
+      "name": "Voice and speech",
+      "description": "Turn text into natural speech, clone or change voices.",
+      "icon": "audio-lines"
+    },
+    {
+      "id": "music",
+      "name": "Music and sound",
+      "description": "Compose songs, beats and sound effects.",
+      "icon": "music"
+    },
+    {
+      "id": "transcription",
+      "name": "Transcription and captions",
+      "description": "Turn speech in audio or video into text and subtitles.",
+      "icon": "captions"
+    },
+    {
+      "id": "translation",
+      "name": "Translation",
+      "description": "Translate text, documents and speech between languages.",
+      "icon": "languages"
+    },
+    {
+      "id": "presentations",
+      "name": "Slides and presentations",
+      "description": "Build slide decks from a topic or a document.",
+      "icon": "presentation"
+    },
+    {
+      "id": "design",
+      "name": "Design and UI",
+      "description": "Logos, graphics, mockups and interface design.",
+      "icon": "palette"
+    },
+    {
+      "id": "research",
+      "name": "Research and search",
+      "description": "Answer questions with sources, search and summarize papers.",
+      "icon": "search"
+    },
+    {
+      "id": "education",
+      "name": "Learning and study",
+      "description": "Tutoring, quizzes, flashcards and homework help.",
+      "icon": "graduation-cap"
+    },
+    {
+      "id": "productivity",
+      "name": "Productivity and notes",
+      "description": "Notes, to-dos, calendars and personal knowledge.",
+      "icon": "notebook-pen"
+    },
+    {
+      "id": "data",
+      "name": "Data and spreadsheets",
+      "description": "Analyze data, write formulas and make charts.",
+      "icon": "table"
+    },
+    {
+      "id": "automation",
+      "name": "Automation and agents",
+      "description": "Connect apps and let AI agents run repeated tasks.",
+      "icon": "workflow"
+    },
+    {
+      "id": "marketing",
+      "name": "Marketing and SEO",
+      "description": "Ads, product copy, keyword research and SEO.",
+      "icon": "megaphone"
+    },
+    {
+      "id": "social-media",
+      "name": "Social media content",
+      "description": "Posts, captions, thumbnails and short clips for social networks.",
+      "icon": "share-2"
+    },
+    {
+      "id": "business",
+      "name": "Business and meetings",
+      "description": "Meeting notes, email, sales and customer support.",
+      "icon": "briefcase"
+    },
+    {
+      "id": "documents",
+      "name": "PDFs and documents",
+      "description": "Chat with, summarize and convert PDFs and documents.",
+      "icon": "file-text"
+    },
+    {
+      "id": "model-apis",
+      "name": "Model APIs and inference",
+      "description": "Call AI models from your own code through an API.",
+      "icon": "server"
+    },
+    {
+      "id": "local-ai",
+      "name": "Run AI locally",
+      "description": "Run open models on your own computer, offline.",
+      "icon": "hard-drive"
+    },
+    {
+      "id": "3d",
+      "name": "3D and avatars",
+      "description": "Generate 3D models, scenes and talking avatars.",
+      "icon": "box"
+    },
+    {
+      "id": "app-builders",
+      "name": "Website and app builders",
+      "description": "Build websites and apps by describing them.",
+      "icon": "layout-template"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "ask-questions",
+      "name": "Ask questions",
+      "category": "chat"
+    },
+    {
+      "id": "brainstorm-ideas",
+      "name": "Brainstorm ideas",
+      "category": "chat"
+    },
+    {
+      "id": "role-play-practice",
+      "name": "Practise conversations",
+      "category": "chat"
+    },
+    {
+      "id": "write-essays",
+      "name": "Write essays and articles",
+      "category": "writing"
+    },
+    {
+      "id": "rewrite-text",
+      "name": "Rewrite or paraphrase text",
+      "category": "writing"
+    },
+    {
+      "id": "check-grammar",
+      "name": "Check grammar and spelling",
+      "category": "writing"
+    },
+    {
+      "id": "summarize-text",
+      "name": "Summarize text",
+      "category": "writing"
+    },
+    {
+      "id": "write-cvs",
+      "name": "Write CVs and cover letters",
+      "category": "writing"
+    },
+    {
+      "id": "generate-code",
+      "name": "Generate code",
+      "category": "coding"
+    },
+    {
+      "id": "explain-code",
+      "name": "Explain code",
+      "category": "coding"
+    },
+    {
+      "id": "debug-code",
+      "name": "Find and fix bugs",
+      "category": "coding"
+    },
+    {
+      "id": "review-code",
+      "name": "Review code",
+      "category": "coding"
+    },
+    {
+      "id": "text-to-image",
+      "name": "Make images from text",
+      "category": "image"
+    },
+    {
+      "id": "make-illustrations",
+      "name": "Make illustrations",
+      "category": "image"
+    },
+    {
+      "id": "generate-product-photos",
+      "name": "Make product photos",
+      "category": "image"
+    },
+    {
+      "id": "remove-background",
+      "name": "Remove background",
+      "category": "image-editing"
+    },
+    {
+      "id": "upscale-images",
+      "name": "Upscale images",
+      "category": "image-editing"
+    },
+    {
+      "id": "restore-old-photos",
+      "name": "Restore old photos",
+      "category": "image-editing"
+    },
+    {
+      "id": "erase-objects",
+      "name": "Erase objects from photos",
+      "category": "image-editing"
+    },
+    {
+      "id": "text-to-video",
+      "name": "Make videos from text",
+      "category": "video"
+    },
+    {
+      "id": "edit-videos",
+      "name": "Edit videos",
+      "category": "video"
+    },
+    {
+      "id": "clip-long-videos",
+      "name": "Cut long videos into clips",
+      "category": "video"
+    },
+    {
+      "id": "image-to-video",
+      "name": "Animate an image",
+      "category": "video"
+    },
+    {
+      "id": "text-to-speech",
+      "name": "Text to speech",
+      "category": "voice"
+    },
+    {
+      "id": "voice-cloning",
+      "name": "Clone a voice",
+      "category": "voice"
+    },
+    {
+      "id": "voice-over",
+      "name": "Record voice-overs",
+      "category": "voice"
+    },
+    {
+      "id": "change-voice",
+      "name": "Change a voice",
+      "category": "voice"
+    },
+    {
+      "id": "make-songs",
+      "name": "Make songs",
+      "category": "music"
+    },
+    {
+      "id": "generate-sound-effects",
+      "name": "Make sound effects",
+      "category": "music"
+    },
+    {
+      "id": "separate-vocals",
+      "name": "Separate vocals from music",
+      "category": "music"
+    },
+    {
+      "id": "transcribe-audio",
+      "name": "Transcribe audio",
+      "category": "transcription"
+    },
+    {
+      "id": "generate-subtitles",
+      "name": "Make subtitles",
+      "category": "transcription"
+    },
+    {
+      "id": "transcribe-meetings",
+      "name": "Transcribe meetings",
+      "category": "transcription"
+    },
+    {
+      "id": "translate-text",
+      "name": "Translate text",
+      "category": "translation"
+    },
+    {
+      "id": "translate-documents",
+      "name": "Translate documents",
+      "category": "translation"
+    },
+    {
+      "id": "dub-videos",
+      "name": "Dub videos into another language",
+      "category": "translation"
+    },
+    {
+      "id": "make-slides",
+      "name": "Make slides",
+      "category": "presentations"
+    },
+    {
+      "id": "document-to-slides",
+      "name": "Turn a document into slides",
+      "category": "presentations"
+    },
+    {
+      "id": "design-logos",
+      "name": "Design logos",
+      "category": "design"
+    },
+    {
+      "id": "make-graphics",
+      "name": "Make social graphics and posters",
+      "category": "design"
+    },
+    {
+      "id": "design-ui-mockups",
+      "name": "Design app and web mockups",
+      "category": "design"
+    },
+    {
+      "id": "search-with-sources",
+      "name": "Search with sources",
+      "category": "research"
+    },
+    {
+      "id": "summarize-papers",
+      "name": "Summarize research papers",
+      "category": "research"
+    },
+    {
+      "id": "literature-review",
+      "name": "Do a literature review",
+      "category": "research"
+    },
+    {
+      "id": "tutoring",
+      "name": "Get tutoring",
+      "category": "education"
+    },
+    {
+      "id": "make-quizzes",
+      "name": "Make quizzes",
+      "category": "education"
+    },
+    {
+      "id": "make-flashcards",
+      "name": "Make flashcards",
+      "category": "education"
+    },
+    {
+      "id": "solve-math-problems",
+      "name": "Solve math problems",
+      "category": "education"
+    },
+    {
+      "id": "take-notes",
+      "name": "Take notes",
+      "category": "productivity"
+    },
+    {
+      "id": "plan-tasks",
+      "name": "Plan tasks and projects",
+      "category": "productivity"
+    },
+    {
+      "id": "schedule-calendar",
+      "name": "Schedule your calendar",
+      "category": "productivity"
+    },
+    {
+      "id": "analyze-data",
+      "name": "Analyze data",
+      "category": "data"
+    },
+    {
+      "id": "write-spreadsheet-formulas",
+      "name": "Write spreadsheet formulas",
+      "category": "data"
+    },
+    {
+      "id": "make-charts",
+      "name": "Make charts",
+      "category": "data"
+    },
+    {
+      "id": "write-sql",
+      "name": "Write SQL queries",
+      "category": "data"
+    },
+    {
+      "id": "automate-workflows",
+      "name": "Automate workflows",
+      "category": "automation"
+    },
+    {
+      "id": "build-ai-agents",
+      "name": "Build AI agents",
+      "category": "automation"
+    },
+    {
+      "id": "scrape-web-data",
+      "name": "Collect data from websites",
+      "category": "automation"
+    },
+    {
+      "id": "write-ad-copy",
+      "name": "Write ad copy",
+      "category": "marketing"
+    },
+    {
+      "id": "keyword-research",
+      "name": "Do keyword research",
+      "category": "marketing"
+    },
+    {
+      "id": "write-product-descriptions",
+      "name": "Write product descriptions",
+      "category": "marketing"
+    },
+    {
+      "id": "write-social-posts",
+      "name": "Write social media posts",
+      "category": "social-media"
+    },
+    {
+      "id": "make-thumbnails",
+      "name": "Make video thumbnails",
+      "category": "social-media"
+    },
+    {
+      "id": "make-short-videos",
+      "name": "Make short videos and reels",
+      "category": "social-media"
+    },
+    {
+      "id": "write-emails",
+      "name": "Write emails",
+      "category": "business"
+    },
+    {
+      "id": "meeting-notes",
+      "name": "Get meeting notes",
+      "category": "business"
+    },
+    {
+      "id": "customer-support-bots",
+      "name": "Build a customer support bot",
+      "category": "business"
+    },
+    {
+      "id": "chat-with-pdf",
+      "name": "Chat with a PDF",
+      "category": "documents"
+    },
+    {
+      "id": "convert-documents",
+      "name": "Convert documents",
+      "category": "documents"
+    },
+    {
+      "id": "fill-forms",
+      "name": "Fill in forms",
+      "category": "documents"
+    },
+    {
+      "id": "llm-api",
+      "name": "Call a language model API",
+      "category": "model-apis"
+    },
+    {
+      "id": "speech-api",
+      "name": "Call a speech API",
+      "category": "model-apis"
+    },
+    {
+      "id": "image-api",
+      "name": "Call an image generation API",
+      "category": "model-apis"
+    },
+    {
+      "id": "embeddings-api",
+      "name": "Make embeddings for search",
+      "category": "model-apis"
+    },
+    {
+      "id": "run-llm-locally",
+      "name": "Run a chatbot on your computer",
+      "category": "local-ai"
+    },
+    {
+      "id": "run-image-models-locally",
+      "name": "Run image models on your computer",
+      "category": "local-ai"
+    },
+    {
+      "id": "text-to-3d",
+      "name": "Make 3D models from text",
+      "category": "3d"
+    },
+    {
+      "id": "talking-avatars",
+      "name": "Make talking avatars",
+      "category": "3d"
+    },
+    {
+      "id": "build-websites",
+      "name": "Build a website",
+      "category": "app-builders"
+    },
+    {
+      "id": "build-apps",
+      "name": "Build an app",
+      "category": "app-builders"
+    }
+  ]
+}

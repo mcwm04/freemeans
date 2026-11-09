@@ -150,6 +150,14 @@ Email Routing only receives and forwards. To *reply* as hello@freemeans.com, add
 
    Later runs update the same PR instead of opening new ones. Pages that need JavaScript, or that block bots, appear under *Could not read*. Check those by hand, or switch the limit's `source_url` to an official docs page or a Markdown version of it.
 
+## 6b. Turn on the nightly signal collector (AI tools directory)
+
+1. Run `npm run migrate` in `db/` with `DATABASE_URL` set (step 2). It applies `002_directory.sql`.
+2. In GitHub, open **Settings → Secrets and variables → Actions → New repository secret**. Name it `DATABASE_URL` and paste the Neon pooled string.
+3. Open **Actions → Signals → Run workflow**. After that it runs every night at 00:34 Pakistan time.
+
+Details and the run checks: [DIRECTORY.md](DIRECTORY.md).
+
 ## 7. Final checks
 
 - [ ] `https://freemeans.com` shows the home page, and the Urdu tagline renders in Nastaliq.

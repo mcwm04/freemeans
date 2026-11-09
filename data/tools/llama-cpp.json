@@ -1,0 +1,67 @@
+{
+  "best_for": [
+    "Local OpenAI-compatible server",
+    "Running models on a CPU"
+  ],
+  "alternatives": [
+    "ollama"
+  ],
+  "status": "published",
+  "listed_at": "2026-11-09",
+  "changelog": [
+    {
+      "date": "2026-11-09",
+      "field": "listed",
+      "note": "Starter record for the Phase 0 signal collector; editor review due before pages go live"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false,
+  "pricing": null,
+  "slug": "llama-cpp",
+  "name": "llama.cpp",
+  "url": "https://github.com/ggml-org/llama.cpp",
+  "tagline": "Fast C/C++ engine for running language models locally, with an OpenAI-compatible server",
+  "description": "llama.cpp is an open-source engine, written in C and C++, for running large language models on your own hardware. It works on ordinary CPUs as well as graphics cards, and it uses the GGUF file format, so many open models on Hugging Face can be downloaded and run with one command. Besides a command-line chat, it includes a server with an OpenAI-compatible API and a built-in web interface, so existing apps can talk to a local model instead of a paid cloud service. You can install pre-built binaries, use Docker, or build it from source. Many other local AI apps use it under the hood.",
+  "categories": [
+    "local-ai",
+    "model-apis"
+  ],
+  "tasks": [
+    "run-llm-locally",
+    "llm-api"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "cli",
+    "api",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/ggml-org/llama.cpp",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "card_required": false,
+    "signup_required": false,
+    "watermark": false,
+    "commercial_use": true,
+    "works_in_pk": null,
+    "notes": "Free under the MIT license; you supply the computer.",
+    "source_url": "https://github.com/ggml-org/llama.cpp/blob/master/LICENSE",
+    "verified_at": "2026-11-09"
+  },
+  "signals": {
+    "trends_term": "llama.cpp",
+    "wikipedia_article": "Llama.cpp",
+    "github_repo": "ggml-org/llama.cpp",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": null,
+    "hn_query": "llama.cpp"
+  }
+}
