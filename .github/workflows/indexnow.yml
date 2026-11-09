@@ -1,0 +1,45 @@
+# Tells Bing, Yandex, Seznam, Naver and other IndexNow engines which pages changed, a few
+# minutes after Cloudflare redeploys the site. Google does not use IndexNow; it reads
+# sitemap.xml (submitted once in Search Console). Free on GitHub Actions.
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/web/**"
+      - "data/catalog/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow
+  cancel-in-progress: true
+
+env:
+  SITE: https://freemeans.com
+  # Public by design: the same key is served at https://freemeans.com/<key>.txt
+  INDEXNOW_KEY: fce2bace446ef852fb4d71bc979a8cd0
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for the Cloudflare build to go live
+        if: github.event_name == 'push'
+        run: sleep 240
+      - name: Submit every sitemap URL
+        run: |
+          set -euo pipefail
+          curl -fsS "$SITE/$INDEXNOW_KEY.txt" | grep -q "$INDEXNOW_KEY" || { echo "Key file not live yet"; exit 1; }
+          urls=$(curl -fsS "$SITE/sitemap.xml" | grep -o '<loc>[^<]*</loc>' | sed 's/<\/\?loc>//g' | jq -R . | jq -sc .)
+          echo "Submitting $(echo "$urls" | jq length) URLs"
+          body=$(jq -nc --arg key "$INDEXNOW_KEY" --argjson urls "$urls" \
+            '{host: "freemeans.com", key: $key, keyLocation: ("https://freemeans.com/" + $key + ".txt"), urlList: $urls}')
+          code=$(curl -sS -o /tmp/out -w '%{http_code}' -X POST https://api.indexnow.org/indexnow \
+            -H 'content-type: application/json; charset=utf-8' --data "$body")
+          cat /tmp/out || true
+          echo "IndexNow answered HTTP $code"
+          case "$code" in 200|202) ;; *) exit 1 ;; esac

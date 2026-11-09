@@ -165,3 +165,11 @@ test('Worker entry point serves the seed when DATABASE_URL is not set', async ()
   const nf = await worker.fetch(new Request('https://api.freemeans.com/nothing'), {});
   assert.equal(nf.status, 404);
 });
+
+test('every API answer tells search engines not to index it', async () => {
+  const app = createApp({ store: seedStore(seed), siteUrl: SITE });
+  for (const path of ['/health', '/catalog', '/resources/groq.gpt-oss-120b', '/nope']) {
+    const res = await call(app, path);
+    assert.equal(res.headers.get('x-robots-tag'), 'noindex, nofollow', path);
+  }
+});

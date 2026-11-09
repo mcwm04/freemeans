@@ -11,3 +11,10 @@
 /catalog.json
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=3600
+  X-Robots-Tag: noindex
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+
+/og.png
+  Cache-Control: public, max-age=86400

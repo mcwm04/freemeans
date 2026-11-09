@@ -67,12 +67,17 @@ test('snapshot-sourced resources carry a warning; dates use the brand format', (
   assert.match(groq, /22 Oct 2026/);
 });
 
-test('catalog.json and sitemap are published', () => {
+test('catalog.json and sitemap.xml are published', () => {
   const json = JSON.parse(read('catalog.json'));
   assert.equal(json.resources.length, seed.resources.length);
-  const sitemap = read('sitemap.txt').trim().split('\n');
-  assert.equal(sitemap.length, seed.resources.length + 2);
-  assert.ok(sitemap.every((u) => u.startsWith('https://freemeans.com/')));
+  const xml = read('sitemap.xml');
+  assert.match(xml, /^<\?xml version="1.0" encoding="UTF-8"\?>/);
+  const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  assert.equal(locs.length, seed.resources.length + 2);
+  assert.ok(locs.every((u) => u.startsWith('https://freemeans.com/') && u.endsWith('/')));
+  assert.equal(new Set(locs).size, locs.length, 'no duplicate URLs');
+  assert.equal((xml.match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g) || []).length, locs.length);
+  assert.match(read('robots.txt'), /^Sitemap: https:\/\/freemeans\.com\/sitemap\.xml$/m);
 });
 
 test('design tokens are generated for light and dark themes', () => {
@@ -88,4 +93,77 @@ test('Cloudflare Pages files are in place', () => {
   assert.ok(existsSync(resolve(dist, '_headers')));
   assert.ok(existsSync(resolve(dist, '404.html')));
   assert.ok(existsSync(resolve(dist, 'favicon.svg')));
+});
+
+// ---------- SEO ----------
+const htmlPages = () => {
+  const out = [];
+  const walk = (d, rel = '') => {
+    for (const e of readdirSync(d, { withFileTypes: true })) {
+      if (e.isDirectory()) walk(resolve(d, e.name), `${rel}${e.name}/`);
+      else if (e.name === 'index.html') out.push({ path: `/${rel}`, html: readFileSync(resolve(d, e.name), 'utf8') });
+    }
+  };
+  walk(dist);
+  return out;
+};
+const meta = (html, re) => (html.match(re) || [])[1];
+
+test('every indexable page is in sitemap.xml, and only those', () => {
+  const locs = new Set([...read('sitemap.xml').matchAll(/<loc>https:\/\/freemeans\.com([^<]+)<\/loc>/g)].map((m) => m[1]));
+  const pages = htmlPages().filter((p) => !/name="robots" content="noindex/.test(p.html)).map((p) => p.path);
+  for (const p of pages) assert.ok(locs.has(p), `${p} is built but missing from sitemap.xml (add it in src/lib/seo.js)`);
+  for (const l of locs) assert.ok(pages.includes(l), `${l} is in sitemap.xml but not built`);
+});
+
+test('every page has a unique title and description, one h1, canonical and social tags', () => {
+  const titles = new Set();
+  const descs = new Set();
+  for (const { path, html } of htmlPages()) {
+    const title = meta(html, /<title>([^<]+)<\/title>/);
+    const desc = meta(html, /<meta name="description" content="([^"]+)"/);
+    assert.ok(title && title.length <= 70, `${path}: title missing or over 70 chars (${title?.length})`);
+    assert.ok(desc && desc.length >= 50 && desc.length <= 170, `${path}: description length ${desc?.length}`);
+    assert.ok(!titles.has(title), `${path}: duplicate title`);
+    assert.ok(!descs.has(desc), `${path}: duplicate description`);
+    titles.add(title);
+    descs.add(desc);
+    assert.equal((html.match(/<h1[\s>]/g) || []).length, 1, `${path}: needs exactly one h1`);
+    assert.equal(meta(html, /<link rel="canonical" href="([^"]+)"/), `https://freemeans.com${path}`, `${path}: canonical`);
+    assert.equal(meta(html, /<meta property="og:url" content="([^"]+)"/), `https://freemeans.com${path}`);
+    assert.equal(meta(html, /<meta property="og:image" content="([^"]+)"/), 'https://freemeans.com/og.png');
+    assert.match(html, /<meta name="twitter:card" content="summary_large_image"/);
+    assert.match(html, /<html lang="en">/);
+  }
+});
+
+test('structured data parses and matches each page type', () => {
+  const ld = (path) => {
+    const page = htmlPages().find((p) => p.path === path);
+    const blocks = [...page.html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+    assert.equal(blocks.length, 1, `${path}: one JSON-LD block`);
+    const data = JSON.parse(blocks[0][1]);
+    assert.equal(data['@context'], 'https://schema.org');
+    return data['@graph'];
+  };
+  const types = (g) => g.map((n) => n['@type']);
+  assert.deepEqual(types(ld('/')), ['Organization', 'WebSite', 'WebPage']);
+  const cat = ld('/catalog/');
+  assert.deepEqual(types(cat), ['CollectionPage', 'BreadcrumbList', 'ItemList']);
+  assert.equal(cat[2].itemListElement.length, seed.resources.length);
+  const res = ld('/resources/groq.gpt-oss-120b/');
+  assert.deepEqual(types(res), ['WebPage', 'BreadcrumbList']);
+  assert.equal(res[0].dateModified, '2026-10-22');
+  assert.equal(res[1].itemListElement.at(-1).item, 'https://freemeans.com/resources/groq.gpt-oss-120b/');
+});
+
+test('404 stays out of search; share images and IndexNow key are published', () => {
+  const nf = read('404.html');
+  assert.match(nf, /<meta name="robots" content="noindex, follow"/);
+  assert.doesNotMatch(nf, /rel="canonical"/);
+  for (const f of ['og.png', 'logo-512.png', 'apple-touch-icon.png', 'favicon-32.png']) assert.ok(existsSync(resolve(dist, f)), f);
+  const keys = readdirSync(dist).filter((f) => /^[0-9a-f]{32}\.txt$/.test(f));
+  assert.equal(keys.length, 1);
+  assert.equal(read(keys[0]), keys[0].replace('.txt', ''));
+  assert.match(read('_headers'), /\/catalog\.json[\s\S]*X-Robots-Tag: noindex/);
 });

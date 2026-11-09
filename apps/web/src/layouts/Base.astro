@@ -1,11 +1,32 @@
 ---
 import '../styles/global.css';
 import Logo from '../components/Logo.astro';
+import { SITE_NAME, DEFAULT_IMAGE } from '../lib/seo.js';
 
-interface Props { title: string; description?: string; current?: 'home' | 'catalog' }
-const { title, description = 'Every free tier for AI builders, dated and tracked. Plan a $0 stack, track your own quotas, upgrade only when you must.', current } = Astro.props;
-const fullTitle = title === 'Freemeans' ? 'Freemeans: free means you can build' : `${title} · Freemeans`;
+interface Props {
+  title: string;
+  description?: string;
+  current?: 'home' | 'catalog' | 'tools';
+  // One schema.org JSON-LD object (use graph() from lib/seo.js to combine several).
+  jsonLd?: object;
+  // true for pages that must stay out of search results (404, previews, thin pages).
+  noindex?: boolean;
+  ogType?: 'website' | 'article';
+  image?: { path: string; width: number; height: number; alt: string };
+}
+const {
+  title,
+  description = 'Every free tier for AI builders, dated and tracked. Plan a $0 stack, track your own quotas, upgrade only when you must.',
+  current,
+  jsonLd,
+  noindex = false,
+  ogType = 'website',
+  image = DEFAULT_IMAGE,
+} = Astro.props;
+const fullTitle = title === SITE_NAME ? 'Freemeans: free means you can build' : `${title} · ${SITE_NAME}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const imageUrl = new URL(image.path, Astro.site).href;
+const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1';
 ---
 <!doctype html>
 <html lang="en">
@@ -14,12 +35,29 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    <meta name="robots" content={robots} />
+    {!noindex && <link rel="canonical" href={canonical} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:site_name" content="Freemeans" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content={String(image.width)} />
+    <meta property="og:image:height" content={String(image.height)} />
+    <meta property="og:image:alt" content={image.alt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={image.alt} />
     <meta name="theme-color" content="#0B6E69" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <slot name="head" />
   </head>
   <body>

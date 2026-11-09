@@ -105,12 +105,18 @@ export function createApp({ store, siteUrl = 'https://freemeans.com', allowedOri
     return json(req, 404, { error: 'Not found. Try /catalog or /resources/{id}.' });
   }
 
+  // The API is for programs, not search results: every answer carries noindex.
+  const noindex = (res) => {
+    res.headers.set('x-robots-tag', 'noindex, nofollow');
+    return res;
+  };
+
   return async (req) => {
     try {
-      return await handle(req);
+      return noindex(await handle(req));
     } catch (err) {
       const status = err.status ?? 500;
-      return json(req, status, { error: status === 500 ? 'Something went wrong on our side.' : err.message });
+      return noindex(json(req, status, { error: status === 500 ? 'Something went wrong on our side.' : err.message }));
     }
   };
 }

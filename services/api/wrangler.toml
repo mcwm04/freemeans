@@ -18,7 +18,7 @@ routes = [
 [vars]
 SITE_URL = "https://freemeans.com"
 # Comma-separated: every address the website is served from.
-ALLOWED_ORIGINS = "https://freemeans.com,https://www.freemeans.com,https://freemeans.nexusuaf.workers.dev,http://localhost:4321"
+ALLOWED_ORIGINS = "https://freemeans.com,https://www.freemeans.com,http://localhost:4321"
 
 # Secret (never in this file):  npx wrangler secret put DATABASE_URL
 # Use Neon's *pooled* connection string (host contains "-pooler").

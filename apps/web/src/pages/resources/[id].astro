@@ -5,6 +5,7 @@ import {
   resources, KIND_LABELS, TIER_LABELS, METRICS, SIGNALS,
   formatValue, formatDate, resetLabel, isOfficial, hostOf,
 } from '../../lib/catalog.js';
+import { graph, breadcrumbLd, webPageLd } from '../../lib/seo.js';
 
 export function getStaticPaths() {
   return resources().map((r) => ({ params: { id: r.id }, props: { r } }));
@@ -12,18 +13,34 @@ export function getStaticPaths() {
 
 const { r } = Astro.props;
 const official = isOfficial(r);
-const description = `${r.name}: ${r.limit_rules.length} free-tier limits with sources, checked ${formatDate(r.last_verified)}.`;
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Product',
-  name: r.name,
-  brand: { '@type': 'Brand', name: r.provider },
-  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: TIER_LABELS[r.tier_type] },
-  dateModified: r.last_verified,
-};
+// Lead with the numbers people search for ("groq free tier limits"), then the date.
+const published = r.limit_rules.filter((l) => formatValue(l) !== 'Not published').slice(0, 2)
+  .map((l) => {
+    const label = METRICS[l.metric] ?? l.metric;
+    if (l.metric === 'credit_usd') return `${formatValue(l)} credit`;
+    const unit = /^(.*) \((.+)\)$/.exec(label); // "Session length (hours)" -> "session length 12 hours"
+    return unit ? `${unit[1].toLowerCase()} ${formatValue(l)} ${unit[2]}` : `${formatValue(l)} ${label.toLowerCase()}`;
+  });
+const description = `Current limits for ${r.name}${published.length ? ': ' + published.join(', ') : ''}. ${r.limit_rules.length} limit${r.limit_rules.length === 1 ? '' : 's'} with sources and usage rules, checked ${formatDate(r.last_verified)}.`;
+const title = /free|trial|credit/i.test(r.name) ? `${r.name}: limits and rules` : `${r.name}: free tier limits`;
+const path = `/resources/${r.id}/`;
+const jsonLd = graph([
+  webPageLd(Astro.site, {
+    path, name: title, description, dateModified: r.last_verified,
+    extra: {
+      about: {
+        '@type': 'Service',
+        name: r.name,
+        serviceType: KIND_LABELS[r.kind] ?? r.kind,
+        provider: { '@type': 'Organization', name: r.provider },
+        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: TIER_LABELS[r.tier_type] ?? r.tier_type },
+      },
+    },
+  }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Catalog', path: '/catalog/' }, { name: r.name, path }]),
+]);
 ---
-<Base title={r.name} description={description}>
-  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+<Base title={title} description={description} jsonLd={jsonLd}>
   <p class="small"><a href="/catalog/">← Catalog</a></p>
   <div class="detail-head">
     <div>

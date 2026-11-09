@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://freemeans.com/sitemap.txt
+Sitemap: https://freemeans.com/sitemap.xml

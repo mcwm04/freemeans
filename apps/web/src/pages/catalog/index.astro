@@ -2,12 +2,20 @@
 import Base from '../../layouts/Base.astro';
 import Badge from '../../components/Badge.astro';
 import { resources, stats, KIND_LABELS, TIER_LABELS, BADGES, formatDate, isOfficial } from '../../lib/catalog.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
 
 const list = resources();
 const s = stats();
 const kinds = [...new Set(list.map((r) => r.kind))];
+const title = 'Free AI API tiers and limits catalog';
+const description = `${s.resources} free AI and cloud tiers from ${s.providers} providers (LLM APIs, speech, GPU notebooks, credits), each with dated limits, usage rules and sources.`;
+const jsonLd = graph([
+  webPageLd(Astro.site, { path: '/catalog/', name: title, description, type: 'CollectionPage', dateModified: s.latest }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Catalog', path: '/catalog/' }]),
+  itemListLd(Astro.site, { name: title, items: list.map((r) => ({ name: r.name, path: `/resources/${r.id}/` })) }),
+]);
 ---
-<Base title="Catalog" current="catalog" description={`${s.resources} free AI and cloud tiers from ${s.providers} providers, each with dated limits, usage rules and sources.`}>
+<Base title={title} current="catalog" description={description} jsonLd={jsonLd}>
   <h1>Free-tier catalog</h1>
   <p class="muted">{s.resources} resources from {s.providers} providers. Catalog version {s.version}. Latest check {formatDate(s.latest)}.</p>
 

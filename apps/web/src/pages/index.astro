@@ -3,14 +3,21 @@ import Base from '../layouts/Base.astro';
 import Waitlist from '../components/Waitlist.astro';
 import Badge from '../components/Badge.astro';
 import { stats, resources, formatDate, KIND_LABELS } from '../lib/catalog.js';
+import { graph, organizationLd, websiteLd, webPageLd } from '../lib/seo.js';
 
 const s = stats();
 const kinds = [...new Set(resources().map((r) => r.kind))];
+const description = `Free AI API tiers, GPU notebooks and cloud credits from ${s.providers} providers, with dated limits, usage rules and sources. Plan a $0 stack and upgrade only when you must.`;
+const jsonLd = graph([
+  organizationLd(Astro.site),
+  websiteLd(Astro.site),
+  webPageLd(Astro.site, { path: '/', name: 'Freemeans: free means you can build', description, dateModified: s.latest, extra: { about: { '@id': new URL('/#organization', Astro.site).href } } }),
+]);
 ---
-<Base title="Freemeans" current="home">
+<Base title="Freemeans" current="home" description={description} jsonLd={jsonLd}>
   <section class="hero">
     <div class="stack-bars" aria-hidden="true"><span></span><span></span><span></span></div>
-    <p class="display">Free means you can build.</p>
+    <h1 class="display">Free means you can build.</h1>
     <p class="urdu" lang="ur">مفت کا مطلب: آپ بنا سکتے ہیں</p>
     <p class="lead">Freemeans finds the free tiers your project can use, checks their rules, and tracks your own quotas, so you build at $0 and upgrade only when you must.</p>
     <p><a class="btn" href="/catalog/">Browse the catalog</a><a class="btn secondary" href="#waitlist">Join the beta</a></p>
