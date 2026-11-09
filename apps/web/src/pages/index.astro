@@ -48,11 +48,11 @@ const stopped = demo.find((d) => d.tone === 'stop');
 // Trust panel: an officially sourced resource, shown as it appears in the ledger.
 const proof = list.find((r) => isOfficial(r) && r.limit_rules.length >= 2) ?? list.find(isOfficial) ?? list[0];
 
-const description = `Free AI API tiers, GPU notebooks and cloud credits from ${s.providers} providers, with dated limits, usage rules and sources. Plan a $0 stack and upgrade only when you must.`;
+const description = `Top AI tools and free resources for every task, for everyone: free plans, trials, AI APIs, GPU notebooks and credits from ${s.providers} providers, dated and sourced.`;
 const jsonLd = graph([
   organizationLd(Astro.site),
   websiteLd(Astro.site),
-  webPageLd(Astro.site, { path: '/', name: 'Freemeans: free means you can build', description, dateModified: s.latest, extra: { about: { '@id': new URL('/#organization', Astro.site).href } } }),
+  webPageLd(Astro.site, { path: '/', name: 'Freemeans: Do more. Pay nothing.', description, dateModified: s.latest, extra: { about: { '@id': new URL('/#organization', Astro.site).href } } }),
 ]);
 ---
 <Base title="Freemeans" current="home" description={description} jsonLd={jsonLd}>
@@ -60,9 +60,9 @@ const jsonLd = graph([
     <div class="wrap hero-grid">
       <div>
         <a class="pill rise" href="#waitlist"><span class="tag">Beta</span> Pakistan beta is open: join the waitlist</a>
-        <h1 class="display rise d1">Free means you can <span class="accent">build.</span></h1>
-        <p class="urdu rise d1" lang="ur" dir="rtl">مفت کا مطلب: آپ بنا سکتے ہیں</p>
-        <p class="lead rise d2">Freemeans finds the free tiers your project can use, checks their rules, and tracks your own quotas, so you <strong>build at $0</strong> and upgrade only when you must.</p>
+        <h1 class="display rise d1">Do more. <span class="accent">Pay nothing.</span></h1>
+        <p class="urdu rise d1" lang="ur" dir="rtl">کام زیادہ، خرچ صفر</p>
+        <p class="lead rise d2">Top AI tools and free resources for every task, for everyone. Freemeans finds the free plans, trials and quotas you can use, checks their rules, and tracks what you have left, so you <strong>get work done at $0</strong> and pay only when you must.</p>
         <p class="btn-row rise d3">
           <a class="btn" href="/catalog/">Browse the catalog <span class="arrow"><Icon name="arrow-right" /></span></a>
           <a class="btn secondary" href="#waitlist">Join the beta</a>

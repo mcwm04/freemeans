@@ -5,7 +5,7 @@ import { resources, loadCatalog } from './catalog.js';
 
 export const SITE_NAME = 'Freemeans';
 export const SITE_URL = 'https://freemeans.com';
-export const DEFAULT_IMAGE = { path: '/og.png', width: 1200, height: 630, alt: 'Freemeans: every free tier for AI builders, dated and tracked.' };
+export const DEFAULT_IMAGE = { path: '/og.png', width: 1200, height: 630, alt: 'Freemeans: Do more. Pay nothing. Top AI tools and free resources for every task, for everyone.' };
 
 const abs = (site, path) => new URL(path, site).href;
 

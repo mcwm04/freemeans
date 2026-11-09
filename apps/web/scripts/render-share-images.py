@@ -24,9 +24,9 @@ h1 {{ font-family:B; font-size:92px; line-height:96px; letter-spacing:-2px; marg
 </style></head><body>
 <div class="bars"><span style="width:360px"></span><span style="width:260px"></span><span style="width:180px"></span></div>
 <div class="top">{MARK.format(c='#0B6E69')}freemeans</div>
-<h1>Free means<br>you can build.</h1>
-<p class="ur" lang="ur">مفت کا مطلب: آپ بنا سکتے ہیں</p>
-<p class="sub">Every free tier for AI builders, dated and tracked.</p>
+<h1>Do more.<br>Pay nothing.</h1>
+<p class="ur" lang="ur">کام زیادہ، خرچ صفر</p>
+<p class="sub">Top AI tools and free resources for every task, for everyone.</p>
 </body></html>"""
 def icon(size, pad):
     return f"<html><body style='margin:0;width:{size}px;height:{size}px;background:#0B6E69;display:flex;align-items:center;justify-content:center'><div style='width:{size-2*pad}px;height:{size-2*pad}px'>{MARK.format(c='#FFFFFF')}</div></body></html>"
