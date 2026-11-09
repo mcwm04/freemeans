@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "freemeans-signals"
+version = "0.1.0"
+description = "Daily signal collector for the Freemeans AI tools directory (PRD Chapter 7.5)."
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+dependencies = ["psycopg[binary]>=3.2"]   # everything else is the standard library
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools]
+packages = ["signals", "signals.sources"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

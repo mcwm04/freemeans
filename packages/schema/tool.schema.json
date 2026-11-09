@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://freemeans.com/schema/tool.schema.json",
+  "title": "Tool",
+  "description": "One AI tool in the directory: data/tools/{slug}.json (PRD Chapter 5.1). Cross-file rules (slug = file name, taxonomy ids, banned words, alternatives) are checked by services/toolcheck.",
+  "type": "object",
+  "required": ["slug", "name", "url", "tagline", "description", "categories", "tasks", "platforms", "open_source", "free_tier", "signals", "status", "listed_at"],
+  "additionalProperties": false,
+  "properties": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 60,
+      "description": "Lowercase a-z0-9 and single hyphens. Never changed after publishing: URLs depend on it."
+    },
+    "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "tagline": { "type": "string", "minLength": 10, "maxLength": 120 },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "80–150 words, plain English, editor-approved. Word count is checked by toolcheck."
+    },
+    "categories": {
+      "type": "array", "minItems": 1, "maxItems": 3, "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+    },
+    "tasks": {
+      "type": "array", "minItems": 1, "maxItems": 8, "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" }
+    },
+    "best_for": {
+      "type": "array", "maxItems": 5,
+      "items": { "type": "string", "minLength": 1, "maxLength": 60 }
+    },
+    "platforms": {
+      "type": "array", "minItems": 1, "uniqueItems": true,
+      "items": { "type": "string", "enum": ["web", "api", "ios", "android", "windows", "macos", "linux", "browser-extension", "cli", "self-hosted"] }
+    },
+    "open_source": { "type": "boolean" },
+    "repo_url": { "type": ["string", "null"], "format": "uri", "pattern": "^https://" },
+    "license": {
+      "type": ["string", "null"],
+      "description": "SPDX id for open-source tools (e.g. MIT, Apache-2.0), or null."
+    },
+    "free_tier": { "$ref": "#/$defs/free_tier" },
+    "pricing": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["cheapest_paid_usd", "period", "source_url", "verified_at"],
+      "properties": {
+        "cheapest_paid_usd": { "type": ["number", "null"], "minimum": 0 },
+        "period": { "type": ["string", "null"], "enum": ["month", "year", "once", null] },
+        "source_url": { "$ref": "#/$defs/source_url" },
+        "verified_at": { "$ref": "#/$defs/date" }
+      }
+    },
+    "signals": { "$ref": "#/$defs/signals" },
+    "alternatives": {
+      "type": "array", "maxItems": 10, "uniqueItems": true,
+      "items": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["published", "hidden", "removed"],
+      "description": "published: live and ranked. hidden: dead or paused, page kept. removed: page returns 410."
+    },
+    "listed_at": { "$ref": "#/$defs/date" },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["date", "field", "note"],
+        "properties": {
+          "date": { "$ref": "#/$defs/date" },
+          "field": { "type": "string", "minLength": 1 },
+          "note": { "type": "string", "minLength": 1, "maxLength": 200 }
+        }
+      }
+    },
+    "affiliate_url": {
+      "type": ["string", "null"], "format": "uri", "pattern": "^https://",
+      "description": "Used only by /go/{slug}; shown links always carry rel=\"sponsored\" when this is set."
+    },
+    "sponsor": { "type": ["object", "null"], "description": "Filled in v2 from the sponsorships table. Never read by the scorer." },
+    "verified_vendor": { "type": "boolean", "default": false }
+  },
+  "$defs": {
+    "date": { "type": "string", "format": "date", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+    "source_url": { "type": "string", "format": "uri", "pattern": "^https?://" },
+    "free_tier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "source_url", "verified_at"],
+      "properties": {
+        "type": { "type": "string", "enum": ["forever_free", "credits", "trial", "open_source", "none"] },
+        "quota": {
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "required": ["value", "unit", "period"],
+          "description": "null when the provider does not publish a number. Never guessed.",
+          "properties": {
+            "value": { "type": ["number", "null"], "minimum": 0 },
+            "unit": { "type": "string", "minLength": 1, "maxLength": 40 },
+            "period": { "type": ["string", "null"], "enum": ["day", "month", "once", null] }
+          }
+        },
+        "trial_days": { "type": ["integer", "null"], "minimum": 1 },
+        "card_required": { "type": ["boolean", "null"] },
+        "signup_required": { "type": ["boolean", "null"] },
+        "watermark": { "type": ["boolean", "null"] },
+        "commercial_use": { "type": ["boolean", "null"] },
+        "works_in_pk": { "type": ["boolean", "null"], "description": "null until someone has checked from Pakistan." },
+        "notes": { "type": ["string", "null"], "maxLength": 300 },
+        "source_url": { "$ref": "#/$defs/source_url" },
+        "verified_at": { "$ref": "#/$defs/date" }
+      }
+    },
+    "signals": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "How the signal collector finds this tool. A null field means the signal is skipped for this tool (never counted as zero).",
+      "properties": {
+        "trends_term": { "type": ["string", "null"], "minLength": 1 },
+        "wikipedia_article": {
+          "type": ["string", "null"], "minLength": 1,
+          "description": "English Wikipedia title as in the article URL, e.g. ElevenLabs or Claude_(language_model)."
+        },
+        "github_repo": { "type": ["string", "null"], "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$" },
+        "hf_id": {
+          "type": ["string", "null"], "pattern": "^(spaces/)?[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$",
+          "description": "Hugging Face model id (owner/name) or Space (spaces/owner/name)."
+        },
+        "producthunt_slug": { "type": ["string", "null"], "pattern": "^[a-z0-9-]+$" },
+        "hn_domain": {
+          "type": ["string", "null"], "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}(/[A-Za-z0-9_./-]*)?$",
+          "description": "Match Hacker News stories whose link is on this domain (or domain/path). Preferred: it avoids name clashes."
+        },
+        "hn_query": {
+          "type": ["string", "null"], "minLength": 3,
+          "description": "Text search in story titles, used only when hn_domain is null. Leave null for ambiguous names."
+        }
+      }
+    }
+  }
+}

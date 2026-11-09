@@ -1,0 +1,70 @@
+# Nightly signal collector for the AI tools directory (PRD Chapter 7.5).
+# 19:34 UTC = 00:34 in Pakistan. It collects the UTC day that has just ended for every
+# published tool in data/tools/, writes one row per tool per day to Neon (signal_snapshots),
+# then loads any history that is still missing (2 years of Wikipedia and Hacker News, GitHub stars).
+#
+# One-time setup: Settings → Secrets and variables → Actions → New repository secret
+#   DATABASE_URL = the Neon pooled connection string (same one as the API's Wrangler secret).
+# Optional repository variable FREEMEANS_CLICKS_SINCE = the date /go links went live (YYYY-MM-DD).
+#
+# Free: unlimited minutes on a public repo. A failed run emails the repo owner (GitHub default).
+name: Signals
+
+on:
+  schedule:
+    - cron: "34 19 * * *"
+  workflow_dispatch:
+    inputs:
+      day:
+        description: "UTC day to collect (YYYY-MM-DD). Empty = yesterday."
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: signals
+  cancel-in-progress: false
+
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  FREEMEANS_CLICKS_SINCE: ${{ vars.FREEMEANS_CLICKS_SINCE }}
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: services/signals
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install .
+      - name: Collect yesterday's signals
+        env:
+          DAY: ${{ inputs.day }}
+        run: python -m signals collect ${DAY:+--day "$DAY"}
+
+  backfill:
+    # History for tools that do not have it yet. Finished tools are skipped, so this is quick
+    # once everything is loaded. Runs even if the collection failed.
+    needs: collect
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: services/signals
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install .
+      - name: Load missing history
+        run: python -m signals backfill --gh-budget 600

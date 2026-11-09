@@ -1,0 +1,67 @@
+{
+  "best_for": [
+    "Private offline chat",
+    "Testing open models"
+  ],
+  "alternatives": [
+    "llama-cpp"
+  ],
+  "status": "published",
+  "listed_at": "2026-11-09",
+  "changelog": [
+    {
+      "date": "2026-11-09",
+      "field": "listed",
+      "note": "Starter record for the Phase 0 signal collector; editor review due before pages go live"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false,
+  "pricing": null,
+  "slug": "ollama",
+  "name": "Ollama",
+  "url": "https://ollama.com",
+  "tagline": "Download and run open language models on your own computer",
+  "description": "Ollama is a free, open-source app for running open language models on your own Windows, macOS or Linux computer. You install it with one command or a normal installer, then download a model and chat with it from the terminal. It can also connect local models to other apps and coding agents, and it ships official Python and JavaScript libraries for developers. Because the model runs on your machine, your prompts do not have to leave it, and there is no per-message cost. Speed depends on your computer's memory and graphics card, so small models suit ordinary laptops. Ollama also offers a cloud option, which is a separate service with its own terms.",
+  "categories": [
+    "local-ai",
+    "chat"
+  ],
+  "tasks": [
+    "run-llm-locally",
+    "ask-questions",
+    "llm-api"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "cli",
+    "api"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/ollama/ollama",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "card_required": false,
+    "signup_required": false,
+    "watermark": false,
+    "commercial_use": true,
+    "works_in_pk": null,
+    "notes": "Free to run locally under the MIT license; the separate cloud service has its own plans.",
+    "source_url": "https://github.com/ollama/ollama/blob/main/LICENSE",
+    "verified_at": "2026-11-09"
+  },
+  "signals": {
+    "trends_term": "Ollama",
+    "wikipedia_article": null,
+    "github_repo": "ollama/ollama",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "ollama.com",
+    "hn_query": null
+  }
+}

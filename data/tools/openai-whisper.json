@@ -1,0 +1,66 @@
+{
+  "best_for": [
+    "Offline transcription",
+    "Subtitles for videos"
+  ],
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-09",
+  "changelog": [
+    {
+      "date": "2026-11-09",
+      "field": "listed",
+      "note": "Starter record for the Phase 0 signal collector; editor review due before pages go live"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false,
+  "pricing": null,
+  "slug": "openai-whisper",
+  "name": "Whisper (OpenAI)",
+  "url": "https://github.com/openai/whisper",
+  "tagline": "Open-source speech recognition model for transcription and translation",
+  "description": "Whisper is an open-source speech recognition model released by OpenAI. It turns speech in audio files into text in many languages, can translate speech into English, and can identify which language is being spoken. It comes in six sizes, from tiny to large, so you can trade accuracy for speed and memory: the smallest model needs about 1 GB of video memory. You install it as a Python package and run it from the command line or from your own code, and it needs the free ffmpeg tool for reading audio. The model weights are also published on Hugging Face, where many apps build on them for subtitles and meeting notes.",
+  "categories": [
+    "transcription",
+    "translation",
+    "model-apis"
+  ],
+  "tasks": [
+    "transcribe-audio",
+    "generate-subtitles",
+    "translate-text",
+    "speech-api"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "cli"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/openai/whisper",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "card_required": false,
+    "signup_required": false,
+    "watermark": false,
+    "commercial_use": true,
+    "works_in_pk": null,
+    "notes": "Code and model weights are free under the MIT license; you supply the computer.",
+    "source_url": "https://github.com/openai/whisper/blob/main/LICENSE",
+    "verified_at": "2026-11-09"
+  },
+  "signals": {
+    "trends_term": "OpenAI Whisper",
+    "wikipedia_article": "Whisper_(speech_recognition_system)",
+    "github_repo": "openai/whisper",
+    "hf_id": "openai/whisper-large-v3",
+    "producthunt_slug": null,
+    "hn_domain": "github.com/openai/whisper",
+    "hn_query": null
+  }
+}
