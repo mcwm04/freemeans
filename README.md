@@ -1,6 +1,8 @@
 # Freemeans
 
-**Free means you can build.** · freemeans.com
+**Do more. Pay nothing.** · کام زیادہ، خرچ صفر · freemeans.com
+
+Top AI tools and free resources for every task, for everyone.
 
 Freemeans helps builders run projects on **their own** free AI quotas. It knows which free tiers exist, what their limits and rules are, and it routes each request to the provider with the most headroom. It never breaks a provider's terms.
 

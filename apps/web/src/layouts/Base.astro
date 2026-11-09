@@ -16,14 +16,14 @@ interface Props {
 }
 const {
   title,
-  description = 'Every free tier for AI builders, dated and tracked. Plan a $0 stack, track your own quotas, upgrade only when you must.',
+  description = 'Top AI tools and free resources for every task, for everyone. Every free plan, trial and quota dated and sourced, so you pay only when you must.',
   current,
   jsonLd,
   noindex = false,
   ogType = 'website',
   image = DEFAULT_IMAGE,
 } = Astro.props;
-const fullTitle = title === SITE_NAME ? 'Freemeans: free means you can build' : `${title} · ${SITE_NAME}`;
+const fullTitle = title === SITE_NAME ? 'Freemeans: Do more. Pay nothing.' : `${title} · ${SITE_NAME}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const imageUrl = new URL(image.path, Astro.site).href;
 const year = new Date().getFullYear();
@@ -83,8 +83,8 @@ const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:l
         <div class="foot-grid">
           <div>
             <a class="logo" href="/" aria-label="Freemeans home"><Logo /></a>
-            <p class="blurb">Every free tier for AI builders, dated and sourced. Plan a $0 stack, track your own quotas, upgrade only when you must.</p>
-            <p class="urdu" lang="ur" dir="rtl">مفت کا مطلب: آپ بنا سکتے ہیں</p>
+            <p class="blurb">Top AI tools and free resources for every task, for everyone. Every free plan, trial and quota dated and sourced, so you pay only when you must.</p>
+            <p class="urdu" lang="ur" dir="rtl">کام زیادہ، خرچ صفر</p>
           </div>
           <div>
             <h4>Product</h4>
