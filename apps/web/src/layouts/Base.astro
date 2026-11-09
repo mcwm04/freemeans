@@ -26,6 +26,7 @@ const {
 const fullTitle = title === SITE_NAME ? 'Freemeans: free means you can build' : `${title} · ${SITE_NAME}`;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const imageUrl = new URL(image.path, Astro.site).href;
+const year = new Date().getFullYear();
 const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1';
 ---
 <!doctype html>
@@ -56,27 +57,57 @@ const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:l
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
     <meta name="twitter:image:alt" content={image.alt} />
-    <meta name="theme-color" content="#0B6E69" />
+    <meta name="theme-color" content="#F5F3EE" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0F1512" media="(prefers-color-scheme: dark)" />
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     <slot name="head" />
   </head>
   <body>
+    <a class="skip" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="wrap">
         <a class="logo" href="/" aria-label="Freemeans home"><Logo /></a>
-        <nav aria-label="Main">
+        <nav class="site-nav" aria-label="Main">
           <a href="/catalog/" aria-current={current === 'catalog' ? 'page' : undefined}>Catalog</a>
-          <a href="/#waitlist">Join the beta</a>
+          <a class="opt" href="/#how">How it works</a>
+          <a class="opt" href="/#trust">Sources</a>
+          <a class="btn sm" href="/#waitlist">Join the beta</a>
         </nav>
       </div>
     </header>
-    <main>
-      <div class="wrap"><slot /></div>
+    <main id="main">
+      <slot />
     </main>
     <footer class="site-footer">
-      <div class="wrap small muted">
-        <p>Freemeans gives information, not a guarantee: providers can change free tiers without notice. Every limit links to its source and the date we checked it.</p>
-        <p>One account per provider. Freemeans never pools accounts or bypasses limits. · <a href="/catalog.json">catalog.json</a> · A <a href="https://tekdigix.com">TEKDIGIX</a> product</p>
+      <div class="wrap">
+        <div class="foot-grid">
+          <div>
+            <a class="logo" href="/" aria-label="Freemeans home"><Logo /></a>
+            <p class="blurb">Every free tier for AI builders, dated and sourced. Plan a $0 stack, track your own quotas, upgrade only when you must.</p>
+            <p class="urdu" lang="ur" dir="rtl">مفت کا مطلب: آپ بنا سکتے ہیں</p>
+          </div>
+          <div>
+            <h4>Product</h4>
+            <ul>
+              <li><a href="/catalog/">Free-tier catalog</a></li>
+              <li><a href="/#how">How it works</a></li>
+              <li><a href="/#waitlist">Join the beta</a></li>
+              <li><a href="/catalog.json">catalog.json</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Company</h4>
+            <ul>
+              <li><a href="https://tekdigix.com">TEKDIGIX</a></li>
+              <li><a href="mailto:hello@freemeans.com">hello@freemeans.com</a></li>
+              <li><a href="https://github.com/mcwm04/freemeans">GitHub</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="foot-legal">
+          <p>Freemeans gives information, not a guarantee: providers can change free tiers without notice. Every limit links to its source and the date we checked it. One account per provider. Freemeans never pools accounts or bypasses limits.</p>
+          <p>© {year} Freemeans · A <a href="https://tekdigix.com">TEKDIGIX</a> product</p>
+        </div>
       </div>
     </footer>
   </body>

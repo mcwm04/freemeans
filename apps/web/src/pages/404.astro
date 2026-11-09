@@ -2,7 +2,12 @@
 import Base from '../layouts/Base.astro';
 ---
 <Base title="Page not found" noindex>
-  <h1>Page not found</h1>
-  <p class="muted">This page doesn't exist, or the free tier it described was removed from the catalog.</p>
-  <p><a class="btn" href="/catalog/">Browse the catalog</a></p>
+  <section class="nf">
+    <div class="wrap">
+      <div class="code" aria-hidden="true">404</div>
+      <h1>Page not found</h1>
+      <p class="muted">This page doesn't exist, or the free tier it described was removed from the catalog.</p>
+      <p class="btn-row"><a class="btn" href="/catalog/">Browse the catalog</a><a class="btn secondary" href="/">Go home</a></p>
+    </div>
+  </section>
 </Base>

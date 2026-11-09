@@ -1,19 +1,30 @@
 ---
 // Waitlist form. Posts JSON to the Workers API (services/api) at PUBLIC_API_URL.
 // Without JavaScript the form still posts, and the API answers with a short HTML page.
+import Icon from './Icon.astro';
 const api = (import.meta.env.PUBLIC_API_URL || 'https://api.freemeans.com').replace(/\/$/, '');
 ---
 <section class="waitlist" id="waitlist" aria-labelledby="waitlist-title">
-  <h2 id="waitlist-title">Join the Pakistan beta</h2>
-  <p class="muted">Get the $0 stack planner and quota tracker first. One email when the beta opens, then only if you ask for more.</p>
+  <div>
+    <p class="eyebrow">Pakistan beta</p>
+    <h2 id="waitlist-title">Join the Pakistan beta</h2>
+    <p>Get the $0 stack planner and quota tracker first. One email when the beta opens, then only if you ask for more.</p>
+    <ul class="perks">
+      <li><Icon name="check" /> Early access to the $0 stack planner</li>
+      <li><Icon name="check" /> Local quota agent: your keys never leave your machine</li>
+      <li><Icon name="check" /> Free, with no card</li>
+    </ul>
+  </div>
   <form method="post" action={`${api}/waitlist`} data-waitlist>
     <label class="hp" aria-hidden="true">Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
-    <label for="wl-email" class="hp">Email</label>
-    <input id="wl-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email" />
+    <label for="wl-email" class="field-label">Your email</label>
+    <div class="field">
+      <input id="wl-email" type="email" name="email" required placeholder="you@example.com" autocomplete="email" />
+      <button class="btn" type="submit">Join the beta</button>
+    </div>
     <input type="hidden" name="source" value="home" />
-    <button class="btn" type="submit">Join the beta</button>
-    <label class="consent small muted"><input type="checkbox" name="consent" value="true" required /> I agree to get emails about the Freemeans beta. I can leave at any time.</label>
-    <p class="small" role="status" aria-live="polite" data-message></p>
+    <label class="consent"><input type="checkbox" name="consent" value="true" required /> <span>I agree to get emails about the Freemeans beta. I can leave at any time.</span></label>
+    <p role="status" aria-live="polite" data-message></p>
   </form>
 </section>
 <script>

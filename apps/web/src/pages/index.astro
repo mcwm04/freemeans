@@ -2,11 +2,52 @@
 import Base from '../layouts/Base.astro';
 import Waitlist from '../components/Waitlist.astro';
 import Badge from '../components/Badge.astro';
-import { stats, resources, formatDate, KIND_LABELS } from '../lib/catalog.js';
+import Icon from '../components/Icon.astro';
+import {
+  stats, resources, getResource, formatDate, formatValue, resetLabel, isOfficial, hostOf,
+  KIND_LABELS, TIER_LABELS, METRICS, SIGNALS,
+} from '../lib/catalog.js';
 import { graph, organizationLd, websiteLd, webPageLd } from '../lib/seo.js';
 
 const s = stats();
-const kinds = [...new Set(resources().map((r) => r.kind))];
+const list = resources();
+
+// Catalog coverage: one tile per kind, with its count.
+const kindCounts = Object.entries(
+  list.reduce((acc, r) => ({ ...acc, [r.kind]: (acc[r.kind] ?? 0) + 1 }), {} as Record<string, number>),
+).sort((a, b) => b[1] - a[1]);
+
+// Hero preview: real limits from the catalog, with EXAMPLE usage (labelled as such on the page).
+const DAILY = ['rpd', 'tpd', 'neurons_per_day', 'requests_per_month'];
+const headline = (r: any) =>
+  r.limit_rules.find((l: any) => DAILY.includes(l.metric) && l.value != null && l.published !== false) ??
+  r.limit_rules.find((l: any) => l.value != null && l.published !== false);
+const demo = [
+  { id: 'groq.gpt-oss-120b', share: 0.34, tone: '' },
+  { id: 'cloudflare.workers-ai', share: 0.82, tone: 'warn' },
+  { id: 'openrouter.free-models', share: 1, tone: 'stop' },
+]
+  .map((d) => ({ ...d, r: getResource(d.id) }))
+  .filter((d) => d.r && headline(d.r))
+  .map((d) => {
+    const rule = headline(d.r);
+    const used = Math.round(Number(rule.value) * d.share);
+    return { ...d, rule, used: used.toLocaleString('en-US'), total: formatValue(rule) };
+  });
+
+// Featured: one resource per provider, up to six, the most-used providers first.
+const PRIORITY = ['Groq', 'Google', 'Cloudflare', 'OpenRouter', 'Mistral', 'Cohere'];
+const rank = (p: string) => (PRIORITY.includes(p) ? PRIORITY.indexOf(p) : PRIORITY.length);
+const seen = new Set<string>();
+const featured = [...list]
+  .sort((a, b) => rank(a.provider) - rank(b.provider))
+  .filter((r) => (seen.has(r.provider) ? false : (seen.add(r.provider), true)))
+  .slice(0, 6);
+const stopped = demo.find((d) => d.tone === 'stop');
+
+// Trust panel: an officially sourced resource, shown as it appears in the ledger.
+const proof = list.find((r) => isOfficial(r) && r.limit_rules.length >= 2) ?? list.find(isOfficial) ?? list[0];
+
 const description = `Free AI API tiers, GPU notebooks and cloud credits from ${s.providers} providers, with dated limits, usage rules and sources. Plan a $0 stack and upgrade only when you must.`;
 const jsonLd = graph([
   organizationLd(Astro.site),
@@ -16,34 +57,176 @@ const jsonLd = graph([
 ---
 <Base title="Freemeans" current="home" description={description} jsonLd={jsonLd}>
   <section class="hero">
-    <div class="stack-bars" aria-hidden="true"><span></span><span></span><span></span></div>
-    <h1 class="display">Free means you can build.</h1>
-    <p class="urdu" lang="ur">مفت کا مطلب: آپ بنا سکتے ہیں</p>
-    <p class="lead">Freemeans finds the free tiers your project can use, checks their rules, and tracks your own quotas, so you build at $0 and upgrade only when you must.</p>
-    <p><a class="btn" href="/catalog/">Browse the catalog</a><a class="btn secondary" href="#waitlist">Join the beta</a></p>
-  </section>
+    <div class="wrap hero-grid">
+      <div>
+        <a class="pill rise" href="#waitlist"><span class="tag">Beta</span> Pakistan beta is open: join the waitlist</a>
+        <h1 class="display rise d1">Free means you can <span class="accent">build.</span></h1>
+        <p class="urdu rise d1" lang="ur" dir="rtl">مفت کا مطلب: آپ بنا سکتے ہیں</p>
+        <p class="lead rise d2">Freemeans finds the free tiers your project can use, checks their rules, and tracks your own quotas, so you <strong>build at $0</strong> and upgrade only when you must.</p>
+        <p class="btn-row rise d3">
+          <a class="btn" href="/catalog/">Browse the catalog <span class="arrow"><Icon name="arrow-right" /></span></a>
+          <a class="btn secondary" href="#waitlist">Join the beta</a>
+        </p>
+        <ul class="trust-line rise d3">
+          <li><Icon name="check" /> No card needed</li>
+          <li><Icon name="check" /> Every limit dated and sourced</li>
+          <li><Icon name="check" /> Your keys stay on your machine</li>
+        </ul>
+      </div>
 
-  <div class="stats">
-    <div class="stat"><span class="num">{s.resources}</span><span class="small muted">free resources tracked</span></div>
-    <div class="stat"><span class="num">{s.providers}</span><span class="small muted">providers</span></div>
-    <div class="stat"><span class="num">{s.official}</span><span class="small muted">confirmed from official sources</span></div>
-    <div class="stat"><span class="num">{formatDate(s.latest)}</span><span class="small muted">latest check</span></div>
-  </div>
-
-  <section aria-labelledby="how">
-    <h2 id="how">How Freemeans works</h2>
-    <div class="cards">
-      <div class="card"><h3>1. Plan a $0 stack</h3><p class="muted">Tell us what you're building. We pick free tiers that fit, and show the rules that apply: <Badge type="trains_on_data" />, <Badge type="non_commercial" />, <Badge type="eu_restricted" />.</p></div>
-      <div class="card"><h3>2. Track your own quotas</h3><p class="muted">The local agent reads each provider's rate-limit headers. Your keys stay on your machine; only usage numbers sync.</p></div>
-      <div class="card"><h3>3. Upgrade at the right moment</h3><p class="muted">When a free tier runs out for good, Freemeans shows the cheapest next step, before your app breaks.</p></div>
+      <div class="preview-wrap rise d2">
+        <div class="preview" role="img" aria-label="Preview of the Freemeans quota tracker, with example usage against real free-tier limits">
+          <div class="preview-bar" aria-hidden="true">
+            <span class="dots"><i></i><i></i><i></i></span>
+            <span class="title">My $0 stack</span>
+            <span class="live">Tracking</span>
+          </div>
+          <div class="preview-body" aria-hidden="true">
+            {demo.map((d) => (
+              <div class="q-row">
+                <span class="mono-mark">{d.r.provider[0]}</span>
+                <div>
+                  <div class="who">{d.r.provider}</div>
+                  <div class="what">{METRICS[d.rule.metric] ?? d.rule.metric}</div>
+                </div>
+                <div class="figure">
+                  {d.used} / {d.total}
+                  <small>{d.tone === 'stop' ? 'Cooling down' : d.tone === 'warn' ? 'Nearing limit' : resetLabel(d.rule.reset)}</small>
+                </div>
+                <div class={`meter ${d.tone}`}><i style={`width:${Math.round(d.share * 100)}%`}></i></div>
+              </div>
+            ))}
+            {stopped && <div class="alert-row"><span class="dot"></span><span>{stopped.r.provider} limit reached. Switch to {demo[0].r.provider}?</span><b>Switch</b></div>}
+          </div>
+          <div class="preview-foot" aria-hidden="true">
+            <span class="muted">Spent this month</span>
+            <span class="total">$0.00</span>
+          </div>
+        </div>
+                <p class="preview-note">Preview. Limits are from the catalog; usage numbers are examples.</p>
+      </div>
     </div>
   </section>
 
-  <section aria-labelledby="covers">
-    <h2 id="covers">What the catalog covers</h2>
-    <p class="muted">{kinds.map((k) => KIND_LABELS[k] ?? k).join(' · ')}</p>
-    <p>Every limit shows its source link, the date we checked it, and whether it came from official docs or a third-party snapshot.</p>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><span class="num">{s.resources}</span><span class="label">free resources tracked</span></div>
+      <div class="stat"><span class="num">{s.providers}</span><span class="label">providers</span></div>
+      <div class="stat"><span class="num">{s.official}</span><span class="label">confirmed from official sources</span></div>
+      <div class="stat"><span class="num date">{formatDate(s.latest)}</span><span class="label">latest check</span></div>
+    </div>
+  </div>
+
+  <section class="section" aria-labelledby="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2 id="how">How Freemeans works</h2>
+        <p>Three steps from idea to a running app, without a bill.</p>
+      </div>
+      <div class="steps">
+        <div class="card step">
+          <span class="n">01</span>
+          <span class="icon"><Icon name="layers" /></span>
+          <h3>Plan a $0 stack</h3>
+          <p>Tell us what you're building. We pick free tiers that fit, and show the rules that apply.</p>
+          <div class="badges"><Badge type="trains_on_data" /><Badge type="non_commercial" /><Badge type="eu_restricted" /></div>
+        </div>
+        <div class="card step">
+          <span class="n">02</span>
+          <span class="icon"><Icon name="gauge" /></span>
+          <h3>Track your own quotas</h3>
+          <p>The local agent reads each provider's rate-limit headers. Your keys stay on your machine; only usage numbers sync.</p>
+        </div>
+        <div class="card step">
+          <span class="n">03</span>
+          <span class="icon"><Icon name="arrow-up" /></span>
+          <h3>Upgrade at the right moment</h3>
+          <p>When a free tier runs out for good, Freemeans shows the cheapest next step, before your app breaks.</p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <Waitlist />
+  <section class="section alt" aria-labelledby="covers">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">The catalog</p>
+        <h2 id="covers">What the catalog covers</h2>
+        <p>{s.resources} free tiers from {s.providers} providers: LLM APIs, inference platforms, speech, GPU notebooks and cloud credit.</p>
+      </div>
+      <div class="kinds">
+        {kindCounts.map(([k, n]) => (
+          <a class="kind" href={`/catalog/?kind=${k}`}>
+            <span class="k-num">{n}</span>
+            <span class="k-label">{KIND_LABELS[k] ?? k}</span>
+            <span class="k-sub">{n === 1 ? 'resource' : 'resources'} · view <span aria-hidden="true">→</span></span>
+          </a>
+        ))}
+      </div>
+
+      <ul class="cards" style="margin-top: 40px">
+        {featured.map((r) => {
+          const h = headline(r);
+          return (
+            <li class="card res-card">
+              <div class="top">
+                <span class="mono-mark">{r.provider[0]}</span>
+                <div class="who">
+                  <div class="prov">{r.provider} · {KIND_LABELS[r.kind] ?? r.kind}</div>
+                </div>
+              </div>
+              <h3><a href={`/resources/${r.id}/`}>{r.name}</a></h3>
+              {h && <div class="headline"><span>{formatValue(h)}</span><em>{METRICS[h.metric] ?? h.metric}</em></div>}
+              <div class="facts">
+                <span>{TIER_LABELS[r.tier_type] ?? r.tier_type}</span>
+                <span>{r.limit_rules.length} limit{r.limit_rules.length === 1 ? '' : 's'}</span>
+                <span>Checked {formatDate(r.last_verified)}</span>
+              </div>
+              <div class="badges">
+                {r.badges.map((b: any) => <Badge type={b.type} />)}
+                {isOfficial(r) ? <span class="badge ok">Official source</span> : <span class="badge">Snapshot source</span>}
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <div class="see-all"><a class="btn secondary" href="/catalog/">See all {s.resources} resources <span class="arrow"><Icon name="arrow-right" /></span></a></div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="trust">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow">Sources</p>
+        <h2 id="trust">Every number has a source and a date</h2>
+        <p class="muted" style="font-size:18px;line-height:1.6">Free tiers change without notice. So every limit on Freemeans shows where it came from and when we last checked it, and a nightly check flags changes for review.</p>
+        <ul class="checks">
+          <li><span class="ic"><Icon name="link" /></span><div><strong>Linked to the source</strong><span>Official docs, the provider's API, or a clearly marked third-party snapshot.</span></div></li>
+          <li><span class="ic"><Icon name="calendar" /></span><div><strong>Dated on every row</strong><span>You always see the day a limit was last confirmed.</span></div></li>
+          <li><span class="ic"><Icon name="shield" /></span><div><strong>Fair use only</strong><span>One account per provider. No pooling, no limit bypassing.</span></div></li>
+        </ul>
+      </div>
+      <div class="table-scroll">
+        <table class="ledger">
+          <caption class="sr-only">Example: limits for {proof.name}</caption>
+          <thead><tr><th scope="col">{proof.provider} limit</th><th scope="col">Value</th><th scope="col">Checked</th><th scope="col">Source</th></tr></thead>
+          <tbody>
+            {proof.limit_rules.slice(0, 4).map((l: any) => (
+              <tr>
+                <td>{METRICS[l.metric] ?? l.metric}</td>
+                <td class="value">{formatValue(l)}</td>
+                <td class="small num">{formatDate(l.verified_at)}</td>
+                <td class="small"><a href={l.source_url} rel="nofollow noopener">{hostOf(l.source_url)}</a><div class="muted">{SIGNALS[l.signal_type]?.label ?? l.signal_type}</div></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <div class="waitlist-band">
+    <div class="wrap"><Waitlist /></div>
+  </div>
 </Base>
