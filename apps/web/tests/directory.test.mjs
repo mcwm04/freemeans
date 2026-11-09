@@ -103,3 +103,11 @@ test('sitemap lists the directory home and every tool page', () => {
 test('the main menu links to the directory', () => {
   assert.match(read('index.html'), /<a href="\/tools\/"[^>]*>AI tools<\/a>/);
 });
+
+test('M5: submit page posts to the API, works without JavaScript, lists every category', () => {
+  const html = read('tools/submit/index.html');
+  assert.match(html, /<form[^>]+method="post"[^>]+action="https:\/\/api\.freemeans\.com\/submit"/);
+  assert.match(html, /name="website"/, 'honeypot');
+  for (const c of taxonomy.categories) assert.ok(html.includes(`value="${c.id}"`), c.id);
+  assert.match(read('tools/index.html'), /href="\/tools\/submit\/"/);
+});

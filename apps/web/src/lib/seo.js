@@ -89,6 +89,7 @@ function directoryEntries() {
   const newest = (ts) => ts.map(lastModified).sort().at(-1);
   return [
     { path: '/tools/', lastmod: directoryStats().latest },
+    { path: '/tools/submit/', lastmod: directoryStats().latest },
     ...list.map((t) => ({ path: `/tools/${t.slug}/`, lastmod: lastModified(t) })),
     ...liveCategories().filter((c) => c.count >= MIN_TOOLS_TO_INDEX)
       .map((c) => ({ path: `/tools/c/${c.id}/`, lastmod: newest(inCategory(c.id)) })),

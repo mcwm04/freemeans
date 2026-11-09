@@ -16,7 +16,7 @@ async function freshDb() {
 
 test('migration creates every table and is idempotent', async () => {
   const db = await freshDb();
-  assert.deepEqual(await migrate(db), ['001_init.sql', '002_directory.sql']);
+  assert.deepEqual(await migrate(db), ['001_init.sql', '002_directory.sql', '003_review_queue.sql']);
   assert.deepEqual(await migrate(db), []);
   const { rows } = await db.query(
     `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name`,
@@ -118,7 +118,7 @@ test('002 can run on a database that already has 001 applied (the live Neon case
   copyFileSync(new URL('../migrations/001_init.sql', import.meta.url), join(dir001, '001_init.sql'));
   assert.deepEqual(await migrate(db, dir001), ['001_init.sql']);
   await db.query(`INSERT INTO waitlist (email, consent_at) VALUES ('old@example.com', now())`);
-  assert.deepEqual(await migrate(db), ['002_directory.sql']);
+  assert.deepEqual(await migrate(db), ['002_directory.sql', '003_review_queue.sql']);
   const { rows } = await db.query(`SELECT lists FROM waitlist WHERE email = 'old@example.com'`);
   assert.deepEqual(rows[0].lists, ['waitlist']);
 });
@@ -144,4 +144,14 @@ test('directory enums are enforced', async () => {
   await assert.rejects(db.query(`INSERT INTO job_runs (job) VALUES ('mystery')`), /check constraint/);
   await db.query(`INSERT INTO tool_candidates (url, domain, source) VALUES ('https://x.ai', 'x.ai', 'hn')`);
   await assert.rejects(db.query(`INSERT INTO tool_candidates (url, domain, source) VALUES ('https://www.x.ai', 'x.ai', 'github')`), /duplicate key/);
+});
+
+test('003 review queue: fixed reject reasons, flags default to empty', async () => {
+  const db = await freshDb();
+  await migrate(db);
+  await db.query(`INSERT INTO tool_candidates (url, domain, source, name) VALUES ('https://a.ai', 'a.ai', 'submit', 'A')`);
+  const { rows } = await db.query(`SELECT flags, attempts, status FROM tool_candidates`);
+  assert.deepEqual(rows[0], { flags: [], attempts: 0, status: 'new' });
+  await assert.rejects(db.query(`UPDATE tool_candidates SET status='rejected', reject_reason='meh'`), /check constraint/);
+  await db.query(`UPDATE tool_candidates SET status='rejected', reject_reason='dead_site'`);
 });

@@ -1,0 +1,24 @@
+{
+  "name": "@freemeans/admin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Freemeans editor console (admin.freemeans.com) on Cloudflare Workers: review queue, approve and publish listings. Sign in with GitHub.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node --test tests/*.test.mjs",
+    "check-bundle": "wrangler deploy --dry-run --outdir .bundle"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@cfworker/json-schema": "^4.1.6",
+    "@neondatabase/serverless": "^1.2.0"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.16",
+    "wrangler": "^4.159.0"
+  }
+}
