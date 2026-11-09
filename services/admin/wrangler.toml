@@ -1,0 +1,28 @@
+# Freemeans editor console (M6) on Cloudflare Workers, free plan. Sign in with GitHub.
+# Setup: docs/DIRECTORY.md → "Part 2: switch on".
+name = "freemeans-admin"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = false
+preview_urls = false
+
+routes = [
+  { pattern = "admin.freemeans.com", custom_domain = true }
+]
+
+[vars]
+ADMIN_URL = "https://admin.freemeans.com"
+SITE_URL = "https://freemeans.com"
+GITHUB_REPO = "mcwm04/freemeans"
+# Comma-separated GitHub logins allowed to sign in.
+ALLOWED_GITHUB_USERS = "mcwm04"
+
+# Secrets (never in this file):
+#   npx wrangler secret put DATABASE_URL          (Neon pooled string)
+#   npx wrangler secret put GITHUB_CLIENT_ID      (GitHub OAuth App)
+#   npx wrangler secret put GITHUB_CLIENT_SECRET
+#   npx wrangler secret put SESSION_SECRET        (any random text, 32+ characters)
+
+[observability]
+enabled = true

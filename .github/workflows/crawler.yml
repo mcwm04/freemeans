@@ -1,0 +1,49 @@
+# Nightly discovery crawler for the AI tools directory (PRD Chapter 7.1–7.4).
+# 20:47 UTC = 01:47 in Pakistan. Finds new AI tools (Hacker News, GitHub, Hugging Face), then
+# drafts up to 40 listings with Groq (Gemini as fallback) into the editor's review queue.
+# Nothing is published here: every listing waits for approval in the editor console.
+#
+# Secrets (Settings → Secrets and variables → Actions): DATABASE_URL, GROQ_API_KEY, GEMINI_API_KEY.
+# Optional variables: GROQ_MODEL, GEMINI_MODEL (when a free model is retired).
+name: Crawler
+
+on:
+  schedule:
+    - cron: "47 20 * * *"
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Max listings to draft"
+        required: false
+        default: "40"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: crawler
+  cancel-in-progress: false
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: services/crawler
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GROQ_MODEL: ${{ vars.GROQ_MODEL || 'openai/gpt-oss-120b' }}
+      GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.8-flash' }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      LIMIT: ${{ inputs.limit || '40' }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install ../toolcheck ../signals .
+      - name: Discover and draft
+        run: python -m crawler run --limit "$LIMIT"

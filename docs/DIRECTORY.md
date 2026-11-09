@@ -128,4 +128,82 @@ URLs follow the PRD: `/tools/c/{category}/` and `/tools/t/{task}/`.
 
 New tools need no API deploy: `/go/` reads the live list at `freemeans.com/tools/links.json`.
 
-Next: part 2 (M5 submit form, M6 editor console, discovery crawler), then part 3 (M9 weekly email).
+---
+
+# Phase 1, part 2: submit form, discovery crawler, editor console (M5, M6, Chapter 7)
+
+| Piece | What is built | Where |
+| --- | --- | --- |
+| M5 Submit | `/tools/submit/`: URL, name, category, optional email. Works without JavaScript. Cloudflare Turnstile and a honeypot block spam. Entries go to the review queue, never straight to the site. Same answer whether a site was new or already queued. | `apps/web/src/pages/tools/submit.astro`, API `POST /submit` |
+| Discovery crawler | Nightly at 01:47 PKT. Finds AI tools on Hacker News (Show HN 20+ points, AI stories 50+), GitHub (young repos with AI topics and 100+ stars) and Hugging Face (trending Spaces). Skips listed and already-queued sites, blocked categories. | `services/crawler`, `.github/workflows/crawler.yml` |
+| Drafting | Reads at most 3 pages per site (home, pricing, docs), obeying robots.txt, 1 request a second. Groq drafts the listing (Gemini when Groq is busy). Code, not the LLM, sets slug, address, dates and signals. **Number check:** any free-tier or price number not on the pages next to its unit is blanked and flagged. The result is checked with toolcheck; one retry with the problems, then "needs manual". | `crawler/draft.py` |
+| M6 Editor console | `admin.freemeans.com`, sign in with GitHub (only `mcwm04`). Queue with priorities, job status and stale free tiers. Review screen: listing JSON + live site + flags + evidence. Approve commits `data/tools/{slug}.json` as you; reject stores a reason so the site is never queued again. You can also add a tool by hand. | `services/admin` |
+
+New database columns for the queue: `db/migrations/003_review_queue.sql`. One site = one tool
+everywhere (API, crawler, console) through the shared rules in `packages/schema/site-key-cases.json`.
+
+**Changed from the PRD:** the console uses GitHub sign-in, not Cloudflare Access, because Cloudflare
+Zero Trust asks for a payment card even on its free plan (decided 9 Nov 2026).
+
+## Switch on part 2 (about 30 minutes, all free, no card)
+
+**1. Merge** the pull request. Then update your copy: `git checkout main` and `git pull`.
+
+**2. New queue columns on Neon** (same as before):
+
+```powershell
+cd db
+$env:DATABASE_URL = "postgresql://...your Neon string..."
+npm run migrate          # applied: 003_review_queue.sql
+```
+
+**3. Spam check for the submit form (Cloudflare Turnstile).**
+1. Cloudflare dashboard → **Turnstile** → **Add widget**. Name `Freemeans submit`, hostnames
+   `freemeans.com` and `www.freemeans.com`, widget mode **Managed** → **Create**.
+2. Copy the **site key** (public). Open **Workers & Pages → freemeans → Settings → Build →
+   Variables and secrets → Add**: name `PUBLIC_TURNSTILE_SITE_KEY`, value the site key. Then
+   **Deployments → Retry/redeploy** the latest build, so the form shows the check.
+3. Copy the **secret key**, and in PowerShell:
+
+```powershell
+cd ..\services\api
+npx wrangler secret put TURNSTILE_SECRET   # paste the secret key
+npx wrangler deploy
+```
+
+**4. GitHub sign-in for the console.** On GitHub: your picture → **Settings → Developer settings →
+OAuth Apps → New OAuth App**:
+- Application name: `Freemeans editor`
+- Homepage URL: `https://freemeans.com`
+- Authorization callback URL: `https://admin.freemeans.com/callback`
+
+Click **Register application**, copy the **Client ID**, then **Generate a new client secret** and copy it.
+
+**5. Deploy the console:**
+
+```powershell
+cd ..\admin
+npm ci
+npx wrangler secret put DATABASE_URL          # the Neon string
+npx wrangler secret put GITHUB_CLIENT_ID
+npx wrangler secret put GITHUB_CLIENT_SECRET
+npx wrangler secret put SESSION_SECRET        # paste: [guid]::NewGuid().ToString() + [guid]::NewGuid().ToString()
+npx wrangler deploy
+```
+
+Open **https://admin.freemeans.com**, click through to GitHub, and allow the app. You should see the
+review queue. Approving publishes as your GitHub account.
+
+**6. Free LLM keys for drafting.**
+- Groq: **console.groq.com → API Keys → Create API key**.
+- Gemini: **aistudio.google.com → Get API key → Create API key**.
+
+Add both on GitHub (**Settings → Secrets and variables → Actions → New repository secret**):
+`GROQ_API_KEY` and `GEMINI_API_KEY`. (`DATABASE_URL` is already there from Phase 0.)
+
+**7. First crawl.** **Actions → Crawler → Run workflow** (try `limit` 10 the first time). Read the
+**Summary**, then open the console: the drafts are waiting.
+
+If a free model is retired, set the Actions variable `GROQ_MODEL` or `GEMINI_MODEL` to its replacement.
+
+Next: part 3 (M9 weekly email), then the push to 300 verified tools by 21 Dec.

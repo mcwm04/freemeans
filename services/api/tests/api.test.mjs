@@ -269,3 +269,66 @@ test('link map: live map from the site, bundled copy when the site cannot be rea
   const down = linkSource({ siteUrl: SITE, fetcher: async () => { throw new Error('offline'); } });
   assert.equal((await down()).get('llama-cpp'), 'https://github.com/ggml-org/llama.cpp');
 });
+
+// ---------- M5: POST /submit ----------
+import { siteKey, parseSite } from '../src/domain.js';
+import { turnstile } from '../src/index.js';
+import cases from '../../../packages/schema/site-key-cases.json' with { type: 'json' };
+
+test('siteKey follows the shared cases (same file as the crawler)', () => {
+  for (const [url, key] of cases.cases) assert.equal(siteKey(url), key, url);
+  for (const bad of cases.invalid) assert.equal(parseSite(bad), null, bad);
+});
+
+async function submitApp({ human = true } = {}) {
+  const pg = new PGlite();
+  await migrate(pg);
+  const app = createApp({
+    store: sqlStore((t, p) => pg.query(t, p)), siteUrl: SITE, allowedOrigins: [SITE],
+    links: async () => LINKS, verifyHuman: async (token) => human && token === 'ok',
+  });
+  const rows = async () => (await pg.query('SELECT url, domain, source, name, category, submitter_email, priority, status FROM tool_candidates ORDER BY id')).rows;
+  return { app, rows };
+}
+const form = (fields) => ({ method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(fields).toString() });
+
+test('/submit queues a new tool once, keyed by site', async () => {
+  const { app, rows } = await submitApp();
+  const res = await call(app, '/submit', post({ url: 'https://www.newtool.ai/?utm_source=x#top', name: '  New   Tool ', category: 'video', email: 'Me@Vendor.ai', 'cf-turnstile-response': 'ok' }));
+  assert.equal(res.status, 200);
+  assert.deepEqual(await body(res), { ok: true, status: 'queued' });
+  await call(app, '/submit', post({ url: 'https://app.newtool.ai', name: 'Again', 'cf-turnstile-response': 'ok' }));
+  assert.deepEqual(await rows(), [{ url: 'https://www.newtool.ai/', domain: 'newtool.ai', source: 'submit', name: 'New Tool', category: 'video', submitter_email: 'me@vendor.ai', priority: 40, status: 'new' }]);
+});
+
+test('/submit form posts redirect back to the page with a status', async () => {
+  const { app, rows } = await submitApp();
+  const sent = await call(app, '/submit', form({ url: 'newtool.ai', name: 'New Tool', 'cf-turnstile-response': 'ok' }));
+  assert.equal(sent.status, 303);
+  assert.equal(sent.headers.get('location'), `${SITE}/tools/submit/?sent=1#form`);
+  const listed = await call(app, '/submit', form({ url: 'https://ollama.com/download', name: 'Ollama', 'cf-turnstile-response': 'ok' }));
+  assert.equal(listed.headers.get('location'), `${SITE}/tools/submit/?status=listed#form`);
+  const bad = await call(app, '/submit', form({ url: 'http://localhost', name: 'X', 'cf-turnstile-response': 'ok' }));
+  assert.equal(bad.headers.get('location'), `${SITE}/tools/submit/?error=url#form`);
+  assert.equal((await rows()).length, 1);
+});
+
+test('/submit rejects failed spam checks, fills nothing for bots, validates fields', async () => {
+  const { app, rows } = await submitApp();
+  assert.equal((await call(app, '/submit', post({ url: 'https://x.ai', name: 'X', 'cf-turnstile-response': 'bad' }))).status, 403);
+  assert.equal((await call(app, '/submit', post({ url: 'https://x.ai', name: 'X', website: 'spam' }))).status, 200);
+  assert.equal((await call(app, '/submit', post({ url: 'https://x.ai', name: '', 'cf-turnstile-response': 'ok' }))).status, 400);
+  assert.equal((await call(app, '/submit', post({ url: 'https://x.ai', name: 'X', email: 'nope', 'cf-turnstile-response': 'ok' }))).status, 400);
+  assert.equal((await call(app, '/submit')).status, 405);
+  assert.deepEqual(await rows(), []);
+});
+
+test('Turnstile check posts the token and secret to Cloudflare', async () => {
+  let sent;
+  const check = turnstile('s3cret', async (url, init) => { sent = { url, body: String(init.body) }; return new Response(JSON.stringify({ success: true })); });
+  assert.equal(await check('tok', '1.2.3.4'), true);
+  assert.equal(sent.url, 'https://challenges.cloudflare.com/turnstile/v0/siteverify');
+  assert.equal(sent.body, 'secret=s3cret&response=tok&remoteip=1.2.3.4');
+  assert.equal(await check('', ''), false);
+  assert.equal(await turnstile('s', async () => new Response('{"success":false}'))('t'), false);
+});

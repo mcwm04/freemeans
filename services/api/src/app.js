@@ -1,5 +1,6 @@
 // Request handling, kept free of Cloudflare-specific imports so tests run in plain Node.
 import { parseFilters, filterResources, summarize } from './catalog.js';
+import { parseSite, siteKey } from './domain.js';
 
 const EMAIL = /^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_BODY = 4096;
@@ -16,6 +17,7 @@ const BOT_UA = /bot|crawl|spider|slurp|preview|fetch|scan|monitor|headless|light
 export function createApp({
   store, siteUrl = 'https://freemeans.com', allowedOrigins = [],
   links = async () => new Map(), dedupe = { seen: async () => false }, clickSalt = 'freemeans', waitUntil = (p) => p,
+  verifyHuman = async () => true,
 }) {
   const site = siteUrl.replace(/\/$/, '');
 
@@ -54,6 +56,40 @@ export function createApp({
       return { data: Object.fromEntries(new URLSearchParams(text)), form: true };
     }
     throw Object.assign(new Error('Send JSON or a form.'), { status: 415 });
+  }
+
+  // M5: "Submit a tool". The entry goes into the editor's review queue (tool_candidates);
+  // nothing is published without review. Same answer whether the site was new or already queued.
+  async function submit(req) {
+    const { data, form } = await readWaitlistBody(req);
+    const back = (q) => new Response(null, { status: 303, headers: { location: `${site}/tools/submit/?${q}#form` } });
+    const fail = (code, message, status = 400) => (form ? back(`error=${code}`) : json(req, status, { error: message, code }));
+    const ok = (status) => (form ? back(status === 'listed' ? 'status=listed' : 'sent=1') : json(req, 200, { ok: true, status }));
+
+    if (data.website) return ok('queued'); // honeypot: bots fill the hidden field
+    const ip = req.headers.get('cf-connecting-ip') || '';
+    if (!(await verifyHuman(String(data['cf-turnstile-response'] ?? ''), ip))) {
+      return fail('check', 'The anti-spam check failed. Reload the page and try again.', 403);
+    }
+    const u = parseSite(data.url);
+    if (!u) return fail('url', 'Please enter the tool’s public web address, for example https://example.ai.');
+    const name = String(data.name ?? '').trim().replace(/\s+/g, ' ').slice(0, 80);
+    if (name.length < 2) return fail('name', 'Please enter the tool’s name.');
+    const category = String(data.category ?? '').toLowerCase();
+    const email = String(data.email ?? '').trim().toLowerCase();
+    if (email && (!EMAIL.test(email) || email.length > 254)) return fail('email', 'Please enter a valid email address, or leave it empty.');
+
+    const key = siteKey(u.href);
+    const listed = [...(await links()).values()].some((url) => siteKey(url) === key);
+    if (listed) return ok('listed');
+    u.hash = '';
+    for (const p of [...u.searchParams.keys()]) if (/^(utm_|ref$|fbclid$|gclid$)/i.test(p)) u.searchParams.delete(p);
+    await store.addCandidate({
+      url: u.href, domain: key, source: 'submit', name,
+      category: /^[a-z0-9-]{1,40}$/.test(category) ? category : null,
+      email: email || null, priority: 40,
+    });
+    return ok('queued');
   }
 
   async function waitlist(req) {
@@ -142,6 +178,11 @@ export function createApp({
       const r = await store.getResource(m[1]);
       if (!r) return json(req, 404, { error: `No resource with id ${m[1]}.` });
       return json(req, 200, { ...r, url: `${site}/resources/${r.id}/` }, cached);
+    }
+
+    if (path === '/submit') {
+      if (req.method !== 'POST') return json(req, 405, { error: 'Use POST.' }, { allow: 'POST, OPTIONS' });
+      return submit(req);
     }
 
     if (path === '/waitlist') {

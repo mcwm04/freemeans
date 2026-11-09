@@ -1,0 +1,19 @@
+{
+  "description": "One site = one tool. Shared by services/api/src/domain.js and services/crawler (both test suites read this file), so the API, the crawler and the console de-duplicate the same way (PRD 7.1).",
+  "cases": [
+    ["https://ollama.com", "ollama.com"],
+    ["https://www.ollama.com/download?utm_source=x", "ollama.com"],
+    ["https://app.example.ai/login", "example.ai"],
+    ["http://EXAMPLE.ai/", "example.ai"],
+    ["https://studio.foo.co.uk/pricing", "foo.co.uk"],
+    ["https://tool.com.pk", "tool.com.pk"],
+    ["https://github.com/openai/whisper", "github.com/openai/whisper"],
+    ["https://github.com/OpenAI/Whisper/tree/main/docs", "github.com/openai/whisper"],
+    ["https://huggingface.co/openai/whisper-large-v3", "huggingface.co/openai/whisper-large-v3"],
+    ["https://huggingface.co/spaces/owner/demo", "huggingface.co/spaces/owner/demo"],
+    ["https://my-demo.vercel.app/", "my-demo.vercel.app"],
+    ["https://cool-app.streamlit.app", "cool-app.streamlit.app"],
+    ["https://someone.github.io/project/", "someone.github.io"]
+  ],
+  "invalid": ["ftp://x.ai", "https://localhost", "https://192.168.1.10", "not a url", "https://intranet", "javascript:alert(1)"]
+}

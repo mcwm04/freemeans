@@ -22,3 +22,7 @@
 /tools/links.json
   Cache-Control: public, max-age=300
   X-Robots-Tag: noindex
+
+/tools/status.json
+  Cache-Control: public, max-age=300
+  X-Robots-Tag: noindex

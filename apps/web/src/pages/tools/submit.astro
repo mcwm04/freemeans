@@ -1,0 +1,81 @@
+---
+// M5: Submit a tool. A plain form that posts to the API (works without JavaScript); the entry
+// goes to the editor's review queue. Cloudflare Turnstile blocks spam when PUBLIC_TURNSTILE_SITE_KEY is set.
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import { taxonomy } from '../../lib/directory.js';
+import { graph, breadcrumbLd, webPageLd } from '../../lib/seo.js';
+
+const api = (import.meta.env.PUBLIC_API_URL || 'https://api.freemeans.com').replace(/\/$/, '');
+const siteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
+const cats = taxonomy().categories;
+const title = 'Submit an AI tool to the Freemeans directory';
+const description = 'Suggest an AI tool for the Freemeans directory. Listing is free; an editor checks the free plan against your own pages before it goes live.';
+const path = '/tools/submit/';
+const jsonLd = graph([
+  webPageLd(Astro.site, { path, name: title, description }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'AI tools', path: '/tools/' }, { name: 'Submit a tool', path }]),
+]);
+---
+<Base title={title} description={description} jsonLd={jsonLd} current="tools">
+  <Fragment slot="head">{siteKey && <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}</Fragment>
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/tools/">AI tools</a><span aria-hidden="true">/</span><span>Submit</span></nav>
+      <h1>Submit a tool</h1>
+      <p class="lede">Listing is free and always will be. An editor checks the free plan against your own pricing page, then publishes it. Paying never decides whether a tool is listed.</p>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap detail-layout">
+      <form class="panel submit-form" id="form" method="post" action={`${api}/submit`} data-submit>
+        <p class="notice ok" data-msg="sent" hidden><Icon name="check" /><span>Thanks. The tool is in the review queue. Most reviews take a few days.</span></p>
+        <p class="notice" data-msg="listed" hidden><Icon name="check" /><span>That tool is already in the directory. Search for it on the <a href="/tools/">tools page</a>.</span></p>
+        <p class="notice" data-msg="error" hidden><Icon name="alert" /><span data-error-text>Please check the form and try again.</span></p>
+        <label class="hp" aria-hidden="true">Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        <label class="field-label" for="s-url">Tool website</label>
+        <input id="s-url" name="url" type="url" required placeholder="https://example.ai" inputmode="url" />
+        <label class="field-label" for="s-name">Tool name</label>
+        <input id="s-name" name="name" type="text" required maxlength="80" />
+        <label class="field-label" for="s-cat">Category</label>
+        <select id="s-cat" name="category">
+          <option value="">Not sure</option>
+          {cats.map((c) => <option value={c.id}>{c.name}</option>)}
+        </select>
+        <label class="field-label" for="s-email">Your email <span class="muted small">(optional: we write only if we have a question)</span></label>
+        <input id="s-email" name="email" type="email" autocomplete="email" />
+        {siteKey && <div class="cf-turnstile" data-sitekey={siteKey}></div>}
+        <button class="btn" type="submit">Submit for review</button>
+      </form>
+      <aside class="aside" aria-label="What happens next">
+        <div class="panel">
+          <h3>What happens next</h3>
+          <ol class="small">
+            <li>Our crawler reads your home and pricing pages.</li>
+            <li>An editor checks every free-tier number against those pages.</li>
+            <li>The listing goes live with a link to your site.</li>
+          </ol>
+          <p class="small muted">We list AI tools that anyone can use. We skip tools with no public website, and adult, gambling or surveillance tools.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</Base>
+
+<script>
+  const q = new URLSearchParams(location.search);
+  const show = (k: string) => { const el = document.querySelector<HTMLElement>(`[data-msg="${k}"]`); if (el) el.hidden = false; };
+  const errors: Record<string, string> = {
+    url: 'Please enter the tool’s public web address, for example https://example.ai.',
+    name: 'Please enter the tool’s name.',
+    email: 'Please enter a valid email address, or leave it empty.',
+    check: 'The anti-spam check failed. Please try again.',
+  };
+  if (q.get('sent')) show('sent');
+  if (q.get('status') === 'listed') show('listed');
+  const err = q.get('error');
+  if (err) {
+    show('error');
+    document.querySelector<HTMLElement>('[data-error-text]')!.textContent = errors[err] ?? errors.url;
+  }
+</script>
