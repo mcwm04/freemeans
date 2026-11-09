@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://freemeans.com/schema/eligibility.schema.json",
+  "title": "Eligibility",
+  "description": "Who can get an offer, where, with what proof, and for how long (Eligibility PRD, Chapter 4). Referenced from resource.schema.json.",
+  "$defs": {
+    "audience": {
+      "type": "string",
+      "enum": [
+        "student_k12", "student_higher_ed", "student_bootcamp",
+        "educator_k12", "educator_higher_ed",
+        "institution_school", "institution_university",
+        "nonprofit", "startup_self_funded", "startup_investor_backed",
+        "open_source_maintainer", "researcher", "journalist_civil_society",
+        "resident", "public"
+      ],
+      "description": "resident = anyone living in the listed countries (national promotions). public = anyone at all (e.g. free courses open to everybody); use it only together with a country rule or for offers that are not otherwise free-for-all on Freemeans."
+    },
+    "eligibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audiences", "countries", "via", "proof"],
+      "properties": {
+        "audiences": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "$ref": "#/$defs/audience" }
+        },
+        "countries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": { "type": "string", "enum": ["global", "include", "exclude"] },
+            "codes": {
+              "type": "array", "uniqueItems": true,
+              "items": { "type": "string", "pattern": "^[A-Z]{2}$", "description": "ISO 3166-1 alpha-2, upper case (PK, US, GB)." }
+            },
+            "source_url": { "type": "string", "format": "uri", "description": "Page that lists the countries, when it differs from the main source." }
+          },
+          "allOf": [
+            {
+              "if": { "properties": { "mode": { "const": "global" } } },
+              "then": { "properties": { "codes": { "maxItems": 0 } } }
+            },
+            {
+              "if": { "properties": { "mode": { "enum": ["include", "exclude"] } } },
+              "then": { "required": ["codes"], "properties": { "codes": { "minItems": 1 } } }
+            }
+          ]
+        },
+        "min_age": { "type": "integer", "minimum": 0, "maximum": 99 },
+        "via": {
+          "type": "string", "enum": ["individual", "institution"],
+          "description": "institution = the school, university or organization applies, not the person (Workspace for Education, HEC Digital Library)."
+        },
+        "proof": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "none", "school_email", "student_id", "isic_itic", "official_document", "teaching_license",
+              "sheerid", "github_education", "institution_verification", "nonprofit_registration",
+              "validation_partner", "company_website", "investor_referral", "phone", "sign_up"
+            ]
+          }
+        },
+        "verifier": { "type": "string", "description": "Third party that checks status, e.g. SheerID, Goodstack, TechSoup." },
+        "reverify": { "type": "string", "enum": ["none", "monthly", "yearly", "on_renewal", "periodic"] },
+        "excludes": { "type": "string", "description": "Who is explicitly not eligible, in plain words." },
+        "notes": { "type": "string", "description": "Practical notes, e.g. whether .edu.pk addresses pass automatic checks. Never a workaround." }
+      }
+    },
+    "offer_window": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "starts": { "type": "string", "format": "date" },
+        "redeem_by": { "type": "string", "format": "date", "description": "Last day to claim. After it the offer is shown as ended." },
+        "access_ends": { "type": "string", "format": "date", "description": "Fixed date when free access stops for everyone, e.g. 'free through June 2027'." },
+        "duration_months": { "type": "integer", "minimum": 1, "description": "Length of the free period from the day it is claimed." },
+        "renewable": { "type": "boolean", "description": "Can be claimed again (e.g. every year while still a student)." },
+        "after": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["auto_renews"],
+          "properties": {
+            "price": { "type": "string", "description": "What it costs after the free period, as the provider states it." },
+            "auto_renews": { "type": "boolean", "description": "true = charged automatically unless cancelled. Requires the auto_renews_paid badge." }
+          }
+        }
+      }
+    },
+    "watch": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["text", "source_url"],
+        "properties": {
+          "text": { "type": "string", "minLength": 3, "maxLength": 120, "description": "Exact phrase the source check expects on the page: a date, amount or condition." },
+          "source_url": { "type": "string", "format": "uri" }
+        }
+      }
+    }
+  }
+}

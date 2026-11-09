@@ -137,7 +137,36 @@ def validate_catalog(data: dict[str, Any], schema_dir: Path) -> list[str]:
         if rid in seen:
             errors.append(f"resources/{i}/id: duplicate id '{rid}'")
         seen.add(rid)
+        errors.extend(f"resources/{i}: {msg}" for msg in eligibility_problems(r))
     return errors
+
+
+# Kinds the local agent routes requests to. Every other kind is an eligibility-based
+# offer (student, teacher, nonprofit, startup, country) and must say who qualifies.
+API_KINDS = frozenset({"llm_api", "speech_api", "embedding_api", "inference_platform", "gpu_notebook", "cloud_credit"})
+
+
+def eligibility_problems(r: dict[str, Any]) -> list[str]:
+    """Rules for eligibility-based offers (Eligibility PRD, Chapter 4)."""
+    out: list[str] = []
+    rid = r.get("id", "?")
+    badges = {b.get("type") for b in r.get("badges", [])}
+    if r.get("kind") not in API_KINDS and "eligibility" not in r:
+        out.append(f"{rid}: kind '{r.get('kind')}' needs an eligibility block")
+    after = (r.get("offer_window") or {}).get("after") or {}
+    if after.get("auto_renews") and "auto_renews_paid" not in badges:
+        out.append(f"{rid}: offer auto-renews into a paid plan, so it needs the auto_renews_paid badge")
+    if "auto_renews_paid" in badges and not after.get("auto_renews"):
+        out.append(f"{rid}: auto_renews_paid badge needs offer_window.after.auto_renews = true")
+    if r.get("replaced_by") and r.get("status") != "ended":
+        out.append(f"{rid}: replaced_by is only for ended offers")
+    if r.get("replaced_by") == rid:
+        out.append(f"{rid}: replaced_by points to itself")
+    source_urls = {s.get("url") for s in r.get("sources", [])}
+    for w in r.get("watch", []):
+        if w.get("source_url") not in source_urls:
+            out.append(f"{rid}: watch phrase '{w.get('text')}' uses a URL that is not in sources")
+    return out
 
 
 def load_catalog(path: Path, schema_dir: Path | None = None) -> Catalog:

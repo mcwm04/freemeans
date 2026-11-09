@@ -2,13 +2,18 @@
 //   db.exec(sql)            run one or more statements, no parameters (migrations)
 //   db.query(sql, params)   run one statement with $1, $2 … parameters, resolves to { rows }
 // node-postgres (pg) and PGlite (used in tests) both fit this shape directly.
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 export const MIGRATIONS_DIR = resolve(here, '../migrations');
 export const SEED_PATH = resolve(here, '../../data/catalog/seed.json');
+// Eligibility-based offers (students, teachers, nonprofits, startups, countries) live in their own
+// file so the agent's API-tier catalog stays clean. Both files are loaded together, because the
+// loader replaces the whole catalog: loading one file alone would delete the other's rows.
+export const ELIGIBILITY_PATH = resolve(here, '../../data/catalog/eligibility.json');
+export const DEFAULT_CATALOG_PATHS = [SEED_PATH, ELIGIBILITY_PATH];
 
 export async function migrate(db, dir = MIGRATIONS_DIR) {
   await db.exec(`CREATE TABLE IF NOT EXISTS schema_migrations (
@@ -37,6 +42,36 @@ export function readSeed(path = SEED_PATH) {
   return JSON.parse(readFileSync(path, 'utf8'));
 }
 
+// Merges several catalog files into one bundle. The version records every part, e.g.
+// "0.1.0-seed+0.1.0-eligibility". Files that do not exist are skipped, so the loader works
+// before data/catalog/eligibility.json is added.
+export function mergeCatalogs(catalogs) {
+  const parts = catalogs.filter(Boolean);
+  if (parts.length === 1) return parts[0];
+  return {
+    version: parts.map((c) => c.version).join('+'),
+    generated_at: parts.map((c) => c.generated_at).filter(Boolean).sort().at(-1) ?? null,
+    resources: parts.flatMap((c) => c.resources ?? []),
+  };
+}
+
+export function readCatalogs(paths = DEFAULT_CATALOG_PATHS) {
+  return mergeCatalogs(paths.filter((p) => existsSync(p)).map((p) => readSeed(p)));
+}
+
+// Values for the eligibility columns (migration 003). API-tier resources get the defaults.
+export function eligibilityColumns(r) {
+  const c = r.eligibility?.countries ?? { mode: 'global', codes: [] };
+  return {
+    status: r.status ?? 'active',
+    redeem_by: r.offer_window?.redeem_by ?? null,
+    access_ends: r.offer_window?.access_ends ?? null,
+    audiences: r.eligibility?.audiences ?? [],
+    country_mode: c.mode ?? 'global',
+    countries: c.codes ?? [],
+  };
+}
+
 // Light checks before anything touches the database; the full JSON-Schema check lives in
 // the agent (`freemeans validate-catalog`) and runs in CI.
 export function checkCatalog(catalog) {
@@ -50,6 +85,9 @@ export function checkCatalog(catalog) {
     ids.add(r.id);
     if (!Array.isArray(r.limit_rules)) errors.push(`${r.id}: limit_rules missing`);
     if (!Array.isArray(r.sources) || r.sources.length === 0) errors.push(`${r.id}: needs at least one source`);
+    const after = r.offer_window?.after;
+    const renewBadge = (r.badges ?? []).some((b) => b.type === 'auto_renews_paid');
+    if (after?.auto_renews && !renewBadge) errors.push(`${r.id}: auto-renewing offer needs the auto_renews_paid badge`);
   }
   return errors;
 }
@@ -72,19 +110,25 @@ export async function loadCatalog(db, catalog) {
     await db.query('DELETE FROM resources WHERE NOT (id = ANY($1::text[]))', [ids]);
 
     for (const r of catalog.resources) {
+      const e = eligibilityColumns(r);
       await db.query(
         `INSERT INTO resources (id, provider, name, kind, tier_type, endpoint_style, base_url, models,
-            notes, last_verified, record, catalog_version, updated_at)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,$12, now())
+            notes, last_verified, record, catalog_version, status, redeem_by, access_ends, audiences,
+            country_mode, countries, updated_at)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11::jsonb,$12,$13,$14,$15,$16,$17,$18, now())
          ON CONFLICT (id) DO UPDATE SET provider = EXCLUDED.provider, name = EXCLUDED.name,
            kind = EXCLUDED.kind, tier_type = EXCLUDED.tier_type, endpoint_style = EXCLUDED.endpoint_style,
            base_url = EXCLUDED.base_url, models = EXCLUDED.models, notes = EXCLUDED.notes,
            last_verified = EXCLUDED.last_verified, record = EXCLUDED.record,
-           catalog_version = EXCLUDED.catalog_version, updated_at = now()`,
+           catalog_version = EXCLUDED.catalog_version, status = EXCLUDED.status,
+           redeem_by = EXCLUDED.redeem_by, access_ends = EXCLUDED.access_ends,
+           audiences = EXCLUDED.audiences, country_mode = EXCLUDED.country_mode,
+           countries = EXCLUDED.countries, updated_at = now()`,
         [r.id, r.provider, r.name, r.kind, r.tier_type, r.endpoint?.style ?? null, r.endpoint?.base_url ?? null,
-          r.models ?? [], r.notes ?? null, r.last_verified, JSON.stringify(r), catalog.version],
+          r.models ?? [], r.notes ?? null, r.last_verified, JSON.stringify(r), catalog.version,
+          e.status, e.redeem_by, e.access_ends, e.audiences, e.country_mode, e.countries],
       );
-      for (const table of ['limit_rules', 'badges', 'sources'])
+      for (const table of ['limit_rules', 'badges', 'sources', 'watch_phrases'])
         await db.query(`DELETE FROM ${table} WHERE resource_id = $1`, [r.id]);
 
       for (const [i, l] of r.limit_rules.entries()) {
@@ -110,6 +154,12 @@ export async function loadCatalog(db, catalog) {
            ON CONFLICT (resource_id, url) DO UPDATE SET fetched_at = EXCLUDED.fetched_at,
              signal_type = EXCLUDED.signal_type`,
           [r.id, s.url, s.fetched_at, s.signal_type],
+        );
+      }
+      for (const [i, w] of (r.watch ?? []).entries()) {
+        await db.query(
+          'INSERT INTO watch_phrases (resource_id, position, text, source_url) VALUES ($1,$2,$3,$4)',
+          [r.id, i, w.text, w.source_url],
         );
       }
     }
