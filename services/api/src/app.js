@@ -3,8 +3,20 @@ import { parseFilters, filterResources, summarize } from './catalog.js';
 
 const EMAIL = /^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_BODY = 4096;
+const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+// Crawlers, link previews and scripts: redirected, never counted (PRD 3.5).
+const BOT_UA = /bot|crawl|spider|slurp|preview|fetch|scan|monitor|headless|lighthouse|curl|wget|python|httpclient|okhttp|go-http|java\/|axios|node-fetch|facebookexternalhit|whatsapp|telegram|discord|slack|embedly|^$/i;
 
-export function createApp({ store, siteUrl = 'https://freemeans.com', allowedOrigins = [] }) {
+/**
+ * links():  async () => Map<slug, url>  (published directory tools; see src/links.js)
+ * dedupe:   { seen(key) => Promise<boolean> } marks a key and says whether it was already marked.
+ * waitUntil: lets the click be written after the redirect is sent (the Worker's ctx.waitUntil
+ *            is used when the request carries one).
+ */
+export function createApp({
+  store, siteUrl = 'https://freemeans.com', allowedOrigins = [],
+  links = async () => new Map(), dedupe = { seen: async () => false }, clickSalt = 'freemeans', waitUntil = (p) => p,
+}) {
   const site = siteUrl.replace(/\/$/, '');
 
   const cors = (req) => {
@@ -66,7 +78,34 @@ export function createApp({ store, siteUrl = 'https://freemeans.com', allowedOri
     return done();
   }
 
-  async function handle(req) {
+  // M4: /go/{slug} counts one outbound click, then redirects to the tool's site.
+  // Stored per tool, UTC day and country only. Repeat clicks by one visitor on one day count
+  // once: the check uses a salted hash of IP and browser that is never written to the database.
+  async function go(req, slug, ctx) {
+    const map = await links();
+    const target = map.get(slug);
+    if (!target) return new Response(null, { status: 302, headers: { location: `${site}/tools/`, 'cache-control': 'no-store' } });
+    const redirect = new Response(null, {
+      status: 302,
+      headers: { location: target, 'cache-control': 'no-store', 'referrer-policy': 'strict-origin-when-cross-origin' },
+    });
+    if (req.method !== 'GET' || !countable(req)) return redirect;
+
+    const day = new Date().toISOString().slice(0, 10);
+    const country = /^[A-Z0-9]{2}$/.test(req.headers.get('cf-ipcountry') || '') ? req.headers.get('cf-ipcountry') : 'XX';
+    const visitor = `${req.headers.get('cf-connecting-ip') || ''}|${req.headers.get('user-agent') || ''}`;
+    const key = await sha256(`${clickSalt}|${day}|${slug}|${visitor}`);
+    const later = ctx?.waitUntil ? ctx.waitUntil.bind(ctx) : waitUntil;
+    later(
+      (async () => {
+        if (await dedupe.seen(key)) return;
+        await store.addClick({ slug, day, country });
+      })().catch(() => {}), // a lost click must never break the redirect
+    );
+    return redirect;
+  }
+
+  async function handle(req, ctx) {
     const url = new URL(req.url);
     const path = url.pathname.replace(/\/+$/, '') || '/';
 
@@ -90,6 +129,14 @@ export function createApp({ store, siteUrl = 'https://freemeans.com', allowedOri
       );
     }
 
+    const g = /^\/go\/([^/]+)$/.exec(path);
+    if (g) {
+      if (req.method !== 'GET' && req.method !== 'HEAD') return json(req, 405, { error: 'Use GET.' }, { allow: 'GET, HEAD' });
+      const slug = decodeURIComponent(g[1]).toLowerCase();
+      if (!SLUG.test(slug)) return json(req, 404, { error: 'Unknown tool.' });
+      return go(req, slug, ctx);
+    }
+
     const m = /^\/resources\/([a-z0-9.-]+)$/.exec(path);
     if (req.method === 'GET' && m) {
       const r = await store.getResource(m[1]);
@@ -102,7 +149,7 @@ export function createApp({ store, siteUrl = 'https://freemeans.com', allowedOri
       return waitlist(req);
     }
 
-    return json(req, 404, { error: 'Not found. Try /catalog or /resources/{id}.' });
+    return json(req, 404, { error: 'Not found. Try /catalog, /resources/{id} or /go/{tool}.' });
   }
 
   // The API is for programs, not search results: every answer carries noindex.
@@ -111,12 +158,25 @@ export function createApp({ store, siteUrl = 'https://freemeans.com', allowedOri
     return res;
   };
 
-  return async (req) => {
+  return async (req, ctx) => {
     try {
-      return noindex(await handle(req));
+      return noindex(await handle(req, ctx));
     } catch (err) {
       const status = err.status ?? 500;
       return noindex(json(req, status, { error: status === 500 ? 'Something went wrong on our side.' : err.message }));
     }
   };
+}
+
+function countable(req) {
+  const ua = req.headers.get('user-agent') || '';
+  if (BOT_UA.test(ua)) return false;
+  if (req.cf?.verifiedBotCategory) return false;
+  const purpose = (req.headers.get('sec-purpose') || req.headers.get('purpose') || '').toLowerCase();
+  return !purpose.includes('prefetch') && !purpose.includes('prerender');
+}
+
+async function sha256(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }

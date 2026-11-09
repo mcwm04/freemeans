@@ -133,7 +133,7 @@ def test_report_lists_changes_first_with_fix_instructions():
     assert md.index("Possibly changed") < md.index("Still matches")
     assert "`demo.free` · rpd = 50 per day" in md
     assert "25 requests per day" in md
-    assert "edit `data/catalog/seed.json`" in md
+    assert "File: `data/catalog/seed.json`" in md
 
 
 def test_cli_writes_reports_and_github_output(tmp_path, monkeypatch):
