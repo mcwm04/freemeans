@@ -92,5 +92,40 @@ at most one request per tool per day.
 
 ---
 
-Next: Phase 1 (24 Nov–21 Dec): tool pages, browse and search, `/go` clicks, submit form, editor
-console and the discovery crawler.
+# Phase 1, part 1: public pages (M1–M4)
+
+| Module | What is built | Where |
+| --- | --- | --- |
+| M1 Tool pages | `/tools/{slug}/`: free tier card (plan, quota, card, sign-up, watermark, commercial use, source and date), what it does, best for, pricing, platforms, alternatives, change log. SoftwareApplication JSON-LD. | `apps/web/src/pages/tools/[slug].astro` |
+| M2 Browse and search | `/tools/` home with categories, popular tasks and every tool; `/tools/c/{category}/` and `/tools/t/{task}/`. Filters (no card, forever free, open source, commercial use, no watermark, has API, platform) and sort run in the browser. Site search uses a static Pagefind index, so it costs no Worker requests. | `ToolList.astro`, `pages/tools/` |
+| M3 Freshness | A free tier not checked for 60 days shows "Not recently verified". The nightly Source check now also checks every tool whose quota has a number, and the review PR names the tool's file. | `lib/directory.js`, `services/pipeline/source_check/tools.py` |
+| M4 Clicks | Every Visit button goes to `https://api.freemeans.com/go/{slug}`, which redirects to the tool and adds one row-count to `tool_clicks_daily` (tool, UTC day, country). Bots, link previews, prefetches and repeat clicks by one visitor on one day are not counted. No IP or personal data is stored. | `services/api/src/app.js`, `links.js` |
+
+**Rules kept from the SEO guide:** category and task pages go into the sitemap and search results
+only once they list 5 tools; thinner ones are built with `noindex`. Filters and search never create
+indexable URLs. Paid or affiliate links carry `rel="sponsored"`, all others `rel="nofollow"`.
+URLs follow the PRD: `/tools/c/{category}/` and `/tools/t/{task}/`.
+
+**Not in this part:** the PKR estimate next to prices (no tool has a price yet), `?ref=freemeans`
+(added per tool when a vendor allows it), the momentum sparkline (v1.1).
+
+## Switch on part 1 (about 5 minutes)
+
+1. Merge the pull request. Cloudflare rebuilds the site, and `/tools/` goes live.
+2. Deploy the API, so `/go/` exists:
+
+   ```powershell
+   cd services/api
+   npm ci
+   npx wrangler secret put CLICK_SALT     # optional: paste any long random text
+   npx wrangler deploy
+   ```
+
+3. Test it: open `https://api.freemeans.com/go/ollama`. It should land on ollama.com.
+4. Start counting clicks in the signal collector. On GitHub: **Settings → Secrets and variables →
+   Actions → Variables → New repository variable**: `FREEMEANS_CLICKS_SINCE` = the date of step 2
+   (for example `2026-11-10`).
+
+New tools need no API deploy: `/go/` reads the live list at `freemeans.com/tools/links.json`.
+
+Next: part 2 (M5 submit form, M6 editor console, discovery crawler), then part 3 (M9 weekly email).

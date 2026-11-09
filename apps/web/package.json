@@ -7,7 +7,7 @@
   "scripts": {
     "tokens": "node scripts/build-tokens.mjs",
     "dev": "npm run tokens && astro dev",
-    "build": "npm run tokens && astro build",
+    "build": "npm run tokens && astro build && pagefind --site dist",
     "preview": "astro preview",
     "test": "npm run build && node --test tests/*.test.mjs"
   },
@@ -22,6 +22,7 @@
     "node": ">=20"
   },
   "devDependencies": {
+    "pagefind": "^1.6.0",
     "wrangler": "^4.158.0"
   }
 }

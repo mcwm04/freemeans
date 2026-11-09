@@ -15,6 +15,10 @@ routes = [
   { pattern = "api.freemeans.com", custom_domain = true }
 ]
 
+# Bundles the directory's slug → URL map for /go/{slug} (src/links.generated.json).
+[build]
+command = "node scripts/build-links.mjs"
+
 [vars]
 SITE_URL = "https://freemeans.com"
 # Comma-separated: every address the website is served from.

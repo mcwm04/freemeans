@@ -8,6 +8,9 @@ import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 const dist = resolve(here, '../dist');
 const seed = JSON.parse(readFileSync(resolve(here, '../../../data/catalog/seed.json'), 'utf8'));
+const toolsDir = resolve(here, '../../../data/tools');
+const tools = readdirSync(toolsDir).filter((f) => f.endsWith('.json'))
+  .map((f) => JSON.parse(readFileSync(resolve(toolsDir, f), 'utf8'))).filter((t) => t.status === 'published');
 const read = (p) => readFileSync(resolve(dist, p), 'utf8');
 
 test('home page carries the Freemeans brand', () => {
@@ -73,7 +76,8 @@ test('catalog.json and sitemap.xml are published', () => {
   const xml = read('sitemap.xml');
   assert.match(xml, /^<\?xml version="1.0" encoding="UTF-8"\?>/);
   const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-  assert.equal(locs.length, seed.resources.length + 2);
+  // home + catalog + resources, then /tools/ + one page per tool (+ category and task pages with 5+ tools)
+  assert.ok(locs.length >= seed.resources.length + 2 + 1 + tools.length, `only ${locs.length} URLs`);
   assert.ok(locs.every((u) => u.startsWith('https://freemeans.com/') && u.endsWith('/')));
   assert.equal(new Set(locs).size, locs.length, 'no duplicate URLs');
   assert.equal((xml.match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g) || []).length, locs.length);
@@ -129,7 +133,9 @@ test('every page has a unique title and description, one h1, canonical and socia
     titles.add(title);
     descs.add(desc);
     assert.equal((html.match(/<h1[\s>]/g) || []).length, 1, `${path}: needs exactly one h1`);
-    assert.equal(meta(html, /<link rel="canonical" href="([^"]+)"/), `https://freemeans.com${path}`, `${path}: canonical`);
+    // Pages kept out of search (thin category pages) carry no canonical; all others name themselves.
+    const noindex = /name="robots" content="noindex/.test(html);
+    assert.equal(meta(html, /<link rel="canonical" href="([^"]+)"/), noindex ? undefined : `https://freemeans.com${path}`, `${path}: canonical`);
     assert.equal(meta(html, /<meta property="og:url" content="([^"]+)"/), `https://freemeans.com${path}`);
     assert.equal(meta(html, /<meta property="og:image" content="([^"]+)"/), 'https://freemeans.com/og.png');
     assert.match(html, /<meta name="twitter:card" content="summary_large_image"/);

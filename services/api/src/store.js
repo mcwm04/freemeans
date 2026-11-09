@@ -2,6 +2,7 @@
 //   listResources() → { version, resources: [record] }
 //   getResource(id) → record | null
 //   addToWaitlist({ email, source, country }) → { created: boolean }
+//   addClick({ slug, day, country }) → { recorded: boolean }   (M4, /go/{slug})
 // sqlStore reads Neon Postgres; seedStore serves the catalog bundled into the Worker
 // (used when DATABASE_URL is not set, and as a read fallback if Neon is unreachable).
 
@@ -19,6 +20,9 @@ export function seedStore(catalog) {
       const err = new Error('The waitlist needs a database. Set the DATABASE_URL secret.');
       err.status = 503;
       throw err;
+    },
+    async addClick() {
+      return { recorded: false }; // no database: redirect still works, click is not stored
     },
   };
 }
@@ -43,6 +47,14 @@ export function sqlStore(query) {
         [email, source, country],
       );
       return { created: r.rows.length > 0 };
+    },
+    async addClick({ slug, day, country }) {
+      await query(
+        `INSERT INTO tool_clicks_daily (slug, day, country, clicks) VALUES ($1, $2, $3, 1)
+         ON CONFLICT (slug, day, country) DO UPDATE SET clicks = tool_clicks_daily.clicks + 1`,
+        [slug, day, country],
+      );
+      return { recorded: true };
     },
   };
 }
@@ -69,6 +81,7 @@ export function withFallback(primary, fallback) {
       }
     },
     addToWaitlist: (entry) => primary.addToWaitlist(entry),
+    addClick: (click) => primary.addClick(click),
   };
 }
 

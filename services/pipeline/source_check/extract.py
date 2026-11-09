@@ -117,9 +117,16 @@ def _snippet(text: str, start: int, end: int, pad: int = 80) -> str:
     return ("…" if a else "") + s.strip() + ("…" if b < len(text) else "")
 
 
+def unit_words(metric: str) -> list[str]:
+    if metric.startswith("tool:"):  # directory tools: the quota's own unit (source_check/tools.py)
+        from .tools import unit_patterns
+        return unit_patterns(metric)
+    return UNIT_WORDS.get(metric, [])
+
+
 def find_limit(text: str, metric: str, value) -> Match:
     """Look for `value` in `text`, preferring a hit that sits next to the metric's unit words."""
-    units = [re.compile(u, re.I) for u in UNIT_WORDS.get(metric, [])]
+    units = [re.compile(u, re.I) for u in unit_words(metric)]
     first_plain: Match | None = None
     for variant in number_variants(value):
         for m in _number_pattern(variant).finditer(text):
@@ -136,7 +143,7 @@ def find_limit(text: str, metric: str, value) -> Match:
 def nearby_mentions(text: str, metric: str, limit: int = 3) -> list[str]:
     """Sentences that mention the metric's unit next to some number, to help the reviewer."""
     out: list[str] = []
-    for u in UNIT_WORDS.get(metric, []):
+    for u in unit_words(metric):
         for m in re.finditer(u, text, re.I):
             window = text[max(0, m.start() - 60): m.end() + 60]
             if re.search(r"\d", window):

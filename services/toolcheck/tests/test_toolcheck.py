@@ -54,6 +54,7 @@ def test_good_record_passes():
 @pytest.mark.parametrize("changes, needle", [
     ({"slug": "other"}, "must equal the file name"),
     ({"slug": "Bad_Slug"}, "does not match"),
+    ({"slug": "submit"}, "reserved"),
     ({"categories": ["not-a-category"]}, "unknown category"),
     ({"tasks": ["fly-to-mars"]}, "unknown task"),
     ({"categories": ["chat", "coding", "image", "video"]}, "is too long"),

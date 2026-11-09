@@ -1,0 +1,182 @@
+---
+// M1 tool page: /tools/{slug}/. The free tier card is the core of the page (PRD 3.2).
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import {
+  tools, categoryById, taskById, FREE_TYPES, PLATFORMS, freeSummary, quotaLabel, yesNo,
+  isStale, daysSince, lastModified, goUrl, outboundRel, alternatives, STALE_PUBLIC_DAYS,
+} from '../../lib/directory.js';
+import { formatDate, hostOf } from '../../lib/catalog.js';
+import { graph, breadcrumbLd, webPageLd } from '../../lib/seo.js';
+
+export function getStaticPaths() {
+  return tools().map((tool) => ({ params: { slug: tool.slug }, props: { tool } }));
+}
+
+const { tool } = Astro.props;
+const ft = tool.free_tier;
+const type = FREE_TYPES[ft.type];
+const cats = tool.categories.map(categoryById).filter(Boolean);
+const tasks = tool.tasks.map(taskById).filter(Boolean);
+const alts = alternatives(tool);
+const stale = isStale(tool);
+const modified = lastModified(tool);
+const quota = quotaLabel(tool);
+const path = `/tools/${tool.slug}/`;
+
+// Titles stay within 70 characters including " · Freemeans" (build test).
+const titleFor = (n) => [`${n}: free plan, features and alternatives`, `${n}: free plan and features`, `${n} free plan`]
+  .find((t) => t.length <= 58) ?? n.slice(0, 58);
+const title = titleFor(tool.name);
+const fit = (s, max = 170) => (s.length <= max ? s : s.slice(0, s.lastIndexOf(' ', max - 1)) + '…');
+const tagline = tool.tagline.replace(/[.\s]+$/, '');
+const full = `${tool.name}: ${tagline}. ${freeSummary(tool)}, checked ${formatDate(ft.verified_at)}.`;
+const description = fit(full.length >= 50 ? full : `${full} Free plan details, platforms and alternatives.`);
+
+const OS = { windows: 'Windows', macos: 'macOS', linux: 'Linux', android: 'Android', ios: 'iOS', web: 'Web' };
+const jsonLd = graph([
+  webPageLd(Astro.site, {
+    path, name: title, description, dateModified: modified,
+    extra: {
+      about: {
+        '@type': 'SoftwareApplication',
+        name: tool.name,
+        url: tool.url,
+        description: tagline,
+        applicationCategory: cats[0]?.name ?? 'AI tool',
+        operatingSystem: tool.platforms.map((p) => OS[p]).filter(Boolean).join(', ') || 'Web',
+        ...(tool.license ? { license: tool.license } : {}),
+        ...(ft.type !== 'none' ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: freeSummary(tool) } } : {}),
+      },
+    },
+  }),
+  breadcrumbLd(Astro.site, [
+    { name: 'Home', path: '/' }, { name: 'AI tools', path: '/tools/' },
+    ...(cats[0] ? [{ name: cats[0].name, path: `/tools/c/${cats[0].id}/` }] : []),
+    { name: tool.name, path },
+  ]),
+]);
+
+const rows = [
+  { k: 'Free plan', v: { text: type.label, tone: type.tone } },
+  ...(ft.type === 'trial' ? [{ k: 'Trial length', v: { text: ft.trial_days ? `${ft.trial_days} days` : 'Not stated', tone: 'muted' } }] : []),
+  ...(ft.type !== 'open_source' && ft.type !== 'none' ? [{ k: 'Free quota', v: { text: quota ?? 'Not published by the provider', tone: quota ? 'ok' : 'muted' } }] : []),
+  { k: 'Card required', v: yesNo(ft.card_required, { invert: true }) },
+  { k: 'Sign-up needed', v: yesNo(ft.signup_required, { invert: true }) },
+  { k: 'Watermark on free output', v: yesNo(ft.watermark, { invert: true }) },
+  { k: 'Commercial use allowed', v: yesNo(ft.commercial_use) },
+  ...(ft.works_in_pk !== null && ft.works_in_pk !== undefined ? [{ k: 'Works in Pakistan', v: yesNo(ft.works_in_pk) }] : []),
+];
+---
+<Base title={title} description={description} jsonLd={jsonLd} current="tools">
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/tools/">AI tools</a>
+        {cats[0] && <><span aria-hidden="true">/</span><a href={`/tools/c/${cats[0].id}/`}>{cats[0].name}</a></>}
+      </nav>
+      <div class="detail-head">
+        <span class="mono-mark lg" aria-hidden="true">{tool.name[0]}</span>
+        <div>
+          <h1 data-pagefind-meta="title">{tool.name}</h1>
+          <p class="lede tool-lede">{tool.tagline}</p>
+          <div class="badges">
+            {cats.map((c) => <a class="pill" href={`/tools/c/${c.id}/`}>{c.name}</a>)}
+          </div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <a class="btn" href={goUrl(tool.slug)} rel={outboundRel(tool)}>Visit {hostOf(tool.url)} <Icon name="arrow-up" /></a>
+        {tool.repo_url && <a class="btn secondary" href={tool.repo_url} rel="nofollow noopener">Source code</a>}
+        {(tool.affiliate_url || tool.sponsor) && <span class="badge info">Sponsored link</span>}
+      </div>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="wrap detail-layout">
+      <article data-pagefind-body>
+        <section aria-labelledby="free" class="panel free-card">
+          <h2 id="free">Free tier</h2>
+          {stale && (
+            <p class="notice"><Icon name="alert" /><span><b>Not recently verified.</b> We last checked this {daysSince(ft.verified_at)} days ago (more than {STALE_PUBLIC_DAYS}). Check the source before you rely on it.</span></p>
+          )}
+          <dl class="facts-table">
+            {rows.map((r) => <div><dt>{r.k}</dt><dd class={`tone-${r.v.tone}`}>{r.v.text}</dd></div>)}
+          </dl>
+          {ft.notes && <p class="small">{ft.notes}</p>}
+          <p class="small muted verified"><Icon name="calendar" /> Checked <b>{formatDate(ft.verified_at)}</b> against <a href={ft.source_url} rel="nofollow noopener">{hostOf(ft.source_url)}</a></p>
+        </section>
+
+        <section aria-labelledby="what">
+          <h2 id="what">What it does</h2>
+          <p>{tool.description}</p>
+          {tool.best_for?.length > 0 && (
+            <>
+              <h3 data-pagefind-ignore>Best for</h3>
+              <ul class="bullets">{tool.best_for.map((b) => <li><Icon name="check" /> {b}</li>)}</ul>
+            </>
+          )}
+          {tasks.length > 0 && (
+            <p class="badges" aria-label="Tasks" data-pagefind-ignore>{tasks.map((t) => <a class="pill" href={`/tools/t/${t.id}/`}>{t.name}</a>)}</p>
+          )}
+        </section>
+
+        {tool.pricing && (
+          <section aria-labelledby="pricing">
+            <h2 id="pricing">Pricing</h2>
+            <p>
+              {tool.pricing.cheapest_paid_usd === null ? 'Paid plans exist; the provider does not publish a starting price.' :
+                <>Paid plans start at <b class="num">US${tool.pricing.cheapest_paid_usd.toLocaleString('en-US')}</b>{tool.pricing.period ? ` per ${tool.pricing.period}` : ''}.</>}
+              <span class="small muted"> Checked {formatDate(tool.pricing.verified_at)} on <a href={tool.pricing.source_url} rel="nofollow noopener">{hostOf(tool.pricing.source_url)}</a>.</span>
+            </p>
+          </section>
+        )}
+
+        <section aria-labelledby="platforms">
+          <h2 id="platforms">Platforms and access</h2>
+          <p class="badges" data-pagefind-ignore>{tool.platforms.map((p) => <span class="pill">{PLATFORMS[p] ?? p}</span>)}</p>
+          {tool.open_source && <p class="small">Open source{tool.license && <> under the <b>{tool.license}</b> licence</>}{tool.repo_url && <>: <a href={tool.repo_url} rel="nofollow noopener">{tool.repo_url.replace(/^https:\/\//, '')}</a></>}.</p>}
+        </section>
+
+        {alts.length > 0 && (
+          <section aria-labelledby="alts" data-pagefind-ignore>
+            <h2 id="alts">Alternatives</h2>
+            <ul class="alt-list">
+              {alts.map((a) => (
+                <li><a href={`/tools/${a.slug}/`}><b>{a.name}</b></a> <span class="small muted">{freeSummary(a)}</span></li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {tool.changelog?.length > 0 && (
+          <section aria-labelledby="changes" data-pagefind-ignore>
+            <h2 id="changes">Change log</h2>
+            <ul class="src-list">
+              {[...tool.changelog].sort((a, b) => b.date.localeCompare(a.date)).map((c) => (
+                <li><span class="num small">{formatDate(c.date)}</span> {c.note}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </article>
+
+      <aside class="aside" aria-label="Summary">
+        <div class="panel">
+          <h3>At a glance</h3>
+          <dl>
+            <div><dt>Free plan</dt><dd>{freeSummary(tool)}</dd></div>
+            <div><dt>Card</dt><dd>{yesNo(ft.card_required).text === 'No' ? 'Not needed' : yesNo(ft.card_required).text === 'Yes' ? 'Required' : 'Not stated'}</dd></div>
+            <div><dt>Listed</dt><dd>{formatDate(tool.listed_at)}</dd></div>
+            <div><dt>Last checked</dt><dd>{formatDate(ft.verified_at)}</dd></div>
+          </dl>
+        </div>
+        <div class="panel">
+          <h3>Something wrong?</h3>
+          <p class="small">Free tiers change often. If this page is out of date, email <a href="mailto:hello@freemeans.com">hello@freemeans.com</a> with the page you saw.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</Base>

@@ -2,6 +2,7 @@
 // Every indexable page must appear in sitemapEntries(); tests/build.test.mjs fails the
 // build if a built page is missing, so new sections (for example /tools/) cannot be forgotten.
 import { resources, loadCatalog } from './catalog.js';
+import { tools, liveCategories, liveTasks, inCategory, forTask, lastModified, directoryStats, MIN_TOOLS_TO_INDEX } from './directory.js';
 
 export const SITE_NAME = 'Freemeans';
 export const SITE_URL = 'https://freemeans.com';
@@ -76,6 +77,22 @@ export function sitemapEntries() {
     { path: '/', lastmod: latest },
     { path: '/catalog/', lastmod: latest },
     ...list.map((r) => ({ path: `/resources/${r.id}/`, lastmod: r.last_verified })),
-    // /tools/ pages: add their entries here when the directory ships.
+    ...directoryEntries(),
+  ];
+}
+
+// /tools/: the directory home, every tool page, and category and task pages that are big
+// enough to index (thinner ones are built with noindex and left out here).
+function directoryEntries() {
+  const list = tools();
+  if (!list.length) return [];
+  const newest = (ts) => ts.map(lastModified).sort().at(-1);
+  return [
+    { path: '/tools/', lastmod: directoryStats().latest },
+    ...list.map((t) => ({ path: `/tools/${t.slug}/`, lastmod: lastModified(t) })),
+    ...liveCategories().filter((c) => c.count >= MIN_TOOLS_TO_INDEX)
+      .map((c) => ({ path: `/tools/c/${c.id}/`, lastmod: newest(inCategory(c.id)) })),
+    ...liveTasks().filter((t) => t.count >= MIN_TOOLS_TO_INDEX)
+      .map((t) => ({ path: `/tools/t/${t.id}/`, lastmod: newest(forTask(t.id)) })),
   ];
 }
