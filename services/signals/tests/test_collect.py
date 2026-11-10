@@ -123,5 +123,7 @@ def test_cli_needs_database_url(monkeypatch):
 
 def test_repo_tools_load():
     tools = load_tools(DEFAULT_TOOLS_DIR)
-    assert {t.slug for t in tools} >= {"ollama", "llama-cpp", "openai-whisper", "comfyui"}
-    assert all(t.sig("github_repo") for t in tools)
+    starters = {"ollama", "llama-cpp", "openai-whisper", "comfyui"}
+    assert {t.slug for t in tools} >= starters
+    # Tools added later (a website, a blog post) may have no repo; a missing signal is skipped, not counted as zero.
+    assert all(t.sig("github_repo") for t in tools if t.slug in starters)

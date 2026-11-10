@@ -80,9 +80,12 @@ test('M2: category and task pages exist for live ones only, and thin ones are no
 test('M2: filter cards carry the flags the in-page filters read', () => {
   const html = read('tools/index.html');
   for (const t of tools) {
-    const card = new RegExp(`<li class="card tool-card"[^>]*data-flags="([^"]*)"[^>]*>[\\s\\S]*?href="/tools/${t.slug}/"`).exec(html);
+    // Look inside this tool's own card only: split the page into cards, then find the one linking to the tool.
+    const chunk = html.split('<li class="card tool-card"').slice(1).find((c) => c.includes(`href="/tools/${t.slug}/"`));
+    // A tool with no flags renders a bare `data-flags` attribute, so the value is optional.
+    const card = chunk && /^[^>]*data-flags(?:="([^"]*)")?/.exec(chunk);
     assert.ok(card, `${t.slug}: card`);
-    const flags = card[1].split(' ');
+    const flags = (card[1] ?? '').split(' ').filter(Boolean);
     assert.equal(flags.includes('oss'), t.open_source === true, `${t.slug}: oss flag`);
     assert.equal(flags.includes('nocard'), t.free_tier.card_required === false, `${t.slug}: nocard flag`);
   }
