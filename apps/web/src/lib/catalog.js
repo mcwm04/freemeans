@@ -31,6 +31,15 @@ export const KIND_LABELS = {
   inference_platform: 'Inference platform',
   gpu_notebook: 'GPU notebook',
   cloud_credit: 'Cloud credit',
+  ai_subscription: 'AI subscription',
+  software_license: 'Software license',
+  saas_plan: 'App plan',
+  dev_platform: 'Developer platform',
+  course: 'Course',
+  certification: 'Certification',
+  library_access: 'Library access',
+  security_service: 'Security service',
+  ad_grant: 'Ad grant',
 };
 
 export const TIER_LABELS = { free: 'Free tier', trial: 'Trial', credit: 'Sign-up credit' };
@@ -44,6 +53,9 @@ export const BADGES = {
   manual_only: { label: 'Manual only', tone: 'stop', meaning: 'Use it by hand only. Freemeans never automates it.' },
   not_for_production: { label: 'Not for production', tone: 'info', meaning: 'Good for prototypes, not for a live product.' },
   payment_method_required: { label: 'Card required', tone: 'info', meaning: 'You must add a payment card even for the free part.' },
+  // Red on purpose (Eligibility PRD, decision 2): the free period becomes a paid plan by itself.
+  auto_renews_paid: { label: 'Charges after free period', tone: 'stop', meaning: 'Becomes a paid subscription automatically unless you cancel before the free period ends. Set a reminder.' },
+  educational_use_only: { label: 'Education use only', tone: 'warn', meaning: 'Only for learning and teaching. Not for any paid, client or company work.' },
 };
 
 export const METRICS = {
@@ -59,6 +71,7 @@ export const METRICS = {
   inputs_per_minute: 'Inputs per minute',
   session_hours: 'Session length (hours)',
   credit_usd: 'Credit (US$)',
+  seats: 'Seats (users)',
 };
 
 export const SIGNALS = {

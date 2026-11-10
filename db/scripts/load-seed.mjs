@@ -1,10 +1,12 @@
 #!/usr/bin/env node
-// Loads data/catalog/seed.json (or the file given as the first argument) into Neon.
-// Safe to run again after every catalog change: it replaces the catalog in one transaction.
-// Usage: DATABASE_URL=postgres://... node scripts/load-seed.mjs [path/to/catalog.json]
-import { connect, loadCatalog, readSeed } from './lib.mjs';
+// Loads data/catalog/seed.json and data/catalog/eligibility.json (or the files given as
+// arguments) into Neon as one catalog. Safe to run again after every catalog change: it replaces
+// the whole catalog in one transaction, so always load all files together.
+// Usage: DATABASE_URL=postgres://... node scripts/load-seed.mjs [catalog.json ...]
+import { connect, loadCatalog, readCatalogs } from './lib.mjs';
 
-const catalog = readSeed(process.argv[2]);
+const args = process.argv.slice(2);
+const catalog = readCatalogs(args.length ? args : undefined);
 const db = await connect();
 try {
   const r = await loadCatalog(db, catalog);

@@ -12,9 +12,22 @@
     "name": { "type": "string" },
     "kind": {
       "type": "string",
-      "enum": ["llm_api", "speech_api", "embedding_api", "inference_platform", "gpu_notebook", "cloud_credit"]
+      "enum": [
+        "llm_api", "speech_api", "embedding_api", "inference_platform", "gpu_notebook", "cloud_credit",
+        "ai_subscription", "software_license", "saas_plan", "dev_platform", "course", "certification",
+        "library_access", "security_service", "ad_grant"
+      ],
+      "description": "The first six are API-style free tiers used by the agent. The rest are eligibility-based offers (data/catalog/eligibility.json)."
     },
     "tier_type": { "type": "string", "enum": ["free", "trial", "credit"] },
+    "status": {
+      "type": "string",
+      "enum": ["active", "paused", "ended", "unverified"],
+      "description": "Missing = active. ended keeps the record for the Myths page; unverified is never shown as live. An offer whose offer_window.redeem_by has passed counts as ended whatever this says."
+    },
+    "eligibility": { "$ref": "eligibility.schema.json#/$defs/eligibility" },
+    "offer_window": { "$ref": "eligibility.schema.json#/$defs/offer_window" },
+    "replaced_by": { "type": "string", "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$", "description": "For ended offers: the id of what replaced it (Myths page)." },
     "endpoint": {
       "type": "object",
       "additionalProperties": false,
@@ -27,6 +40,7 @@
     "models": { "type": "array", "items": { "type": "string" } },
     "limit_rules": { "type": "array", "items": { "$ref": "limit_rule.schema.json" } },
     "badges": { "type": "array", "items": { "$ref": "badge.schema.json" } },
+    "watch": { "$ref": "eligibility.schema.json#/$defs/watch" },
     "notes": { "type": "string" },
     "last_verified": { "type": "string", "format": "date" },
     "sources": {

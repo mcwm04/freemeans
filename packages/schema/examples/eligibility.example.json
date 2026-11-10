@@ -1,0 +1,118 @@
+{
+  "version": "0.0.0-example",
+  "generated_at": "2026-11-09",
+  "resources": [
+    {
+      "id": "google.ai-plus-student",
+      "provider": "Google",
+      "name": "Google AI Plus, 12 months free for students",
+      "kind": "ai_subscription",
+      "tier_type": "trial",
+      "status": "active",
+      "eligibility": {
+        "audiences": ["student_higher_ed"],
+        "countries": { "mode": "exclude", "codes": ["US"] },
+        "min_age": 16,
+        "via": "individual",
+        "proof": ["sheerid", "school_email"],
+        "verifier": "SheerID",
+        "reverify": "yearly",
+        "excludes": "School-issued Google accounts; people with an active Google One plan. US students get the AI Pro offer instead.",
+        "notes": "Example record for schema tests. The full country list is copied from Google's support page in Module 2."
+      },
+      "offer_window": {
+        "redeem_by": "2026-12-31",
+        "duration_months": 12,
+        "after": { "price": "Google AI Plus monthly price (about US$4.99 or local equivalent)", "auto_renews": true }
+      },
+      "limit_rules": [],
+      "badges": [
+        { "type": "payment_method_required", "note": "A payment method is needed at sign-up.", "source_url": "https://one.google.com/offer/studentoffer8" },
+        { "type": "auto_renews_paid", "note": "Charged after 12 months unless cancelled.", "source_url": "https://one.google.com/offer/studentoffer8" }
+      ],
+      "watch": [
+        { "text": "December 31, 2026", "source_url": "https://one.google.com/offer/studentoffer8" }
+      ],
+      "last_verified": "2026-11-09",
+      "sources": [
+        { "url": "https://one.google.com/offer/studentoffer8", "fetched_at": "2026-11-09", "signal_type": "official_docs" },
+        { "url": "https://gemini.google/students", "fetched_at": "2026-11-09", "signal_type": "official_docs" }
+      ]
+    },
+    {
+      "id": "microsoft.azure-for-students",
+      "provider": "Microsoft",
+      "name": "Azure for Students",
+      "kind": "cloud_credit",
+      "tier_type": "credit",
+      "eligibility": {
+        "audiences": ["student_higher_ed"],
+        "countries": { "mode": "global", "codes": [] },
+        "via": "individual",
+        "proof": ["school_email"],
+        "reverify": "yearly",
+        "excludes": "Secondary-school students (they get Azure for Students Starter)."
+      },
+      "offer_window": { "duration_months": 12, "renewable": true },
+      "limit_rules": [
+        {
+          "metric": "credit_usd", "value": 100, "window": "year", "reset": { "kind": "none" }, "scope": "account",
+          "conditions": "Renew each year while still a student. No credit card needed.",
+          "published": true, "verified_at": "2026-11-09",
+          "source_url": "https://learn.microsoft.com/en-us/azure/education-hub/about-azure-for-students",
+          "signal_type": "official_docs"
+        }
+      ],
+      "badges": [],
+      "watch": [
+        { "text": "no credit card", "source_url": "https://learn.microsoft.com/en-us/azure/education-hub/about-azure-for-students" }
+      ],
+      "last_verified": "2026-11-09",
+      "sources": [
+        { "url": "https://learn.microsoft.com/en-us/azure/education-hub/about-azure-for-students", "fetched_at": "2026-11-09", "signal_type": "official_docs" }
+      ]
+    },
+    {
+      "id": "github.nonprofits",
+      "provider": "GitHub",
+      "name": "GitHub Team plan for nonprofits",
+      "kind": "dev_platform",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": ["nonprofit"],
+        "countries": { "mode": "global" },
+        "via": "institution",
+        "proof": ["nonprofit_registration"],
+        "excludes": "Governmental, academic, commercial, political or religiously affiliated organizations."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "last_verified": "2026-11-09",
+      "sources": [
+        { "url": "https://docs.github.com/en/nonprofit/quickstart", "fetched_at": "2026-11-09", "signal_type": "official_docs" }
+      ]
+    },
+    {
+      "id": "aws.educate-credits",
+      "provider": "AWS",
+      "name": "AWS Educate credit grants",
+      "kind": "cloud_credit",
+      "tier_type": "credit",
+      "status": "ended",
+      "replaced_by": "aws.educate",
+      "eligibility": {
+        "audiences": ["student_higher_ed", "educator_higher_ed"],
+        "countries": { "mode": "global" },
+        "via": "individual",
+        "proof": ["sign_up"]
+      },
+      "notes": "Credit grants stopped in February 2023; AWS Educate is now free training only.",
+      "limit_rules": [],
+      "badges": [],
+      "last_verified": "2026-11-09",
+      "sources": [
+        { "url": "https://builder.aws.com/content/3J0F6sCj6NWuOC3jqP6ZYMRyxrc/aws-educate-and-free-credit-programs-for-students-whats-actually-available-in-2026", "fetched_at": "2026-11-09", "signal_type": "third_party_snapshot" }
+      ]
+    }
+  ]
+}

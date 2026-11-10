@@ -13,7 +13,7 @@
         "rps", "rpm", "rpd", "requests_per_month",
         "tpm", "tpd", "itpm", "otpm",
         "neurons_per_day", "inputs_per_minute",
-        "session_hours", "credit_usd"
+        "session_hours", "credit_usd", "seats"
       ]
     },
     "value": {
@@ -23,7 +23,7 @@
     },
     "window": {
       "type": "string",
-      "enum": ["second", "minute", "day", "month", "session", "one_time"]
+      "enum": ["second", "minute", "day", "month", "session", "year", "one_time"]
     },
     "reset": {
       "type": "object",

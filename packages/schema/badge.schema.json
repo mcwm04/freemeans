@@ -16,9 +16,11 @@
         "eu_restricted",
         "manual_only",
         "not_for_production",
-        "payment_method_required"
+        "payment_method_required",
+        "auto_renews_paid",
+        "educational_use_only"
       ],
-      "description": "age_18_plus: users must be adults. non_commercial: not for commercial/client work. trains_on_data: prompts may be used to improve the provider's products or reviewed by humans. eu_restricted: apps for EEA/CH/UK end users must not use this tier. manual_only: never automate (e.g. Colab). not_for_production: prototyping only. payment_method_required: a card must be added even for the free part."
+      "description": "age_18_plus: users must be adults. non_commercial: not for commercial/client work. trains_on_data: prompts may be used to improve the provider's products or reviewed by humans. eu_restricted: apps for EEA/CH/UK end users must not use this tier. manual_only: never automate (e.g. Colab). not_for_production: prototyping only. payment_method_required: a card must be added even for the free part. auto_renews_paid: the free period turns into a paid subscription automatically unless cancelled (shown as a red warning). educational_use_only: only for learning and teaching, stricter than non_commercial."
     },
     "note": { "type": "string" },
     "source_url": { "type": "string", "format": "uri" }
