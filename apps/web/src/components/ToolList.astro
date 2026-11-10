@@ -1,0 +1,89 @@
+---
+// A filterable, sortable list of tools (M2). Filters run in the browser on the cards already
+// in the page, so they cost no API or Worker requests. Filter and sort state never becomes a
+// separate URL for search engines (SEO guide 6.1): it is read from ?q= only as a convenience.
+import ToolCard from './ToolCard.astro';
+import Icon from './Icon.astro';
+import { PLATFORMS } from '../lib/directory.js';
+interface Props { tools: any[]; label: string }
+const { tools, label } = Astro.props;
+const platforms = Object.entries(PLATFORMS).filter(([k]) => tools.some((t) => t.platforms.includes(k)));
+---
+<div data-toollist>
+  <form class="toolbar" data-filters aria-label={`Filter ${label}`}>
+    <label class="search">
+      <span class="sr-only">Filter by name or task</span>
+      <Icon name="search" />
+      <input type="search" name="q" placeholder="Filter by name or task…" />
+    </label>
+    <label class="sr-only" for="f-sort">Sort</label>
+    <select id="f-sort" name="sort">
+      <option value="generous">Most generous free tier</option>
+      <option value="newest">Newest</option>
+      <option value="az">A–Z</option>
+    </select>
+    {platforms.length > 1 && (
+      <>
+        <label class="sr-only" for="f-platform">Platform</label>
+        <select id="f-platform" name="platform">
+          <option value="">Any platform</option>
+          {platforms.map(([k, v]) => <option value={k}>{v}</option>)}
+        </select>
+      </>
+    )}
+    <span class="count" data-count role="status" aria-live="polite"><b>{tools.length}</b> shown</span>
+  </form>
+  <div class="chips" role="group" aria-label="Free-tier filters">
+    <label class="chip"><input type="checkbox" form="" data-flag="nocard" /><span>No card needed</span></label>
+    <label class="chip"><input type="checkbox" form="" data-flag="forever" /><span>Forever free</span></label>
+    <label class="chip"><input type="checkbox" form="" data-flag="oss" /><span>Open source</span></label>
+    <label class="chip"><input type="checkbox" form="" data-flag="commercial" /><span>Commercial use OK</span></label>
+    <label class="chip"><input type="checkbox" form="" data-flag="nowatermark" /><span>No watermark</span></label>
+    <label class="chip"><input type="checkbox" form="" data-flag="api" /><span>Has API</span></label>
+  </div>
+  <ul class="cards" data-cards>
+    {tools.map((t) => <ToolCard tool={t} />)}
+  </ul>
+  <p class="empty" data-empty hidden>No tool matches these filters. Try removing one.</p>
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-toollist]')) {
+    const form = root.querySelector<HTMLFormElement>('[data-filters]')!;
+    const list = root.querySelector<HTMLElement>('[data-cards]')!;
+    const cards = [...list.querySelectorAll<HTMLElement>('.tool-card')];
+    const flags = [...root.querySelectorAll<HTMLInputElement>('[data-flag]')];
+    const count = root.querySelector<HTMLElement>('[data-count]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+    const sorters: Record<string, (a: HTMLElement, b: HTMLElement) => number> = {
+      generous: (a, b) => Number(b.dataset.generosity) - Number(a.dataset.generosity) || a.dataset.name!.localeCompare(b.dataset.name!),
+      newest: (a, b) => b.dataset.listed!.localeCompare(a.dataset.listed!) || a.dataset.name!.localeCompare(b.dataset.name!),
+      az: (a, b) => a.dataset.name!.localeCompare(b.dataset.name!),
+    };
+    const apply = () => {
+      const f = new FormData(form);
+      const q = String(f.get('q') || '').trim().toLowerCase();
+      const platform = String(f.get('platform') || '');
+      const need = flags.filter((x) => x.checked).map((x) => x.dataset.flag!);
+      let shown = 0;
+      for (const c of cards) {
+        const have = (c.dataset.flags || '').split(' ');
+        const ok = (!q || (c.dataset.text || '').includes(q))
+          && (!platform || (c.dataset.platforms || '').split(' ').includes(platform))
+          && need.every((n) => have.includes(n));
+        c.hidden = !ok;
+        if (ok) shown++;
+      }
+      const sorted = [...cards].sort(sorters[String(f.get('sort') || 'generous')] ?? sorters.generous);
+      for (const c of sorted) list.appendChild(c);
+      count.innerHTML = `<b>${shown}</b> shown`;
+      empty.hidden = shown > 0;
+    };
+    const q = new URLSearchParams(location.search).get('q');
+    if (q) (form.elements.namedItem('q') as HTMLInputElement).value = q;
+    apply();
+    form.addEventListener('input', apply);
+    form.addEventListener('submit', (e) => e.preventDefault());
+    for (const x of flags) x.addEventListener('change', apply);
+  }
+</script>

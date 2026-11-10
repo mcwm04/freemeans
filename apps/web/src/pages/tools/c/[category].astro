@@ -1,0 +1,40 @@
+---
+// Category page: /tools/c/{category}/ (M2). Built for every category with at least one tool;
+// kept out of search results until it lists MIN_TOOLS_TO_INDEX tools (SEO guide 6.1).
+import Base from '../../../layouts/Base.astro';
+import ToolList from '../../../components/ToolList.astro';
+import { liveCategories, inCategory, taxonomy, forTask, lastModified, MIN_TOOLS_TO_INDEX } from '../../../lib/directory.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../../lib/seo.js';
+
+export function getStaticPaths() {
+  return liveCategories().map((c) => ({ params: { category: c.id }, props: { c } }));
+}
+const { c } = Astro.props;
+const list = inCategory(c.id);
+const tasks = taxonomy().tasks.filter((t) => t.category === c.id && forTask(t.id).length > 0);
+const path = `/tools/c/${c.id}/`;
+const title = `${c.name}: free AI tools compared`;
+const description = `${list.length} AI tool${list.length === 1 ? '' : 's'} for ${c.name.toLowerCase()}, with free plans checked and dated. ${c.description}`.slice(0, 170);
+const modified = list.map(lastModified).sort().at(-1);
+const noindex = list.length < MIN_TOOLS_TO_INDEX;
+const jsonLd = graph([
+  webPageLd(Astro.site, { path, name: title, description, type: 'CollectionPage', dateModified: modified }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'AI tools', path: '/tools/' }, { name: c.name, path }]),
+  itemListLd(Astro.site, { name: title, items: list.map((t) => ({ name: t.name, path: `/tools/${t.slug}/` })) }),
+]);
+---
+<Base title={title} description={description} jsonLd={jsonLd} current="tools" noindex={noindex}>
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/tools/">AI tools</a><span aria-hidden="true">/</span><span>Category</span></nav>
+      <h1>{c.name}</h1>
+      <p class="lede">{c.description}</p>
+      {tasks.length > 0 && <p class="badges">{tasks.map((t) => <a class="pill" href={`/tools/t/${t.id}/`}>{t.name}</a>)}</p>}
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap">
+      <ToolList tools={list} label={c.name} />
+    </div>
+  </div>
+</Base>

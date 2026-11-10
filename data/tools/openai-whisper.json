@@ -1,22 +1,4 @@
 {
-  "best_for": [
-    "Offline transcription",
-    "Subtitles for videos"
-  ],
-  "alternatives": [],
-  "status": "published",
-  "listed_at": "2026-11-09",
-  "changelog": [
-    {
-      "date": "2026-11-09",
-      "field": "listed",
-      "note": "Starter record for the Phase 0 signal collector; editor review due before pages go live"
-    }
-  ],
-  "affiliate_url": null,
-  "sponsor": null,
-  "verified_vendor": false,
-  "pricing": null,
   "slug": "openai-whisper",
   "name": "Whisper (OpenAI)",
   "url": "https://github.com/openai/whisper",
@@ -32,6 +14,10 @@
     "generate-subtitles",
     "translate-text",
     "speech-api"
+  ],
+  "best_for": [
+    "Offline transcription",
+    "Subtitles for videos"
   ],
   "platforms": [
     "windows",
@@ -54,6 +40,7 @@
     "source_url": "https://github.com/openai/whisper/blob/main/LICENSE",
     "verified_at": "2026-11-09"
   },
+  "pricing": null,
   "signals": {
     "trends_term": "OpenAI Whisper",
     "wikipedia_article": "Whisper_(speech_recognition_system)",
@@ -62,5 +49,18 @@
     "producthunt_slug": null,
     "hn_domain": "github.com/openai/whisper",
     "hn_query": null
-  }
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-09",
+  "changelog": [
+    {
+      "date": "2026-11-09",
+      "field": "listed",
+      "note": "Listed in the directory"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
 }

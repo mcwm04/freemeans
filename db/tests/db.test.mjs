@@ -16,7 +16,7 @@ async function freshDb() {
 
 test('migration creates every table and is idempotent', async () => {
   const db = await freshDb();
-  assert.deepEqual(await migrate(db), ['001_init.sql', '002_directory.sql', '003_eligibility.sql']);
+  assert.deepEqual(await migrate(db), ['001_init.sql', '002_directory.sql', '003_review_queue.sql', '004_eligibility.sql']);
   assert.deepEqual(await migrate(db), []);
   const { rows } = await db.query(
     `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' ORDER BY table_name`,
@@ -118,7 +118,7 @@ test('002 can run on a database that already has 001 applied (the live Neon case
   copyFileSync(new URL('../migrations/001_init.sql', import.meta.url), join(dir001, '001_init.sql'));
   assert.deepEqual(await migrate(db, dir001), ['001_init.sql']);
   await db.query(`INSERT INTO waitlist (email, consent_at) VALUES ('old@example.com', now())`);
-  assert.deepEqual(await migrate(db), ['002_directory.sql', '003_eligibility.sql']);
+  assert.deepEqual(await migrate(db), ['002_directory.sql', '003_review_queue.sql', '004_eligibility.sql']);
   const { rows } = await db.query(`SELECT lists FROM waitlist WHERE email = 'old@example.com'`);
   assert.deepEqual(rows[0].lists, ['waitlist']);
 });
@@ -146,23 +146,23 @@ test('directory enums are enforced', async () => {
   await assert.rejects(db.query(`INSERT INTO tool_candidates (url, domain, source) VALUES ('https://www.x.ai', 'x.ai', 'github')`), /duplicate key/);
 });
 
-// ---- 003_eligibility.sql (students, teachers, nonprofits, startups, countries) ----
+// ---- 004_eligibility.sql (students, teachers, nonprofits, startups, countries) ----
 
 const EXAMPLE_URL = new URL('../../packages/schema/examples/eligibility.example.json', import.meta.url);
 const example = () => JSON.parse(readFileSync(EXAMPLE_URL, 'utf8'));
 const schema = (name) => JSON.parse(readFileSync(new URL(`../../packages/schema/${name}`, import.meta.url), 'utf8'));
 
-test('003 runs on a database that already has 001 and 002 with the live seed loaded', async () => {
+test('004 runs on a database that already has 001, 002 and 003 with the live seed loaded', async () => {
   const db = await freshDb();
   const dir = mkdtempSync(join(tmpdir(), 'mig-'));
-  for (const f of ['001_init.sql', '002_directory.sql'])
+  for (const f of ['001_init.sql', '002_directory.sql', '003_review_queue.sql'])
     copyFileSync(new URL(`../migrations/${f}`, import.meta.url), join(dir, f));
   await migrate(db, dir);
   // Old loader shape: no eligibility columns yet.
   await db.query(`INSERT INTO catalog_versions (version, resource_count) VALUES ('old', 1)`);
   await db.query(`INSERT INTO resources (id, provider, name, kind, tier_type, last_verified, record, catalog_version)
                   VALUES ('groq.x', 'Groq', 'X', 'llm_api', 'free', '2026-11-01', '{}', 'old')`);
-  assert.deepEqual(await migrate(db), ['003_eligibility.sql']);
+  assert.deepEqual(await migrate(db), ['004_eligibility.sql']);
   const { rows } = await db.query(`SELECT status, audiences, country_mode, countries FROM resources WHERE id = 'groq.x'`);
   assert.deepEqual(rows[0], { status: 'active', audiences: [], country_mode: 'global', countries: [] });
 });
@@ -261,4 +261,14 @@ test('merging catalog files: missing files are skipped, duplicate ids across fil
   const seed = readSeed();
   const clash = mergeCatalogs([seed, { version: 'x', generated_at: '2026-11-09', resources: [seed.resources[0]] }]);
   assert.deepEqual(checkCatalog(clash), [`duplicate id ${seed.resources[0].id}`]);
+});
+
+test('003 review queue: fixed reject reasons, flags default to empty', async () => {
+  const db = await freshDb();
+  await migrate(db);
+  await db.query(`INSERT INTO tool_candidates (url, domain, source, name) VALUES ('https://a.ai', 'a.ai', 'submit', 'A')`);
+  const { rows } = await db.query(`SELECT flags, attempts, status FROM tool_candidates`);
+  assert.deepEqual(rows[0], { flags: [], attempts: 0, status: 'new' });
+  await assert.rejects(db.query(`UPDATE tool_candidates SET status='rejected', reject_reason='meh'`), /check constraint/);
+  await db.query(`UPDATE tool_candidates SET status='rejected', reject_reason='dead_site'`);
 });

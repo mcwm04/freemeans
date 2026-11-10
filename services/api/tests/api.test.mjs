@@ -173,3 +173,162 @@ test('every API answer tells search engines not to index it', async () => {
     assert.equal(res.headers.get('x-robots-tag'), 'noindex, nofollow', path);
   }
 });
+
+// ---------- M4: /go/{slug} click counting ----------
+import { linkSource } from '../src/links.js';
+
+const LINKS = new Map([['ollama', 'https://ollama.com'], ['comfyui', 'https://www.comfy.org']]);
+const BROWSER = { 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/131 Safari/537.36', 'cf-connecting-ip': '203.0.113.7', 'cf-ipcountry': 'PK' };
+
+function memDedupe() {
+  const seen = new Set();
+  return { seen: async (k) => (seen.has(k) ? true : (seen.add(k), false)) };
+}
+
+async function goApp() {
+  const pg = new PGlite();
+  await migrate(pg);
+  const query = (text, params) => pg.query(text, params);
+  const pending = [];
+  const app = createApp({ store: sqlStore(query), siteUrl: SITE, links: async () => LINKS, dedupe: memDedupe(), waitUntil: (p) => pending.push(p) });
+  const flush = () => Promise.all(pending.splice(0));
+  const clicks = async () => (await pg.query('SELECT slug, country, clicks FROM tool_clicks_daily ORDER BY slug, country')).rows;
+  return { app, flush, clicks };
+}
+
+test('/go/{slug} redirects to the tool and counts one click per visitor per day', async () => {
+  const { app, flush, clicks } = await goApp();
+  const res = await call(app, '/go/ollama', { headers: BROWSER });
+  assert.equal(res.status, 302);
+  assert.equal(res.headers.get('location'), 'https://ollama.com');
+  assert.equal(res.headers.get('cache-control'), 'no-store');
+  assert.equal(res.headers.get('x-robots-tag'), 'noindex, nofollow');
+  await call(app, '/go/ollama', { headers: BROWSER }); // same visitor again: not counted twice
+  await call(app, '/go/ollama', { headers: { ...BROWSER, 'cf-connecting-ip': '198.51.100.9', 'cf-ipcountry': 'US' } });
+  await flush();
+  assert.deepEqual(await clicks(), [{ slug: 'ollama', country: 'PK', clicks: 1 }, { slug: 'ollama', country: 'US', clicks: 1 }]);
+});
+
+test('/go/ ignores bots, prefetches and HEAD requests, but still redirects them', async () => {
+  const { app, flush, clicks } = await goApp();
+  for (const headers of [
+    { 'user-agent': 'Googlebot/2.1 (+http://www.google.com/bot.html)' },
+    { 'user-agent': 'WhatsApp/2.23' },
+    { 'user-agent': 'curl/8.5' },
+    {},
+    { ...BROWSER, 'sec-purpose': 'prefetch' },
+  ]) {
+    const res = await call(app, '/go/comfyui', { headers });
+    assert.equal(res.status, 302);
+    assert.equal(res.headers.get('location'), 'https://www.comfy.org');
+  }
+  assert.equal((await call(app, '/go/comfyui', { method: 'HEAD', headers: BROWSER })).status, 302);
+  await flush();
+  assert.deepEqual(await clicks(), []);
+});
+
+test('/go/ never redirects to an address outside the tool list', async () => {
+  const { app, flush, clicks } = await goApp();
+  const unknown = await call(app, '/go/not-a-tool', { headers: BROWSER });
+  assert.equal(unknown.status, 302);
+  assert.equal(unknown.headers.get('location'), `${SITE}/tools/`);
+  assert.equal((await call(app, '/go/..%2F..%2Fevil.com', { headers: BROWSER })).status, 404);
+  assert.equal((await call(app, '/go/ollama', { method: 'POST', headers: BROWSER })).status, 405);
+  await flush();
+  assert.deepEqual(await clicks(), []);
+});
+
+test('/go/ still redirects when the database is down or absent', async () => {
+  const broken = createApp({
+    store: withFallback(sqlStore(async () => { throw new Error('neon down'); }), seedStore(seed)),
+    siteUrl: SITE, links: async () => LINKS, waitUntil: (p) => p,
+  });
+  const res = await call(broken, '/go/ollama', { headers: BROWSER });
+  assert.equal(res.status, 302);
+  const noDb = createApp({ store: seedStore(seed), siteUrl: SITE, links: async () => LINKS });
+  assert.equal((await call(noDb, '/go/ollama', { headers: BROWSER })).headers.get('location'), 'https://ollama.com');
+});
+
+test('link map: live map from the site, bundled copy when the site cannot be read', async () => {
+  let t = 0;
+  let calls = 0;
+  const live = linkSource({
+    siteUrl: SITE, now: () => t,
+    fetcher: async (url) => { calls++; assert.equal(url, `${SITE}/tools/links.json`); return new Response(JSON.stringify({ 'new-tool': 'https://new.example', bad: 'javascript:alert(1)' })); },
+  });
+  const m = await live();
+  assert.equal(m.get('new-tool'), 'https://new.example');
+  assert.equal(m.has('bad'), false, 'only https destinations');
+  assert.equal(m.get('ollama'), 'https://ollama.com', 'bundled entries kept');
+  await live();
+  assert.equal(calls, 1, 'cached for 10 minutes');
+  t += 11 * 60 * 1000;
+  await live();
+  assert.equal(calls, 2);
+
+  const down = linkSource({ siteUrl: SITE, fetcher: async () => { throw new Error('offline'); } });
+  assert.equal((await down()).get('llama-cpp'), 'https://github.com/ggml-org/llama.cpp');
+});
+
+// ---------- M5: POST /submit ----------
+import { siteKey, parseSite } from '../src/domain.js';
+import { turnstile } from '../src/index.js';
+import cases from '../../../packages/schema/site-key-cases.json' with { type: 'json' };
+
+test('siteKey follows the shared cases (same file as the crawler)', () => {
+  for (const [url, key] of cases.cases) assert.equal(siteKey(url), key, url);
+  for (const bad of cases.invalid) assert.equal(parseSite(bad), null, bad);
+});
+
+async function submitApp({ human = true } = {}) {
+  const pg = new PGlite();
+  await migrate(pg);
+  const app = createApp({
+    store: sqlStore((t, p) => pg.query(t, p)), siteUrl: SITE, allowedOrigins: [SITE],
+    links: async () => LINKS, verifyHuman: async (token) => human && token === 'ok',
+  });
+  const rows = async () => (await pg.query('SELECT url, domain, source, name, category, submitter_email, priority, status FROM tool_candidates ORDER BY id')).rows;
+  return { app, rows };
+}
+const form = (fields) => ({ method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(fields).toString() });
+
+test('/submit queues a new tool once, keyed by site', async () => {
+  const { app, rows } = await submitApp();
+  const res = await call(app, '/submit', post({ url: 'https://www.newtool.ai/?utm_source=x#top', name: '  New   Tool ', category: 'video', email: 'Me@Vendor.ai', 'cf-turnstile-response': 'ok' }));
+  assert.equal(res.status, 200);
+  assert.deepEqual(await body(res), { ok: true, status: 'queued' });
+  await call(app, '/submit', post({ url: 'https://app.newtool.ai', name: 'Again', 'cf-turnstile-response': 'ok' }));
+  assert.deepEqual(await rows(), [{ url: 'https://www.newtool.ai/', domain: 'newtool.ai', source: 'submit', name: 'New Tool', category: 'video', submitter_email: 'me@vendor.ai', priority: 40, status: 'new' }]);
+});
+
+test('/submit form posts redirect back to the page with a status', async () => {
+  const { app, rows } = await submitApp();
+  const sent = await call(app, '/submit', form({ url: 'newtool.ai', name: 'New Tool', 'cf-turnstile-response': 'ok' }));
+  assert.equal(sent.status, 303);
+  assert.equal(sent.headers.get('location'), `${SITE}/tools/submit/?sent=1#form`);
+  const listed = await call(app, '/submit', form({ url: 'https://ollama.com/download', name: 'Ollama', 'cf-turnstile-response': 'ok' }));
+  assert.equal(listed.headers.get('location'), `${SITE}/tools/submit/?status=listed#form`);
+  const bad = await call(app, '/submit', form({ url: 'http://localhost', name: 'X', 'cf-turnstile-response': 'ok' }));
+  assert.equal(bad.headers.get('location'), `${SITE}/tools/submit/?error=url#form`);
+  assert.equal((await rows()).length, 1);
+});
+
+test('/submit rejects failed spam checks, fills nothing for bots, validates fields', async () => {
+  const { app, rows } = await submitApp();
+  assert.equal((await call(app, '/submit', post({ url: 'https://x.ai', name: 'X', 'cf-turnstile-response': 'bad' }))).status, 403);
+  assert.equal((await call(app, '/submit', post({ url: 'https://x.ai', name: 'X', website: 'spam' }))).status, 200);
+  assert.equal((await call(app, '/submit', post({ url: 'https://x.ai', name: '', 'cf-turnstile-response': 'ok' }))).status, 400);
+  assert.equal((await call(app, '/submit', post({ url: 'https://x.ai', name: 'X', email: 'nope', 'cf-turnstile-response': 'ok' }))).status, 400);
+  assert.equal((await call(app, '/submit')).status, 405);
+  assert.deepEqual(await rows(), []);
+});
+
+test('Turnstile check posts the token and secret to Cloudflare', async () => {
+  let sent;
+  const check = turnstile('s3cret', async (url, init) => { sent = { url, body: String(init.body) }; return new Response(JSON.stringify({ success: true })); });
+  assert.equal(await check('tok', '1.2.3.4'), true);
+  assert.equal(sent.url, 'https://challenges.cloudflare.com/turnstile/v0/siteverify');
+  assert.equal(sent.body, 'secret=s3cret&response=tok&remoteip=1.2.3.4');
+  assert.equal(await check('', ''), false);
+  assert.equal(await turnstile('s', async () => new Response('{"success":false}'))('t'), false);
+});

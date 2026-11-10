@@ -20,6 +20,10 @@ The repo so far (Step 1 + Step 2):
 | Nightly source check + GitHub Actions PR | `services/pipeline/`, `.github/workflows/` | ✅ Step 2, 17 tests |
 | AI tools directory, Phase 0: tool schema, taxonomy (25 categories, 80 tasks), `toolcheck` | `packages/schema/`, `data/`, `services/toolcheck/` | ✅ 33 tests · [docs/DIRECTORY.md](docs/DIRECTORY.md) |
 | Directory tables (`002_directory.sql`) + nightly signal collector with 2-year backfill | `db/`, `services/signals/` | ✅ 30 tests |
+| Directory pages (M1–M3): `/tools/`, tool, category and task pages, filters, Pagefind search, freshness | `apps/web/`, `services/pipeline/` | ✅ web 29 tests |
+| `/go/{slug}` click counting (M4) | `services/api/` | ✅ API tests |
+| Submit form (M5), discovery crawler with LLM drafting and number check | `apps/web/`, `services/api/`, `services/crawler/` | ✅ crawler 21 tests |
+| Editor console (M6), sign in with GitHub | `services/admin/` | ✅ 10 tests |
 | Alerts, recipes, dashboard, admin console | `services/alerts/`, `recipes/` | ⏳ later steps |
 
 **Deploy everything for $0, no card:** [docs/DEPLOY.md](docs/DEPLOY.md).

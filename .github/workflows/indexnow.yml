@@ -9,6 +9,8 @@ on:
     paths:
       - "apps/web/**"
       - "data/catalog/**"
+      - "data/tools/**"
+      - "data/taxonomy.json"
   workflow_dispatch: {}
 
 permissions:

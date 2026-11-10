@@ -2,6 +2,8 @@
 //   listResources() → { version, resources: [record] }
 //   getResource(id) → record | null
 //   addToWaitlist({ email, source, country }) → { created: boolean }
+//   addClick({ slug, day, country }) → { recorded: boolean }   (M4, /go/{slug})
+//   addCandidate({ url, domain, source, name, category, email, priority }) → { created }  (M5)
 // sqlStore reads Neon Postgres; seedStore serves the catalog bundled into the Worker
 // (used when DATABASE_URL is not set, and as a read fallback if Neon is unreachable).
 
@@ -17,6 +19,14 @@ export function seedStore(catalog) {
     },
     async addToWaitlist() {
       const err = new Error('The waitlist needs a database. Set the DATABASE_URL secret.');
+      err.status = 503;
+      throw err;
+    },
+    async addClick() {
+      return { recorded: false }; // no database: redirect still works, click is not stored
+    },
+    async addCandidate() {
+      const err = new Error('Submissions need a database. Set the DATABASE_URL secret.');
       err.status = 503;
       throw err;
     },
@@ -41,6 +51,22 @@ export function sqlStore(query) {
         `INSERT INTO waitlist (email, source, consent_at, country) VALUES ($1, $2, now(), $3)
          ON CONFLICT (email) DO NOTHING RETURNING id`,
         [email, source, country],
+      );
+      return { created: r.rows.length > 0 };
+    },
+    async addClick({ slug, day, country }) {
+      await query(
+        `INSERT INTO tool_clicks_daily (slug, day, country, clicks) VALUES ($1, $2, $3, 1)
+         ON CONFLICT (slug, day, country) DO UPDATE SET clicks = tool_clicks_daily.clicks + 1`,
+        [slug, day, country],
+      );
+      return { recorded: true };
+    },
+    async addCandidate({ url, domain, source, name, category, email, priority }) {
+      const r = await query(
+        `INSERT INTO tool_candidates (url, domain, source, name, category, submitter_email, priority)
+         VALUES ($1, $2, $3, $4, $5, $6, $7) ON CONFLICT (domain) DO NOTHING RETURNING id`,
+        [url, domain, source, name, category, email, priority],
       );
       return { created: r.rows.length > 0 };
     },
@@ -69,6 +95,8 @@ export function withFallback(primary, fallback) {
       }
     },
     addToWaitlist: (entry) => primary.addToWaitlist(entry),
+    addClick: (click) => primary.addClick(click),
+    addCandidate: (c) => primary.addCandidate(c),
   };
 }
 

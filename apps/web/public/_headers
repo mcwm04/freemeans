@@ -18,3 +18,11 @@
 
 /og.png
   Cache-Control: public, max-age=86400
+
+/tools/links.json
+  Cache-Control: public, max-age=300
+  X-Robots-Tag: noindex
+
+/tools/status.json
+  Cache-Control: public, max-age=300
+  X-Robots-Tag: noindex

@@ -14,17 +14,21 @@ from pathlib import Path
 
 from .check import check_catalog, summary
 from .report import markdown, record
+from .tools import tools_as_resources
 
 
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="source_check", description="Check that catalog limits still appear on their source pages.")
     p.add_argument("--catalog", default="../../data/catalog/seed.json")
     p.add_argument("--out-dir", default="../../data/source-checks")
+    p.add_argument("--tools", default="../../data/tools", help="directory tool files (M3); '' to skip")
     p.add_argument("--date", default=dt.date.today().isoformat())
     p.add_argument("--github-output", default=os.environ.get("GITHUB_OUTPUT"))
     args = p.parse_args(argv)
 
     catalog = json.loads(Path(args.catalog).read_text(encoding="utf-8"))
+    if args.tools:
+        catalog = {**catalog, "resources": catalog["resources"] + tools_as_resources(Path(args.tools))}
     results = check_catalog(catalog)
     s = summary(results)
     out = Path(args.out_dir)

@@ -21,6 +21,12 @@ def _fmt(v) -> str:
     return str(v)
 
 
+def _file_for(resource_id: str) -> str:
+    if resource_id.startswith("tools/"):
+        return f"data/{resource_id}.json"
+    return "data/catalog/seed.json"
+
+
 def markdown(results: list[RuleResult], run_date: str, catalog_version: str) -> str:
     s = summary(results)
     lines = [
@@ -42,13 +48,15 @@ def markdown(results: list[RuleResult], run_date: str, catalog_version: str) -> 
             "## Possibly changed: review these",
             "",
             "The number we have on file is no longer on its source page. The provider may have changed the limit,",
-            "or the page may have been rewritten. Open the source, then edit `data/catalog/seed.json` in this PR:",
-            "update `value`, set `verified_at` to today, and keep `source_url` pointing at the page you checked.",
+            "or the page may have been rewritten. Open the source, then edit the file named under each item in this PR:",
+            "update the value, set `verified_at` to today, and keep `source_url` pointing at the page you checked.",
+            "For a directory tool, also add a line to its `changelog` (it shows on the tool page).",
             "",
         ]
         for r in missing:
             lines.append(f"### `{r.resource_id}` · {r.metric} = {_fmt(r.value)} per {r.window}")
             lines.append(f"- Source: {r.source_url} ({r.signal_type}, last verified {r.verified_at})")
+            lines.append(f"- File: `{_file_for(r.resource_id)}`")
             if r.nearby:
                 lines.append("- What the page says nearby now:")
                 lines += [f"  > {n}" for n in r.nearby]

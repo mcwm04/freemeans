@@ -59,6 +59,13 @@ jobs:
         run: |
           pip install -e ".[dev]"
           python -m pytest -q
+      - name: Discovery crawler tests (fake network and LLM + real Postgres)
+        working-directory: services/crawler
+        env:
+          TEST_DATABASE_URL: postgresql://postgres:ci@localhost:5432/postgres
+        run: |
+          pip install -e ../toolcheck -e ../signals -e ".[dev]"
+          python -m pytest -q
 
   web-api-db:
     runs-on: ubuntu-latest
@@ -72,6 +79,9 @@ jobs:
         run: npm ci && npm test
       - name: API (Workers)
         working-directory: services/api
+        run: npm ci && npm test && npm run check-bundle
+      - name: Editor console (Workers)
+        working-directory: services/admin
         run: npm ci && npm test && npm run check-bundle
       - name: Website (Astro build + checks)
         working-directory: apps/web

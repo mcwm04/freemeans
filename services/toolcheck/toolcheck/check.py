@@ -30,6 +30,8 @@ BANNED_TAGLINE_WORDS = [
     "amazing", "incredible", "powerful", "seamless", "next-gen", "groundbreaking",
 ]
 DESCRIPTION_WORDS = (80, 150)
+# Paths under /tools/ that belong to the site, not to a tool (M2 pages, M5 form, M7 lists).
+RESERVED_SLUGS = {"c", "t", "submit", "search", "top-10", "category", "task", "compare", "go", "api", "admin"}
 MAX_CATEGORIES_IN_TAXONOMY = 40
 
 
@@ -160,6 +162,8 @@ def check_tool(stem: str, tool: dict, report: Report, validator: Draft202012Vali
     slug = tool.get("slug")
     if slug != stem:
         report.error(where, f"slug {slug!r} must equal the file name {stem!r}")
+    if slug in RESERVED_SLUGS:
+        report.error(where, f"slug {slug!r} is reserved for a site page under /tools/")
 
     for c in tool.get("categories") or []:
         if c not in cat_ids:

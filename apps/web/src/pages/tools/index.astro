@@ -1,0 +1,95 @@
+---
+// Directory home: /tools/. Search (Pagefind, static index), categories, and every tool (M2).
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import ToolList from '../../components/ToolList.astro';
+import { tools, liveCategories, liveTasks, directoryStats } from '../../lib/directory.js';
+import { formatDate } from '../../lib/catalog.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
+
+const list = tools();
+const s = directoryStats();
+const cats = liveCategories();
+const tasks = liveTasks().sort((a, b) => b.count - a.count || a.name.localeCompare(b.name)).slice(0, 12);
+const title = 'AI tools directory: what each tool gives you free';
+const description = `${s.tools} AI tools with their free plans checked against the provider's own pages: quota, card needed, commercial use and watermark. Last checked ${formatDate(s.latest)}.`;
+const jsonLd = graph([
+  webPageLd(Astro.site, { path: '/tools/', name: title, description, type: 'CollectionPage', dateModified: s.latest }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'AI tools', path: '/tools/' }]),
+  itemListLd(Astro.site, { name: title, items: list.map((t) => ({ name: t.name, path: `/tools/${t.slug}/` })) }),
+]);
+---
+<Base title={title} description={description} jsonLd={jsonLd} current="tools">
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">AI tools</p>
+      <h1>AI tools, and what you get free</h1>
+      <p class="lede">{s.tools} tools in {s.categories} categories. Every free plan is checked against the provider's own page and dated.</p>
+      <form class="site-search" role="search" data-search action="/tools/" method="get">
+        <div class="toolbar">
+          <label class="search">
+            <span class="sr-only">Search all tools</span>
+            <Icon name="search" />
+            <input type="search" name="q" placeholder="Search tools: transcribe audio, run models offline…" autocomplete="off" />
+          </label>
+        </div>
+        <ul class="search-results" data-results aria-live="polite"></ul>
+      </form>
+      <p class="small muted">Missing a tool? <a href="/tools/submit/">Submit it for review</a>. Listing is free.</p>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="wrap">
+      <section aria-labelledby="cats">
+        <h2 id="cats">Browse by category</h2>
+        <div class="kinds">
+          {cats.map((c) => (
+            <a class="kind" href={`/tools/c/${c.id}/`}><span class="k-num">{c.count}</span><span class="k-label">{c.name}</span><span class="k-sub">{c.description}</span></a>
+          ))}
+        </div>
+      </section>
+
+      {tasks.length > 0 && (
+        <section aria-labelledby="tasks">
+          <h2 id="tasks">Popular tasks</h2>
+          <p class="badges">{tasks.map((t) => <a class="pill" href={`/tools/t/${t.id}/`}>{t.name}</a>)}</p>
+        </section>
+      )}
+
+      <section aria-labelledby="all">
+        <h2 id="all">All tools</h2>
+        <ToolList tools={list} label="all tools" />
+      </section>
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Site-wide search over tool pages, from the static Pagefind index built after `astro build`.
+  // No Worker or API request is used. The index loads only when someone starts typing.
+  const form = document.querySelector<HTMLFormElement>('[data-search]')!;
+  const input = form.querySelector<HTMLInputElement>('input[name="q"]')!;
+  const out = form.querySelector<HTMLElement>('[data-results]')!;
+  let pagefind: any;
+  let timer: number | undefined;
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+  const run = async () => {
+    const q = input.value.trim();
+    if (!q) { out.innerHTML = ''; return; }
+    try {
+      pagefind ??= await import(/* @vite-ignore */ '/pagefind/pagefind.js');
+      const res = await pagefind.search(q);
+      const items = await Promise.all(res.results.slice(0, 8).map((r: any) => r.data()));
+      out.innerHTML = items.length
+        ? items.map((d: any) => `<li><a href="${esc(d.url)}"><b>${esc(d.meta.title ?? d.url)}</b></a><p>${d.excerpt}</p></li>`).join('')
+        : `<li>No tool matches “${esc(q)}”. Try a task, such as “subtitles”.</li>`;
+    } catch {
+      out.innerHTML = '<li>Search is not available right now. Use the filters below.</li>';
+    }
+  };
+  input.addEventListener('input', () => { clearTimeout(timer); timer = window.setTimeout(run, 150); });
+  form.addEventListener('submit', (e) => { e.preventDefault(); run(); });
+  const q = new URLSearchParams(location.search).get('q');
+  if (q) { input.value = q; run(); }
+</script>
