@@ -1,0 +1,63 @@
+{
+  "slug": "i-m-not-convinced-the-ai-bubble-exists",
+  "name": "I'm not convinced the AI bubble exists",
+  "url": "https://matteoraso.github.io/im-not-convinced-the-ai-bubble-exists.html",
+  "tagline": "An article examining AI industry valuation and spending",
+  "description": "The piece discusses the concept of an AI bubble, detailing the massive spending and debt of AI companies, revenue growth, and profitability after infrastructure costs. It reviews financial figures such as trillions in expenses, billions in revenue, and the potential for AI to automate tasks across professions. The author argues that while costs are high, they are largely one‑off infrastructure investments and that AI adoption could increase significantly. The article is aimed at readers interested in the economics and future of the AI sector.",
+  "categories": [
+    "research",
+    "business"
+  ],
+  "tasks": [
+    "summarize-text"
+  ],
+  "best_for": [
+    "Understanding AI industry financials",
+    "Evaluating arguments about an AI bubble",
+    "Analyzing AI company spending and revenue",
+    "Assessing long‑term AI profitability",
+    "Exploring AI adoption impact"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": null,
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://matteoraso.github.io/im-not-convinced-the-ai-bubble-exists.html",
+    "verified_at": "2026-11-10"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "I'm not convinced the AI bubble exists",
+    "wikipedia_article": null,
+    "github_repo": null,
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "matteoraso.github.io",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-10",
+  "changelog": [
+    {
+      "date": "2026-11-10",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
