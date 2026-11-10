@@ -39,12 +39,19 @@ Post = Callable[[str, dict, dict], tuple[int | None, dict | None, str]]
 
 
 def urllib_post(url: str, headers: dict, body: dict) -> tuple[int | None, dict | None, str]:
-    req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={**headers, "Content-Type": "application/json"}, method="POST")
+    # A named User-Agent is needed: Groq sits behind Cloudflare, which answers 403 to the default "Python-urllib".
+    req = urllib.request.Request(url, data=json.dumps(body).encode(), method="POST", headers={
+        "User-Agent": "FreemeansBot/1.0 (+https://freemeans.com)", "Accept": "application/json",
+        **headers, "Content-Type": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=TIMEOUT) as res:
             return res.status, json.loads(res.read().decode("utf-8")), ""
     except urllib.error.HTTPError as e:
-        return e.code, None, f"HTTP {e.code}"
+        try:                                  # keep the provider's reason; it is never a secret
+            detail = " ".join(e.read().decode("utf-8", "replace").split())[:160]
+        except Exception:
+            detail = ""
+        return e.code, None, f"HTTP {e.code}" + (f" {detail}" if detail else "")
     except Exception as e:
         return None, None, f"{type(e).__name__}: {e}"[:200]
 
