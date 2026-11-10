@@ -10,7 +10,7 @@ const STALE_DAYS = 30;
 const SECURITY_HEADERS = {
   'content-security-policy': "default-src 'none'; style-src 'unsafe-inline'; img-src 'self' data:; frame-src https: http:; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
   'x-robots-tag': 'noindex, nofollow',
-  'referrer-policy': 'no-referrer',
+  'referrer-policy': 'same-origin',
   'x-content-type-options': 'nosniff',
   'cache-control': 'no-store',
 };
@@ -165,8 +165,11 @@ export function createAdmin({
 
     if (req.method === 'POST') {
       // CSRF: the session cookie is SameSite=Lax; also require the request to come from this site.
+      // Browsers send "Origin: null" on form posts when the referrer policy is no-referrer, so a missing or
+      // "null" Origin is accepted only when the browser itself says the request is same-origin.
       const from = req.headers.get('origin');
-      if (from !== origin) return html(403, page('Blocked', s.login, '<h1>Blocked</h1><p>That form came from another site.</p>'));
+      const sameSite = from && from !== 'null' ? from === origin : req.headers.get('sec-fetch-site') === 'same-origin';
+      if (!sameSite) return html(403, page('Blocked', s.login, '<h1>Blocked</h1><p>That form came from another site.</p>'));
       if (path === '/logout') return redirect('/login', { 'set-cookie': cookie(SESSION, '', 0) });
       if (path === '/seed') return seed(req, s);
       let m = /^\/c\/(\d+)$/.exec(path);
