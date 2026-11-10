@@ -1,0 +1,70 @@
+{
+  "slug": "agent-autoloop",
+  "name": "agent-autoloop",
+  "url": "https://github.com/KKKKhazix/agent-autoloop",
+  "tagline": "A lightweight automation middle‑platform for command‑line AI agents",
+  "description": "Agent Autoloop is an open‑source tool that runs on Windows, macOS or Linux. It lets you schedule events, route them to command‑line agents such as Claude Code or Codex, and receive notifications via desktop, Feishu, Slack, Discord and other channels. The system works without external servers, using a plug‑in architecture for event sources, agents and delivery methods. It is aimed at developers who want their CLI agents to operate unattended and handle tasks like daily reports, issue triage or alert investigation.",
+  "categories": [
+    "automation",
+    "local-ai",
+    "productivity"
+  ],
+  "tasks": [
+    "build-ai-agents",
+    "schedule-calendar",
+    "automate-workflows",
+    "run-llm-locally"
+  ],
+  "best_for": [
+    "automating command‑line AI agents",
+    "scheduling recurring tasks",
+    "handling GitHub issues automatically",
+    "sending notifications to Slack, Feishu, Discord, etc.",
+    "running agents without cloud servers"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "cli"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/KKKKhazix/agent-autoloop",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/KKKKhazix/agent-autoloop",
+    "verified_at": "2026-11-10"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "agent-autoloop",
+    "wikipedia_article": null,
+    "github_repo": "KKKKhazix/agent-autoloop",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/kkkkhazix/agent-autoloop",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-10",
+  "changelog": [
+    {
+      "date": "2026-11-10",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
