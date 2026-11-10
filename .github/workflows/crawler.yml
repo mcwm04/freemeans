@@ -44,6 +44,6 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
-      - run: pip install ../toolcheck ../signals .
+      - run: pip install -e ../toolcheck -e ../signals -e .
       - name: Discover and draft
         run: python -m crawler run --limit "$LIMIT"
