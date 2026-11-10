@@ -140,6 +140,15 @@ test('approve refuses an existing file or an already listed site', async () => {
   assert.equal(commits.length, 0);
 });
 
+test('form posts: same-origin browsers that send Origin null are accepted, cross-site ones are not', async () => {
+  const { as, add } = await setup();
+  const id = await add({ url: 'https://voicekit.ai/', domain: 'voicekit.ai', draft: goodTool() });
+  const post = (headers) => as(`/c/${id}/reject`, { method: 'POST', body: 'reason=duplicate', headers: { 'content-type': 'application/x-www-form-urlencoded', ...headers } });
+  assert.equal((await post({ origin: 'null', 'sec-fetch-site': 'cross-site' })).status, 403, 'sandboxed cross-site form');
+  assert.equal((await post({})).status, 403, 'no Origin and no Fetch Metadata');
+  assert.equal((await post({ origin: 'null', 'sec-fetch-site': 'same-origin' })).status, 303, 'browser with no-referrer sends null');
+});
+
 test('save keeps edits; reject stores a fixed reason; forms from other sites are blocked', async () => {
   const { postForm, add, pg, as } = await setup();
   const id = await add({ url: 'https://voicekit.ai/', domain: 'voicekit.ai', draft: goodTool() });
