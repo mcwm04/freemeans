@@ -32,7 +32,8 @@ def drafter_returning(*answers):
         if isinstance(a, int):
             return a, None, f"HTTP {a}"
         return 200, {"choices": [{"message": {"content": json.dumps(a)}}]}, ""
-    return Drafter([Provider("groq", "https://g/v1", "m", "k"), Provider("gemini", "https://ge/v1", "m2", "k2")], post=post)
+    return Drafter([Provider("groq", "https://g/v1", "m", "k"), Provider("gemini", "https://ge/v1", "m2", "k2")],
+                   post=post, sleep=lambda s: None)
 
 
 # ---------- domain rules (shared with the API) ----------
@@ -140,12 +141,64 @@ def test_groq_rate_limit_falls_back_to_gemini():
     out, provider = d.complete_json("s", "u")
     assert provider == "gemini" and out["name"] == "VoiceKit"
     d.complete_json("s", "u")
-    assert d.calls == {"groq": 1, "gemini": 2}, "groq stays paused for the run after a 429"
+    assert d.calls == {"groq": 1, "gemini": 2}, "groq rests for a minute after a 429"
+
+
+def test_rate_limited_provider_is_used_again_after_the_cooldown():
+    now = [0.0]
+    seq = [429, GOOD_DRAFT, GOOD_DRAFT]
+
+    def post(url, headers, body):
+        a = seq.pop(0)
+        return (a, None, f"HTTP {a}") if isinstance(a, int) else (200, {"choices": [{"message": {"content": json.dumps(a)}}]}, "")
+    d = Drafter([Provider("groq", "https://g/v1", "m", "k"), Provider("gemini", "https://ge/v1", "m2", "k2")],
+                post=post, sleep=lambda s: None, clock=lambda: now[0])
+    d.complete_json("s", "u")           # groq 429 -> gemini
+    now[0] = 61
+    assert d.complete_json("s", "u")[1] == "groq"
+
+
+def test_transient_errors_are_retried_then_succeed():
+    waits = []
+    seq = [503, 503, GOOD_DRAFT]
+
+    def post(url, headers, body):
+        a = seq.pop(0)
+        return (a, None, f"HTTP {a}") if isinstance(a, int) else (200, {"choices": [{"message": {"content": json.dumps(a)}}]}, "")
+    d = Drafter([Provider("gemini", "https://ge/v1", "m", "k")], post=post, sleep=waits.append)
+    assert d.complete_json("s", "u")[1] == "gemini"
+    assert waits == [5, 20] and d.calls == {"gemini": 3}
+
+
+def test_all_providers_resting_waits_once_for_the_earliest():
+    waits = []
+    now = [0.0]
+    seq = [429, GOOD_DRAFT]
+
+    def post(url, headers, body):
+        a = seq.pop(0)
+        return (a, None, f"HTTP {a}") if isinstance(a, int) else (200, {"choices": [{"message": {"content": json.dumps(a)}}]}, "")
+
+    def sleep(s):
+        waits.append(s)
+        now[0] += s
+    d = Drafter([Provider("groq", "https://g/v1", "m", "k")], post=post, sleep=sleep, clock=lambda: now[0])
+    assert d.complete_json("s", "u")[1] == "groq"
+    assert waits == [60]
+
+
+def test_waiting_is_capped_so_the_job_stays_under_its_timeout():
+    from crawler import llm
+    d = Drafter([Provider("gemini", "https://ge/v1", "m", "k")], post=lambda *a: (503, None, "HTTP 503"), sleep=lambda s: None)
+    d.waited = llm.WAIT_BUDGET
+    with pytest.raises(NoProvider):
+        d.complete_json("s", "u")
+    assert d.calls == {"gemini": 1}, "no retries once the waiting budget is spent"
 
 
 def test_no_provider_answers():
     with pytest.raises(NoProvider):
-        drafter_returning(500, 500).complete_json("s", "u")
+        drafter_returning(500, 500, 500, 500, 500, 500).complete_json("s", "u")
     with pytest.raises(NoProvider, match="no LLM key"):
         Drafter([]).complete_json("s", "u")
 

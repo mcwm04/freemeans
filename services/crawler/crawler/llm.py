@@ -60,37 +60,73 @@ class NoProvider(Exception):
     pass
 
 
-class Drafter:
-    """Returns parsed JSON from the first provider that answers with valid JSON."""
+TRANSIENT = {None, 500, 502, 503, 504}      # overloaded or unreachable: worth another try
+RETRY_WAITS = (5, 20)                        # seconds before the 2nd and 3rd attempt on one provider
+COOLDOWN = 60                                # a 429 benches that provider for this long (limits are per minute)
+WAIT_BUDGET = 20 * 60                        # total seconds one run may spend waiting, so the job stays under its timeout
 
-    def __init__(self, providers: list[Provider], post: Post = urllib_post, sleep=time.sleep):
+
+class Drafter:
+    """Returns parsed JSON from the first provider that answers with valid JSON.
+
+    Free tiers are busy and rate-limited, so: transient errors (503, timeouts) are retried with short
+    waits; a 429 benches the provider for a minute, not for the whole run; if every provider is benched
+    the drafter waits for the earliest one (within WAIT_BUDGET) before giving up on this site.
+    """
+
+    def __init__(self, providers: list[Provider], post: Post = urllib_post, sleep=time.sleep, clock=time.monotonic):
         self.providers = providers
         self.post = post
         self.sleep = sleep
-        self.paused: set[str] = set()       # providers that rate-limited us this run
+        self.clock = clock
+        self.benched: dict[str, float] = {}  # provider -> clock time when it may be used again
+        self.waited = 0.0
         self.calls: dict[str, int] = {}
 
-    def complete_json(self, system: str, user: str) -> tuple[dict, str]:
-        errors = []
-        for p in self.providers:
-            if p.name in self.paused:
-                continue
-            body = {"model": p.model, "temperature": 0.1, "response_format": {"type": "json_object"},
-                    "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]}
+    def _wait(self, seconds: float) -> bool:
+        if seconds <= 0 or self.waited + seconds > WAIT_BUDGET:
+            return False
+        self.waited += seconds
+        self.sleep(seconds)
+        return True
+
+    def _try(self, p: Provider, system: str, user: str, errors: list[str]):
+        """Ask one provider, retrying transient errors. Returns (json, name), or None to move on."""
+        body = {"model": p.model, "temperature": 0.1, "response_format": {"type": "json_object"},
+                "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}]}
+        for attempt in range(len(RETRY_WAITS) + 1):
             status, data, err = self.post(f"{p.base_url}/chat/completions", {"Authorization": f"Bearer {p.key}"}, body)
             self.calls[p.name] = self.calls.get(p.name, 0) + 1
             if status == 429:
-                self.paused.add(p.name)
+                self.benched[p.name] = self.clock() + COOLDOWN
                 errors.append(f"{p.name}: rate-limited")
+                return None
+            if status in TRANSIENT and attempt < len(RETRY_WAITS) and self._wait(RETRY_WAITS[attempt]):
                 continue
             if status != 200 or not data:
                 errors.append(f"{p.name}: {err or status}")
-                continue
+                return None
             try:
                 text = data["choices"][0]["message"]["content"] or ""
                 return json.loads(_strip_fences(text)), p.name
             except (KeyError, IndexError, TypeError, ValueError):
                 errors.append(f"{p.name}: answer was not JSON")
+                return None
+        return None
+
+    def complete_json(self, system: str, user: str) -> tuple[dict, str]:
+        errors: list[str] = []
+        for round_ in range(2):
+            for p in self.providers:
+                if self.benched.get(p.name, 0) > self.clock():
+                    continue
+                got = self._try(p, system, user, errors)
+                if got:
+                    return got
+            # Nobody answered. If a provider is only resting, wait for it once and go round again.
+            soonest = min((t - self.clock() for t in self.benched.values() if t > self.clock()), default=0)
+            if round_ == 1 or not self._wait(soonest):
+                break
         raise NoProvider("; ".join(errors) or "no LLM key configured (GROQ_API_KEY / GEMINI_API_KEY)")
 
 
