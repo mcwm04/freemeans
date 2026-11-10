@@ -1,0 +1,66 @@
+{
+  "slug": "tokeneconomizer",
+  "name": "TokenEconomizer",
+  "url": "https://github.com/microsoft/TokenEconomizer",
+  "tagline": "Reduces token usage for coding agents by learning from prior sessions",
+  "description": "TokenEconomizer is an open‑source plugin that makes coding agents cheaper to run in repositories you work in frequently. It learns facts about a repository from repeated failures and model reviews, stores them locally, and injects them at the start of future sessions. The plugin also prunes unused tools and intervenes when a turn gets stuck, reducing redundant token consumption. It works with Claude Code, Codex, GitHub Copilot CLI, Pi, and experimental support for other agents. The learned data stays on the user's machine, and the plugin runs without altering the underlying agent model.",
+  "categories": [
+    "coding"
+  ],
+  "tasks": [
+    "generate-code",
+    "debug-code",
+    "review-code",
+    "explain-code"
+  ],
+  "best_for": [
+    "developers using AI coding assistants",
+    "teams running repeated code generation in the same repo",
+    "projects aiming to lower LLM token costs",
+    "users wanting automatic tool pruning",
+    "situations where agents get stuck in loops"
+  ],
+  "platforms": [
+    "cli",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/microsoft/TokenEconomizer",
+  "license": "Apache-2.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Free and open source under Apache-2.0",
+    "source_url": "https://github.com/microsoft/TokenEconomizer",
+    "verified_at": "2026-11-10"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "TokenEconomizer",
+    "wikipedia_article": null,
+    "github_repo": "microsoft/TokenEconomizer",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/microsoft/tokeneconomizer",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-10",
+  "changelog": [
+    {
+      "date": "2026-11-10",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
