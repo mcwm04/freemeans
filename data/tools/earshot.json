@@ -1,0 +1,66 @@
+{
+  "slug": "earshot",
+  "name": "earshot",
+  "url": "https://github.com/Leonxlnx/earshot",
+  "tagline": "Open‑source tool that lets AI agents analyze and generate sound for code projects",
+  "description": "Earshot provides a CPU‑only, open‑source suite for coding agents to hear, review and create sound. It runs locally as a CLI, a Python API and an MCP server. The tool can describe audio files, match descriptions, find key moments, compare recordings, generate transcripts, create annotated images, score launch videos, and synthesize sound effects or full sound kits from code. It is aimed at developers building AI agents that need audio awareness or generating sound effects for films, demos, or games.",
+  "categories": [
+    "coding",
+    "voice",
+    "local-ai"
+  ],
+  "tasks": [
+    "transcribe-audio",
+    "generate-sound-effects"
+  ],
+  "best_for": [
+    "AI agents that need to understand audio content",
+    "Developers creating sound effects for games or videos",
+    "Generating transcripts of film or demo recordings",
+    "Building code‑driven sound libraries",
+    "Analyzing and improving audio quality in software projects"
+  ],
+  "platforms": [
+    "cli",
+    "api"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/Leonxlnx/earshot",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/Leonxlnx/earshot",
+    "verified_at": "2026-11-10"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "earshot",
+    "wikipedia_article": null,
+    "github_repo": "Leonxlnx/earshot",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/leonxlnx/earshot",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-10",
+  "changelog": [
+    {
+      "date": "2026-11-10",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
