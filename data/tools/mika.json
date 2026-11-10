@@ -1,0 +1,65 @@
+{
+  "slug": "mika",
+  "name": "Mika",
+  "url": "https://mikaphone.com/",
+  "tagline": "Voice-controlled Android assistant that operates apps by watching the screen.",
+  "description": "Mika is an Android AI assistant that lets users control apps with spoken commands. It watches the phone screen, taps buttons, and performs actions without requiring app APIs. Users can ask it to add a charger under $30 to a cart, summarize a blogger’s recent posts, compare flight prices, or read the top five news headlines aloud. The assistant connects directly to selected language models such as DeepSeek, Tongyi, Kimi, OpenAI, or local models, with data stored only on the device. Mika is free, open-source, and runs on Android 11 or newer.",
+  "categories": [
+    "productivity",
+    "voice"
+  ],
+  "tasks": [
+    "summarize-text",
+    "automate-workflows",
+    "text-to-speech"
+  ],
+  "best_for": [
+    "voice-controlled app navigation",
+    "summarizing articles or blog posts",
+    "finding cheap flights",
+    "reading news headlines aloud",
+    "assisting with online shopping"
+  ],
+  "platforms": [
+    "android"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/wangzan101/Mika",
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://mikaphone.com/",
+    "verified_at": "2026-11-10"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "Mika",
+    "wikipedia_article": null,
+    "github_repo": "wangzan101/Mika",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "mikaphone.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-10",
+  "changelog": [
+    {
+      "date": "2026-11-10",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
