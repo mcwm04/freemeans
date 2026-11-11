@@ -1,0 +1,67 @@
+{
+  "slug": "scrawl",
+  "name": "scrawl",
+  "url": "https://scrawl.kitlangton.com/",
+  "tagline": "Capture screen interactions with speech and drawings, then paste into an AI agent.",
+  "description": "Scrawl records your screen and creates frames whenever you draw, click, speak a command, or the screen changes. Each frame includes a transcript of your speech. The captured frames are cropped to the active window and can be pasted into an AI agent for further analysis. It works on macOS, Windows, and can mirror an iPhone screen. Developers can also embed ScrawlKit into iOS apps to record interactions directly on the device. The tool is distributed as a free download and can be installed via Homebrew or direct zip files.",
+  "categories": [
+    "productivity",
+    "app-builders"
+  ],
+  "tasks": [
+    "transcribe-audio",
+    "make-illustrations"
+  ],
+  "best_for": [
+    "Developers debugging UI interactions",
+    "AI agents that need visual context",
+    "Designers documenting user flows",
+    "iOS app developers integrating screen capture",
+    "Researchers recording software usage"
+  ],
+  "platforms": [
+    "macos",
+    "windows",
+    "linux",
+    "ios"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/kitlangton/scrawl",
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://scrawl.kitlangton.com/",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "scrawl",
+    "wikipedia_article": null,
+    "github_repo": "kitlangton/scrawl",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "kitlangton.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
