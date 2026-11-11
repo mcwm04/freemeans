@@ -1,0 +1,64 @@
+{
+  "slug": "awesome-rea",
+  "name": "Awesome REA",
+  "url": "https://awesomerea.org/",
+  "tagline": "A bilingual catalog of reverse engineering tools, case studies, and research papers",
+  "description": "Awesome REA (Awesome Reverse Engineering Anything) is a bilingual online catalog that lists 5,191 source‑reviewed tools, projects, case studies and 442 research papers. The entries cover binaries, games, apps, firmware, protocols and websites. Each entry links to the primary source it was checked against. The catalogue is organized by evidence class and includes filters for tools, case studies, integrations, learning resources and more. It is intended for people who need to find reverse‑engineering resources or research material in a single searchable location.",
+  "categories": [
+    "research"
+  ],
+  "tasks": [
+    "search-with-sources",
+    "summarize-papers",
+    "literature-review"
+  ],
+  "best_for": [
+    "security researchers looking for reverse‑engineering tools",
+    "students studying binary analysis",
+    "developers needing reference implementations",
+    "engineers reverse‑engineering firmware or protocols",
+    "academics reviewing reverse‑engineering literature"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/reacher-z/Awesome-REA",
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://awesomerea.org/",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "Awesome REA",
+    "wikipedia_article": null,
+    "github_repo": "reacher-z/Awesome-REA",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "awesomerea.org",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
