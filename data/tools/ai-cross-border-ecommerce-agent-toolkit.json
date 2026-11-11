@@ -1,0 +1,70 @@
+{
+  "slug": "ai-cross-border-ecommerce-agent-toolkit",
+  "name": "AI-Cross-Border-Ecommerce-Agent-Toolkit",
+  "url": "https://github.com/heqiangdiao-wq/AI-Cross-Border-Ecommerce-Agent-Toolkit",
+  "tagline": "Toolkit that turns cross‑border ecommerce SOPs into reusable AI agent workflows",
+  "description": "The AI‑Cross‑Border‑Ecommerce‑Agent‑Toolkit is an open‑source collection of seven AI agent modules that automate key steps of cross‑border ecommerce operations. Each module provides a standard prompt, input template and real‑world example to generate market research, product strategy, listing content, product images, short videos, advertising diagnostics and review analysis. Users run the agents locally without needing an API key, making it suitable for sellers and operators who want to produce compliant product listings, visuals and marketing assets at scale.",
+  "categories": [
+    "automation",
+    "business",
+    "productivity"
+  ],
+  "tasks": [
+    "write-product-descriptions",
+    "generate-product-photos",
+    "make-short-videos",
+    "analyze-data",
+    "search-with-sources"
+  ],
+  "best_for": [
+    "Generating product listings for cross‑border marketplaces",
+    "Creating compliant product images",
+    "Producing short promotional videos",
+    "Analyzing market data for pricing decisions",
+    "Optimizing advertising funnels"
+  ],
+  "platforms": [
+    "self-hosted",
+    "cli",
+    "linux"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/heqiangdiao-wq/AI-Cross-Border-Ecommerce-Agent-Toolkit",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "No usage limits; tool is open source",
+    "source_url": "https://github.com/heqiangdiao-wq/AI-Cross-Border-Ecommerce-Agent-Toolkit",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "AI-Cross-Border-Ecommerce-Agent-Toolkit",
+    "wikipedia_article": null,
+    "github_repo": "heqiangdiao-wq/AI-Cross-Border-Ecommerce-Agent-Toolkit",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/heqiangdiao-wq/ai-cross-border-ecommerce-agent-toolkit",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
