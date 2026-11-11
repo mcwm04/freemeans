@@ -1,0 +1,68 @@
+{
+  "slug": "kanzo",
+  "name": "kanzo",
+  "url": "https://github.com/emanuele-em/kanzo",
+  "tagline": "A self-hosted kanban board with built-in AI agent server",
+  "description": "Kanzo is a lightweight, self‑hosted kanban board that also runs an MCP server for AI agents. The single 4.7 MB binary works on macOS, Linux, Windows and can be accessed in a browser at http://localhost:4242. No account or external server is required; the board stores data locally and starts in milliseconds. Users can create, move, and comment on tasks via the web UI, the command line, or through connected agents that can take tasks, update cards, and add comments. It supports file attachments, images, and links, making it suitable for personal task tracking or collaborative project management with AI assistance.",
+  "categories": [
+    "productivity",
+    "local-ai"
+  ],
+  "tasks": [
+    "plan-tasks",
+    "automate-workflows"
+  ],
+  "best_for": [
+    "individual developers tracking personal tasks",
+    "software teams coordinating work with AI agents",
+    "project managers visualizing backlogs",
+    "developers integrating AI agents into a kanban workflow",
+    "users needing a lightweight self‑hosted task board"
+  ],
+  "platforms": [
+    "web",
+    "windows",
+    "macos",
+    "linux",
+    "cli"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/emanuele-em/kanzo",
+  "license": "AGPL-3.0",
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": false,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Self‑hosted binary runs locally with no usage limits",
+    "source_url": "https://github.com/emanuele-em/kanzo",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "kanzo",
+    "wikipedia_article": null,
+    "github_repo": "emanuele-em/kanzo",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/emanuele-em/kanzo",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
