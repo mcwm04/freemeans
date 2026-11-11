@@ -1,0 +1,69 @@
+{
+  "slug": "reason-network",
+  "name": "reason-network",
+  "url": "https://reasonmachines.com/",
+  "tagline": "Reason helps you maximize your AI usage for minimal spend.",
+  "description": "Reason is an AI agent platform that can edit code and run commands on your computer or on Reason cloud computers. It offers a web interface, a CLI, and an API that let you start and continue sessions from scripts, CI jobs, or custom editors. Agents such as Claude Code, Codex, and Cursor can be used, and the system can operate across multiple machines in a single session. The service integrates with Slack and provides a desktop app for managing agents and viewing results. It targets developers who want to automate coding tasks, run remote commands, and build AI‑enhanced tooling.",
+  "categories": [
+    "coding"
+  ],
+  "tasks": [
+    "generate-code",
+    "debug-code",
+    "automate-workflows"
+  ],
+  "best_for": [
+    "automating code fixes",
+    "running commands on local or cloud machines",
+    "integrating AI agents into CI pipelines",
+    "building custom editor extensions",
+    "creating AI‑powered Slack assistants"
+  ],
+  "platforms": [
+    "web",
+    "api",
+    "cli",
+    "windows",
+    "macos",
+    "linux"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/reason-machines/reason-network",
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://reasonmachines.com/",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "reason-network",
+    "wikipedia_article": null,
+    "github_repo": "reason-machines/reason-network",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "reasonmachines.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
