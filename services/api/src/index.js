@@ -2,6 +2,7 @@
 // Free plan budget: 100,000 requests/day and 10 ms CPU per request. Database time is I/O,
 // not CPU, so a Neon query does not eat the 10 ms.
 import seed from '../../../data/catalog/seed.json' with { type: 'json' };
+import eligibility from '../../../data/catalog/eligibility.json' with { type: 'json' };
 import { createApp } from './app.js';
 import { seedStore, sqlStore, withFallback, neonQuery } from './store.js';
 import { linkSource, cacheDedupe } from './links.js';
@@ -21,12 +22,18 @@ export function turnstile(secret, fetcher = fetch) {
   };
 }
 
+// Same merge as db/scripts/lib.mjs, so the bundled copy matches what Neon holds.
+const bundled = {
+  version: `${seed.version}+${eligibility.version}`,
+  resources: [...seed.resources, ...eligibility.resources],
+};
+
 let cache; // one app per isolate, rebuilt only if the settings change
 
 async function appFor(env) {
   const key = `${env.DATABASE_URL ? 'db' : 'seed'}|${env.SITE_URL}|${env.ALLOWED_ORIGINS}|${env.TURNSTILE_SECRET ? 't' : ''}`;
   if (cache?.key === key) return cache.app;
-  const fallback = seedStore(seed);
+  const fallback = seedStore(bundled);
   const store = env.DATABASE_URL ? withFallback(sqlStore(await neonQuery(env.DATABASE_URL)), fallback) : fallback;
   const siteUrl = env.SITE_URL || 'https://freemeans.com';
   const app = createApp({

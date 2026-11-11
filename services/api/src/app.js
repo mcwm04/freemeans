@@ -1,5 +1,5 @@
 // Request handling, kept free of Cloudflare-specific imports so tests run in plain Node.
-import { parseFilters, filterResources, summarize } from './catalog.js';
+import { parseFilters, filterResources, summarize, effectiveStatus } from './catalog.js';
 import { parseSite, siteKey } from './domain.js';
 
 const EMAIL = /^[^\s@]{1,64}@[^\s@]+\.[^\s@]{2,}$/;
@@ -17,8 +17,9 @@ const BOT_UA = /bot|crawl|spider|slurp|preview|fetch|scan|monitor|headless|light
 export function createApp({
   store, siteUrl = 'https://freemeans.com', allowedOrigins = [],
   links = async () => new Map(), dedupe = { seen: async () => false }, clickSalt = 'freemeans', waitUntil = (p) => p,
-  verifyHuman = async () => true,
+  verifyHuman = async () => true, now = () => new Date(),
 }) {
+  const today = () => now().toISOString().slice(0, 10);
   const site = siteUrl.replace(/\/$/, '');
 
   const cors = (req) => {
@@ -153,14 +154,14 @@ export function createApp({
     }
 
     if (req.method === 'GET' && path === '/catalog') {
-      const filters = parseFilters(url.searchParams);
+      const filters = parseFilters(url.searchParams, today());
       const { version, resources, fallback } = await store.listResources();
       const list = filterResources(resources, filters);
       const extra = fallback ? { ...cached, 'x-freemeans-fallback': 'seed' } : cached;
       return json(
         req,
         200,
-        { version, count: list.length, resources: filters.full ? list : list.map((r) => summarize(r, site)) },
+        { version, count: list.length, resources: filters.full ? list : list.map((r) => summarize(r, site, today())) },
         extra,
       );
     }
@@ -177,7 +178,7 @@ export function createApp({
     if (req.method === 'GET' && m) {
       const r = await store.getResource(m[1]);
       if (!r) return json(req, 404, { error: `No resource with id ${m[1]}.` });
-      return json(req, 200, { ...r, url: `${site}/resources/${r.id}/` }, cached);
+      return json(req, 200, { ...r, effective_status: effectiveStatus(r, today()), url: `${site}/resources/${r.id}/` }, cached);
     }
 
     if (path === '/submit') {

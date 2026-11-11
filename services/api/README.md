@@ -3,7 +3,7 @@
 | Method | Path | Notes |
 | --- | --- | --- |
 | GET | `/health` | `store`: `neon`, `seed`, or `seed (fallback)` |
-| GET | `/catalog` | Filters: `kind`, `tier`, `provider`, `q`, `exclude_badges`, `official=true`, `safe_for=client,commercial,eu,production,minors,automation`, `full=true`. Cached for 5 minutes |
+| GET | `/catalog` | Filters: `kind`, `tier`, `provider`, `q`, `exclude_badges`, `official=true`, `safe_for=client,commercial,eu,production,minors,automation`, `group=students|teachers|institutions|nonprofits|startups`, `audience=…` (comma list), `country=PK`, `status=active` (default) or `include_ended=true`, `ending_within_days=60`, `full=true`. Cached for 5 minutes |
 | GET | `/resources/{id}` | Full record, or 404 |
 | POST | `/waitlist` | JSON or form. Email + consent required, honeypot field `website`. The answer is the same for new and repeat emails |
 
