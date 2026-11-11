@@ -1,0 +1,70 @@
+{
+  "slug": "blender-skills",
+  "name": "blender-skills",
+  "url": "https://github.com/EL4CTEO/blender-skills",
+  "tagline": "Blender 5.2 workflows packaged as AI agent skills for coding assistants",
+  "description": "blender-skills provides a collection of 28 professional Blender 5.2 workflows wrapped as Agent Skills for AI coding agents such as Claude Code, Codex, Gemini CLI, GitHub Copilot and Cursor. The skills cover the full 3D pipeline, including modeling, UV mapping, PBR texturing, baking, rigging, animation, clothing, hair, environment creation, rendering, video editing, simulation, optimization and export to game engines like Unity, Unreal, Godot and Roblox. Each skill is a tested Python script that runs inside Blender, allowing agents to generate or modify 3D assets directly from prompts. The repository is open source under the MIT license and can be installed on macOS, Linux or Windows.",
+  "categories": [
+    "3d",
+    "coding"
+  ],
+  "tasks": [
+    "text-to-3d",
+    "generate-code",
+    "explain-code",
+    "debug-code"
+  ],
+  "best_for": [
+    "3D artists looking to automate asset creation",
+    "Game developers needing quick model exports",
+    "AI developers integrating Blender actions into agents",
+    "Animators automating rigging and animation pipelines",
+    "Technical artists optimizing assets for multiple engines"
+  ],
+  "platforms": [
+    "web",
+    "cli",
+    "windows",
+    "macos",
+    "linux"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/EL4CTEO/blender-skills",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/EL4CTEO/blender-skills",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "blender-skills",
+    "wikipedia_article": null,
+    "github_repo": "EL4CTEO/blender-skills",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/el4cteo/blender-skills",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
