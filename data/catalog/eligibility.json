@@ -1,0 +1,1235 @@
+{
+  "version": "0.1.0-eligibility",
+  "generated_at": "2026-11-09",
+  "resources": [
+    {
+      "id": "github.copilot-student",
+      "provider": "GitHub",
+      "name": "GitHub Copilot Student plan",
+      "kind": "ai_subscription",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed",
+          "student_k12"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "github_education"
+        ],
+        "verifier": "GitHub Education",
+        "reverify": "monthly",
+        "notes": "GitHub re-checks eligibility monthly. Free with automatic model selection and a monthly allowance of AI credits."
+      },
+      "offer_window": {
+        "renewable": true
+      },
+      "limit_rules": [],
+      "badges": [],
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://github.com/education/students",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "github.student-pack",
+      "provider": "GitHub",
+      "name": "GitHub Student Developer Pack",
+      "kind": "dev_platform",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed",
+          "student_k12"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "github_education"
+        ],
+        "verifier": "GitHub Education"
+      },
+      "offer_window": {
+        "renewable": true
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "GitHub Pro plus partner offers, for as long as you are a verified student.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://education.github.com/pack",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "microsoft.azure-for-students",
+      "provider": "Microsoft",
+      "name": "Azure for Students",
+      "kind": "cloud_credit",
+      "tier_type": "credit",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "school_email"
+        ],
+        "reverify": "yearly",
+        "excludes": "Secondary-school students (they get Azure for Students Starter)."
+      },
+      "offer_window": {
+        "duration_months": 12,
+        "renewable": true
+      },
+      "limit_rules": [],
+      "badges": [],
+      "watch": [
+        {
+          "text": "no credit card",
+          "source_url": "https://learn.microsoft.com/en-us/azure/education-hub/about-azure-for-students"
+        }
+      ],
+      "notes": "US$100 Azure credit for 12 months, renewable each year while you are a student. No credit card needed.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://learn.microsoft.com/en-us/azure/education-hub/about-azure-for-students",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "microsoft.azure-students-starter",
+      "provider": "Microsoft",
+      "name": "Azure for Students Starter",
+      "kind": "cloud_credit",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "student_k12"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "none"
+        ]
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Limited Azure services with no time limit, for secondary-school students. No credit card.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://azure.microsoft.com/en-us/free/students",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "jetbrains.education-pack",
+      "provider": "JetBrains",
+      "name": "JetBrains Student license (all IDEs)",
+      "kind": "software_license",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed",
+          "educator_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "school_email",
+          "isic_itic",
+          "official_document",
+          "github_education"
+        ],
+        "notes": "Accredited schools and universities, programs of one year or longer."
+      },
+      "offer_window": {
+        "duration_months": 12,
+        "renewable": true
+      },
+      "limit_rules": [],
+      "badges": [
+        {
+          "type": "non_commercial",
+          "note": "Not for commercial work.",
+          "source_url": "https://www.jetbrains.com/community/education/"
+        }
+      ],
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.jetbrains.com/community/education/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "notion.education-plus",
+      "provider": "Notion",
+      "name": "Notion Plus for education",
+      "kind": "saas_plan",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed",
+          "educator_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "school_email"
+        ],
+        "excludes": "K-12 students and teachers."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Notion Plus free for a one-member workspace, and 50% off Notion AI. Your school email must be recognized (WHED list). No card.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.notion.com/product/notion-for-education",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "figma.education",
+      "provider": "Figma",
+      "name": "Figma Education plan",
+      "kind": "saas_plan",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed",
+          "educator_higher_ed",
+          "student_k12",
+          "educator_k12"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "school_email",
+          "sheerid"
+        ],
+        "verifier": "SheerID",
+        "reverify": "yearly"
+      },
+      "offer_window": {
+        "duration_months": 12,
+        "renewable": true
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Figma Professional free for higher education. K-12 gets Enterprise through the school.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.figma.com/education/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "autodesk.education",
+      "provider": "Autodesk",
+      "name": "Autodesk education software",
+      "kind": "software_license",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed",
+          "educator_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "school_email"
+        ],
+        "reverify": "yearly"
+      },
+      "offer_window": {
+        "duration_months": 12,
+        "renewable": true
+      },
+      "limit_rules": [],
+      "badges": [
+        {
+          "type": "educational_use_only",
+          "note": "Learning and teaching only.",
+          "source_url": "https://www.autodesk.com/education/edu-software/overview"
+        }
+      ],
+      "notes": "AutoCAD, Revit, Fusion, Maya and others, at qualified institutions.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.autodesk.com/education/edu-software/overview",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "google.ai-plus-student",
+      "provider": "Google",
+      "name": "Google AI Plus, 12 months free for students",
+      "kind": "ai_subscription",
+      "tier_type": "trial",
+      "status": "unverified",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed"
+        ],
+        "countries": {
+          "mode": "exclude",
+          "codes": [
+            "US"
+          ]
+        },
+        "via": "individual",
+        "proof": [
+          "sheerid"
+        ],
+        "min_age": 16,
+        "verifier": "SheerID",
+        "reverify": "yearly",
+        "excludes": "School-issued Google accounts; people with an active Google One plan. US students get the AI Pro offer instead.",
+        "notes": "Pakistan is reported as covered, and .edu.pk addresses may need SheerID document upload. UNVERIFIED: copy the full country list from Google's support page, and confirm Pakistan and the minimum age (16+ reported)."
+      },
+      "offer_window": {
+        "redeem_by": "2026-12-31",
+        "duration_months": 12,
+        "after": {
+          "price": "about US$4.99/month or local price",
+          "auto_renews": true
+        }
+      },
+      "limit_rules": [],
+      "badges": [
+        {
+          "type": "payment_method_required",
+          "note": "A card is needed at sign-up.",
+          "source_url": "https://one.google.com/offer/studentoffer8"
+        },
+        {
+          "type": "auto_renews_paid",
+          "note": "Charged after 12 months unless cancelled.",
+          "source_url": "https://one.google.com/offer/studentoffer8"
+        }
+      ],
+      "watch": [
+        {
+          "text": "December 31, 2026",
+          "source_url": "https://one.google.com/offer/studentoffer8"
+        }
+      ],
+      "notes": "Higher Gemini limits and 400 GB storage.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://one.google.com/offer/studentoffer8",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        },
+        {
+          "url": "https://gemini.google/students",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "google.ai-pro-student-us",
+      "provider": "Google",
+      "name": "Google AI Pro, 12 months free for US students",
+      "kind": "ai_subscription",
+      "tier_type": "trial",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed"
+        ],
+        "countries": {
+          "mode": "include",
+          "codes": [
+            "US"
+          ]
+        },
+        "via": "individual",
+        "proof": [
+          "sheerid"
+        ],
+        "min_age": 18,
+        "verifier": "SheerID"
+      },
+      "offer_window": {
+        "redeem_by": "2026-12-31",
+        "duration_months": 12,
+        "after": {
+          "price": "US$19.99/month",
+          "auto_renews": true
+        }
+      },
+      "limit_rules": [],
+      "badges": [
+        {
+          "type": "payment_method_required",
+          "note": "A card is needed at sign-up.",
+          "source_url": "https://gemini.google/students"
+        },
+        {
+          "type": "auto_renews_paid",
+          "note": "Charged after 12 months unless cancelled.",
+          "source_url": "https://gemini.google/students"
+        }
+      ],
+      "notes": "US college students aged 18 and over.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://gemini.google/students",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "cursor.pro-student",
+      "provider": "Cursor",
+      "name": "Cursor Pro, 1 year free for students",
+      "kind": "ai_subscription",
+      "tier_type": "trial",
+      "status": "unverified",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sheerid"
+        ],
+        "verifier": "SheerID",
+        "notes": "UNVERIFIED: reports say the country list is now narrower. Confirm countries, the card rule and the renewal price on Cursor's page."
+      },
+      "offer_window": {
+        "duration_months": 12
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Cursor Pro for one year for eligible university students.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://cursor.com/students",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "aws.educate",
+      "provider": "AWS",
+      "name": "AWS Educate (free training, no credits)",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed",
+          "educator_higher_ed",
+          "student_k12"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ],
+        "min_age": 13
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Free cloud and AI training, labs and badges. AWS stopped giving credits in 2023.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://aws.amazon.com/education/awseducate/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "microsoft.office365-a1",
+      "provider": "Microsoft",
+      "name": "Office 365 A1 for education",
+      "kind": "saas_plan",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed",
+          "educator_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "school_email"
+        ]
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Web Word, Excel, PowerPoint and Teams, while enrolled or employed at an eligible institution.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.microsoft.com/en-us/education/products/office",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "canva.education",
+      "provider": "Canva",
+      "name": "Canva for Education (K-12)",
+      "kind": "saas_plan",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "educator_k12",
+          "student_k12"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "teaching_license",
+          "official_document"
+        ],
+        "reverify": "periodic",
+        "excludes": "Higher-education students."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Canva Pro features free for K-12 teachers, and for students their teacher invites.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.canva.com/education/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "github.copilot-pro-teachers",
+      "provider": "GitHub",
+      "name": "GitHub Copilot Pro for verified teachers",
+      "kind": "ai_subscription",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "educator_higher_ed",
+          "educator_k12"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "github_education"
+        ],
+        "verifier": "GitHub Education"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "GitHub says verified teachers may be eligible. Free while you stay verified.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://github.com/education/teachers",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "openai.chatgpt-for-teachers",
+      "provider": "OpenAI",
+      "name": "ChatGPT for Teachers",
+      "kind": "ai_subscription",
+      "tier_type": "free",
+      "status": "unverified",
+      "eligibility": {
+        "audiences": [
+          "educator_k12"
+        ],
+        "countries": {
+          "mode": "include",
+          "codes": [
+            "US"
+          ]
+        },
+        "via": "individual",
+        "proof": [
+          "sheerid"
+        ],
+        "verifier": "SheerID",
+        "excludes": "Educators outside US K-12 schools.",
+        "notes": "UNVERIFIED: OpenAI's pages disagree on the end of the free period (June 2027 in the announcement, June 2028 in some help-center versions). Confirm on the live help page, then set offer_window.access_ends."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Workspace for verified US K-12 teachers, staff and administrators.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://help.openai.com/en/articles/12844995-chatgpt-for-teachers",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "google.workspace-edu-fundamentals",
+      "provider": "Google",
+      "name": "Google Workspace for Education Fundamentals",
+      "kind": "saas_plan",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "institution_school",
+          "institution_university"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "institution",
+        "proof": [
+          "institution_verification"
+        ]
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Gmail, Classroom, Drive, Meet, the Gemini app and NotebookLM. The institution applies, not the individual.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://edu.google.com/workspace-for-education/editions/education-fundamentals/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "jetbrains.classroom",
+      "provider": "JetBrains",
+      "name": "JetBrains classroom licenses",
+      "kind": "software_license",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "institution_school",
+          "institution_university",
+          "educator_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "institution",
+        "proof": [
+          "official_document"
+        ]
+      },
+      "offer_window": {
+        "renewable": true
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Licenses for all JetBrains IDEs for accredited institutions. A teacher or IT role document is needed.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.jetbrains.com/community/education/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "autodesk.educator-plan",
+      "provider": "Autodesk",
+      "name": "Autodesk educator plan (250 seats)",
+      "kind": "software_license",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "educator_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "school_email"
+        ]
+      },
+      "offer_window": {
+        "duration_months": 12,
+        "renewable": true
+      },
+      "limit_rules": [],
+      "badges": [
+        {
+          "type": "educational_use_only",
+          "note": "Learning and teaching only.",
+          "source_url": "https://www.autodesk.com/education/edu-software/overview"
+        }
+      ],
+      "notes": "250 named-user seats for a class, at qualified institutions.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.autodesk.com/education/edu-software/overview",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "google.for-nonprofits",
+      "provider": "Google",
+      "name": "Google for Nonprofits",
+      "kind": "ad_grant",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "nonprofit"
+        ],
+        "countries": {
+          "mode": "include",
+          "codes": [
+            "PK"
+          ]
+        },
+        "via": "institution",
+        "proof": [
+          "nonprofit_registration",
+          "validation_partner"
+        ],
+        "notes": "Available in 65+ countries and Pakistan is listed. Only Pakistan is encoded here: copy the full country list from Google before using this record outside Pakistan pages."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Workspace for Nonprofits, Ad Grants (up to US$10,000 a month in search ads) and YouTube Nonprofit. Ad Grants has its own activity rules.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.google.com/nonprofits/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "microsoft.nonprofits",
+      "provider": "Microsoft",
+      "name": "Microsoft nonprofit grants",
+      "kind": "saas_plan",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "nonprofit"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "institution",
+        "proof": [
+          "nonprofit_registration"
+        ],
+        "reverify": "yearly"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Microsoft 365 Business Basic grant (up to 300 users) and US$2,000 of Azure credits a year. Grant seats cover paid staff and leadership.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://nonprofit.microsoft.com/en-us/getting-started",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "github.nonprofits",
+      "provider": "GitHub",
+      "name": "GitHub Team plan for nonprofits",
+      "kind": "dev_platform",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "nonprofit"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "institution",
+        "proof": [
+          "nonprofit_registration"
+        ],
+        "excludes": "Governmental, academic, commercial, political or religiously affiliated organizations."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://docs.github.com/en/nonprofit/quickstart",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "canva.nonprofits",
+      "provider": "Canva",
+      "name": "Canva Pro for Nonprofits",
+      "kind": "saas_plan",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "nonprofit"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "institution",
+        "proof": [
+          "nonprofit_registration"
+        ],
+        "verifier": "Goodstack"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Canva Pro for one team of up to 50 people. Registered nonprofits in 190+ countries.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.canva.com/canva-for-nonprofits/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "cloudflare.project-galileo",
+      "provider": "Cloudflare",
+      "name": "Cloudflare Project Galileo",
+      "kind": "security_service",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "journalist_civil_society",
+          "nonprofit"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "institution",
+        "proof": [
+          "institution_verification"
+        ]
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Business-level security (DDoS, WAF) and Zero Trust for human-rights, civil-society, journalism and democracy organizations. Applications are reviewed with partner NGOs.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.cloudflare.com/galileo/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "aws.activate-founders",
+      "provider": "AWS",
+      "name": "AWS Activate Founders",
+      "kind": "cloud_credit",
+      "tier_type": "credit",
+      "eligibility": {
+        "audiences": [
+          "startup_self_funded"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "company_website"
+        ],
+        "excludes": "Startups founded more than 10 years ago.",
+        "notes": "Needs a working website and an AWS paid-tier account."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "US$1,000 of AWS credits (some startups get up to US$5,000). Credits expire.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://aws.amazon.com/startups/credits",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "google.startups-cloud",
+      "provider": "Google",
+      "name": "Google for Startups Cloud Program",
+      "kind": "cloud_credit",
+      "tier_type": "credit",
+      "status": "unverified",
+      "eligibility": {
+        "audiences": [
+          "startup_self_funded",
+          "startup_investor_backed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "company_website"
+        ],
+        "notes": "UNVERIFIED: confirm the Start-tier amount (about US$2,000 reported) on cloud.google.com."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Funded AI startups can get up to US$350,000 over 2 years. Startups founded within 10 years, with under US$5,000 of previous credits.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://cloud.google.com/startup",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "microsoft.startups",
+      "provider": "Microsoft",
+      "name": "Microsoft for Startups Founders Hub",
+      "kind": "cloud_credit",
+      "tier_type": "credit",
+      "status": "unverified",
+      "eligibility": {
+        "audiences": [
+          "startup_self_funded",
+          "startup_investor_backed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "company_website",
+          "investor_referral"
+        ],
+        "notes": "UNVERIFIED: the amounts (about US$5,000 self-serve) come from secondary guides. Read them on Microsoft's own page first."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Self-serve Azure credits, with more through an investor referral. For-profit startups in supported countries.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://www.microsoft.com/en-us/startups",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "digiskills.dstp3",
+      "provider": "DigiSkills",
+      "name": "DigiSkills free online courses (DSTP, Batch-05)",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "resident"
+        ],
+        "countries": {
+          "mode": "include",
+          "codes": [
+            "PK"
+          ]
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ],
+        "notes": "Anyone in Pakistan with Matric or higher. Enrolment opened 2 Nov 2026, first come first served. Classes start 1 Dec 2026."
+      },
+      "offer_window": {
+        "starts": "2026-12-01"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Free online courses with e-certificates from MoITT, Ignite and Virtual University.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://digiskills.pk",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "hec.digital-library",
+      "provider": "HEC Pakistan",
+      "name": "HEC National Digital Library",
+      "kind": "library_access",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed",
+          "educator_higher_ed",
+          "researcher"
+        ],
+        "countries": {
+          "mode": "include",
+          "codes": [
+            "PK"
+          ]
+        },
+        "via": "institution",
+        "proof": [
+          "institution_verification"
+        ],
+        "excludes": "Individuals cannot apply. Access comes through the university.",
+        "notes": "Students, faculty and staff of HEC-recognized universities and R&D bodies, from the campus network (IP) or the university's VPN or credentials."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Journals, databases and e-books.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://digitallibrary.hec.gov.pk",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "mofept.cisco-netacad",
+      "provider": "MoFEPT",
+      "name": "MoFEPT and Cisco Networking Academy free courses",
+      "kind": "course",
+      "tier_type": "free",
+      "status": "unverified",
+      "eligibility": {
+        "audiences": [
+          "student_k12",
+          "student_higher_ed"
+        ],
+        "countries": {
+          "mode": "include",
+          "codes": [
+            "PK"
+          ]
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ],
+        "notes": "UNVERIFIED: only press coverage found. The first batch closed on 8 March 2026 and no newer round is confirmed. Find the official MoFEPT or Cisco page, and check whether enrolment is open. Reports say Grade 9 and above."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Free self-paced courses in cybersecurity, IT, AI and networking. Launched Feb 2026.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://propakistani.pk/2026/02/27/govt-launches-free-online-technology-courses-for-students/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "third_party_snapshot"
+        }
+      ]
+    },
+    {
+      "id": "github.copilot-pro-student",
+      "provider": "GitHub",
+      "name": "GitHub Copilot Pro for students",
+      "kind": "ai_subscription",
+      "tier_type": "free",
+      "status": "ended",
+      "replaced_by": "github.copilot-student",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "github_education"
+        ]
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Replaced by the Copilot Student plan in March 2026.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://github.com/education/students",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "aws.educate-credits",
+      "provider": "AWS",
+      "name": "AWS Educate credit grants",
+      "kind": "cloud_credit",
+      "tier_type": "credit",
+      "status": "ended",
+      "replaced_by": "aws.educate",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed",
+          "educator_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ]
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Credit grants stopped in February 2023. AWS Educate is now free training only.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://aws.amazon.com/education/awseducate/",
+          "fetched_at": "2026-11-09",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "microsoft.m365-business-premium-nonprofit",
+      "provider": "Microsoft",
+      "name": "Microsoft 365 Business Premium grant for nonprofits",
+      "kind": "saas_plan",
+      "tier_type": "free",
+      "status": "ended",
+      "replaced_by": "microsoft.nonprofits",
+      "eligibility": {
+        "audiences": [
+          "nonprofit"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "institution",
+        "proof": [
+          "nonprofit_registration"
+        ]
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Ended at each nonprofit's first renewal on or after 1 July 2025. The Business Basic grant remains.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://techcommunity.microsoft.com/discussions/nonprofitpartners/announcement-microsoft-365-business-premium--office-365-e1-grant-discontinuation/4415334",
+          "fetched_at": "2026-11-09",
+          "signal_type": "community_report"
+        }
+      ]
+    },
+    {
+      "id": "google.ai-pro-student-global",
+      "provider": "Google",
+      "name": "Google AI Pro free for students outside the US (2025 offer)",
+      "kind": "ai_subscription",
+      "tier_type": "trial",
+      "status": "ended",
+      "replaced_by": "google.ai-plus-student",
+      "eligibility": {
+        "audiences": [
+          "student_higher_ed"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sheerid"
+        ]
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "The 2025 offer is closed. People who already claimed it keep it until their period ends.",
+      "last_verified": "2026-11-09",
+      "sources": [
+        {
+          "url": "https://gemini.google/students",
+          "fetched_at": "2026-11-09",
+          "signal_type": "third_party_snapshot"
+        }
+      ]
+    }
+  ]
+}
