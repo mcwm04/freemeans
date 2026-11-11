@@ -144,7 +144,8 @@ def test_cli_writes_reports_and_github_output(tmp_path, monkeypatch):
     gh = tmp_path / "gh_out"
     monkeypatch.setattr(cli, "check_catalog", lambda c: check_catalog(
         c, fetch=pages({url: "<p>30 requests per minute; 25 requests per day</p>"}), allowed=allow_all, pause=0))
-    assert cli.main(["--catalog", str(cat_file), "--out-dir", str(tmp_path / "out"), "--date", "2026-11-09", "--github-output", str(gh)]) == 0
+    # --tools "" keeps the repo's real directory tools out of this test (they would be fetched and fail)
+    assert cli.main(["--catalog", str(cat_file), "--tools", "", "--out-dir", str(tmp_path / "out"), "--date", "2026-11-09", "--github-output", str(gh)]) == 0
     out = gh.read_text()
     assert "changes=true" in out and "missing=1" in out
     assert (tmp_path / "out/2026-11-09.md").exists()
@@ -158,7 +159,7 @@ def test_cli_no_changes_writes_no_dated_report(tmp_path, monkeypatch):
     gh = tmp_path / "gh_out"
     monkeypatch.setattr(cli, "check_catalog", lambda c: check_catalog(
         c, fetch=pages({url: "<p>30 requests per minute</p>"}), allowed=allow_all, pause=0))
-    cli.main(["--catalog", str(cat_file), "--out-dir", str(tmp_path / "out"), "--date", "2026-11-09", "--github-output", str(gh)])
+    cli.main(["--catalog", str(cat_file), "--tools", "", "--out-dir", str(tmp_path / "out"), "--date", "2026-11-09", "--github-output", str(gh)])
     assert "changes=false" in gh.read_text()
     assert not (tmp_path / "out/2026-11-09.md").exists()
     assert (tmp_path / "out/latest.md").exists()

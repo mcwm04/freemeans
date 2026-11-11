@@ -172,7 +172,8 @@ test('editor can add a tool to the queue by hand', async () => {
 test('console validation agrees with toolcheck on the repo tools', () => {
   const dir = new URL('../../../data/tools/', import.meta.url);
   for (const f of readdirSync(dir).filter((x) => x.endsWith('.json'))) {
-    assert.deepEqual(checkTool(JSON.parse(readFileSync(new URL(f, dir))), '2026-11-10'), [], f);
+    // Real files are checked against today's date: a fixed date breaks whenever a tool is added later.
+    assert.deepEqual(checkTool(JSON.parse(readFileSync(new URL(f, dir))), new Date().toISOString().slice(0, 10)), [], f);
   }
   assert.ok(checkTool(goodTool({ slug: 'submit' }), '2026-11-10').some((e) => e.includes('reserved')));
   assert.ok(checkTool(goodTool({ categories: ['nope'] }), '2026-11-10').some((e) => e.includes('unknown category')));
