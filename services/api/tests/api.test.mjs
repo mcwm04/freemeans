@@ -5,6 +5,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { PGlite } from '@electric-sql/pglite';
 import seed from '../../../data/catalog/seed.json' with { type: 'json' };
+import eligibility from '../../../data/catalog/eligibility.json' with { type: 'json' };
 import { createApp } from '../src/app.js';
 import { seedStore, sqlStore, withFallback } from '../src/store.js';
 import { migrate, loadCatalog } from '../../../db/scripts/lib.mjs';
@@ -161,7 +162,7 @@ test('Worker entry point serves the seed when DATABASE_URL is not set', async ()
   const res = await worker.fetch(new Request('https://api.freemeans.com/health'), { SITE_URL: SITE });
   const b = await res.json();
   assert.equal(b.store, 'seed');
-  assert.equal(b.catalog_version, seed.version);
+  assert.equal(b.catalog_version, `${seed.version}+${eligibility.version}`);
   const nf = await worker.fetch(new Request('https://api.freemeans.com/nothing'), {});
   assert.equal(nf.status, 404);
 });
@@ -331,4 +332,105 @@ test('Turnstile check posts the token and secret to Cloudflare', async () => {
   assert.equal(sent.body, 'secret=s3cret&response=tok&remoteip=1.2.3.4');
   assert.equal(await check('', ''), false);
   assert.equal(await turnstile('s', async () => new Response('{"success":false}'))('t'), false);
+});
+
+// --- Eligibility filters (M3) ------------------------------------------------
+
+const both = { version: 'test', resources: [...seed.resources, ...eligibility.resources] };
+const NOW = '2026-11-11';
+const eligApp = (day = NOW) => createApp({ store: seedStore(both), siteUrl: SITE, now: () => new Date(`${day}T12:00:00Z`) });
+const idsOf = async (app, qs) => (await body(await call(app, `/catalog?${qs}`))).resources.map((r) => r.id);
+
+test('default catalog hides ended and unverified offers', async () => {
+  const ids = await idsOf(eligApp(), '');
+  assert.ok(ids.includes('github.copilot-student'));
+  assert.ok(ids.includes('groq.gpt-oss-120b'), 'API free tiers without a status stay visible');
+  for (const hidden of ['google.ai-plus-student', 'cursor.pro-student', 'aws.educate-credits', 'github.copilot-pro-student']) {
+    assert.ok(!ids.includes(hidden), hidden);
+  }
+});
+
+test('status and include_ended: unverified and ended appear only when asked for', async () => {
+  const app = eligApp();
+  assert.ok((await idsOf(app, 'status=unverified')).includes('google.ai-plus-student'));
+  assert.ok(!(await idsOf(app, 'status=unverified')).includes('github.copilot-student'));
+  const withEnded = await idsOf(app, 'include_ended=true');
+  assert.ok(withEnded.includes('aws.educate-credits') && withEnded.includes('github.copilot-student'));
+  assert.ok(!withEnded.includes('cursor.pro-student'), 'include_ended does not add unverified');
+  assert.deepEqual(await idsOf(app, 'status=ended&audience=student_higher_ed&provider=aws'), ['aws.educate-credits']);
+});
+
+test('audience and group filters', async () => {
+  const app = eligApp();
+  const students = await idsOf(app, 'group=students');
+  assert.ok(students.includes('github.student-pack') && students.includes('microsoft.azure-for-students'));
+  assert.ok(!students.includes('github.nonprofits') && !students.includes('groq.gpt-oss-120b'));
+  const nonprofits = await idsOf(app, 'audience=nonprofit');
+  assert.ok(nonprofits.includes('google.for-nonprofits') && nonprofits.includes('cloudflare.project-galileo'));
+  const both2 = await idsOf(app, 'audience=nonprofit&group=startups');
+  assert.ok(both2.includes('github.nonprofits') && both2.includes('aws.activate-founders'));
+});
+
+test('country filter: global, include and exclude rules', async () => {
+  const app = eligApp();
+  const pk = await idsOf(app, 'country=PK&group=students');
+  assert.ok(pk.includes('github.copilot-student'), 'global offers match');
+  assert.ok(!pk.includes('google.ai-pro-student-us'), 'include [US] excludes Pakistan');
+  assert.ok((await idsOf(app, 'country=pk&audience=resident')).includes('digiskills.dstp3'), 'lower case is accepted');
+  assert.ok(!(await idsOf(app, 'country=US&audience=resident')).includes('digiskills.dstp3'));
+  assert.ok((await idsOf(app, 'country=US&group=students')).includes('google.ai-pro-student-us'));
+  // an exclude rule: Google AI Plus excludes US but is unverified, so ask for it explicitly
+  assert.ok((await idsOf(app, 'status=unverified&country=PK&group=students')).includes('google.ai-plus-student'));
+  assert.ok(!(await idsOf(app, 'status=unverified&country=US&group=students')).includes('google.ai-plus-student'));
+  assert.ok((await idsOf(app, 'country=PK')).includes('groq.gpt-oss-120b'), 'API tiers have no country rule');
+});
+
+test('expiry is worked out at read time, whatever status is stored', async () => {
+  const live = eligApp('2026-12-31'); // last day to claim
+  assert.ok((await idsOf(live, 'group=students&country=US')).includes('google.ai-pro-student-us'));
+  const after = eligApp('2027-01-01');
+  assert.ok(!(await idsOf(after, 'group=students&country=US')).includes('google.ai-pro-student-us'));
+  const ended = await idsOf(after, 'status=ended&group=students&country=US');
+  assert.ok(ended.includes('google.ai-pro-student-us'));
+  const one = await body(await call(after, '/resources/google.ai-pro-student-us'));
+  assert.equal(one.status ?? 'active', 'active', 'the stored status is left alone');
+  assert.equal(one.effective_status, 'ended');
+});
+
+test('ending_within_days lists offers whose redeem-by date is close', async () => {
+  const app = eligApp('2026-11-11');
+  const soon = await idsOf(app, 'ending_within_days=60');
+  assert.ok(soon.includes('google.ai-pro-student-us'));
+  assert.ok(!soon.includes('github.student-pack'), 'no end date');
+  assert.deepEqual(await idsOf(app, 'ending_within_days=10'), []);
+  assert.ok((await idsOf(eligApp('2027-02-01'), 'ending_within_days=60')).length === 0, 'already past');
+});
+
+test('eligibility summaries carry status, audiences and redeem_by; API tiers are unchanged', async () => {
+  const b = await body(await call(eligApp(), '/catalog?audience=student_higher_ed&country=US'));
+  const g = b.resources.find((r) => r.id === 'google.ai-pro-student-us');
+  assert.equal(g.status, 'active');
+  assert.deepEqual(g.audiences, ['student_higher_ed']);
+  assert.equal(g.redeem_by, '2026-12-31');
+  const groq = (await body(await call(eligApp(), '/catalog?provider=groq'))).resources[0];
+  assert.ok(!('status' in groq) && !('audiences' in groq));
+});
+
+test('bad filter values are a 400 that names the allowed values', async () => {
+  const app = eligApp();
+  for (const [qs, re] of [
+    ['group=moon', /students, teachers/], ['audience=everyone', /unknown audience/], ['country=Pakistan', /two-letter/],
+    ['status=live', /active, paused, ended, unverified/], ['ending_within_days=soon', /whole number/], ['ending_within_days=0', /whole number/],
+  ]) {
+    const res = await call(app, `/catalog?${qs}`);
+    assert.equal(res.status, 400, qs);
+    assert.match((await body(res)).error, re, qs);
+  }
+});
+
+test('Worker without a database serves the seed and the eligibility offers together', async () => {
+  const res = await worker.fetch(new Request('https://api.freemeans.com/catalog?group=students&country=PK'), {}, {});
+  const b = await body(res);
+  assert.ok(b.resources.some((r) => r.id === 'github.copilot-student'));
+  assert.match(b.version, /\+/);
 });

@@ -10,13 +10,47 @@ export const SAFE_FOR = {
   automation: ['manual_only'],
 };
 
+// Audience groups for the "Free for who you are" pages (Eligibility PRD, chapter 3).
+// Audiences in no group (open_source_maintainer, researcher, resident, public) are still
+// reachable with ?audience=.
+export const AUDIENCE_GROUPS = {
+  students: ['student_k12', 'student_higher_ed', 'student_bootcamp'],
+  teachers: ['educator_k12', 'educator_higher_ed'],
+  institutions: ['institution_school', 'institution_university'],
+  nonprofits: ['nonprofit', 'journalist_civil_society'],
+  startups: ['startup_self_funded', 'startup_investor_backed'],
+};
+const AUDIENCES = new Set([...Object.values(AUDIENCE_GROUPS).flat(), 'open_source_maintainer', 'researcher', 'resident', 'public']);
+const STATUSES = ['active', 'paused', 'ended', 'unverified'];
+
+const bad = (message) => Object.assign(new Error(message), { status: 400 });
+const DAY = 86400000;
+
+// Status at read time: a passed redeem_by or access_ends turns an active offer into ended,
+// whatever is stored. Same rule as the resources_live view in db/migrations/004.
+export function effectiveStatus(r, today) {
+  const stored = r.status ?? 'active';
+  const w = r.offer_window ?? {};
+  if (stored === 'active' && ((w.redeem_by && w.redeem_by < today) || (w.access_ends && w.access_ends < today))) return 'ended';
+  return stored;
+}
+
+// Offers with no eligibility block (API free tiers) are open to everyone, everywhere.
+export function countryAllows(r, code) {
+  const c = r.eligibility?.countries;
+  if (!c || c.mode === 'global') return true;
+  return c.mode === 'include' ? c.codes.includes(code) : !c.codes.includes(code);
+}
+
+const addDays = (today, n) => new Date(Date.parse(`${today}T00:00:00Z`) + n * DAY).toISOString().slice(0, 10);
+
 const OFFICIAL = new Set(['official_docs', 'official_api', 'canary_call']);
 
 export function isOfficial(r) {
   return r.limit_rules.length > 0 && r.limit_rules.every((l) => OFFICIAL.has(l.signal_type));
 }
 
-export function parseFilters(params) {
+export function parseFilters(params, today = new Date().toISOString().slice(0, 10)) {
   const list = (v) => (v ? v.split(',').map((s) => s.trim()).filter(Boolean) : []);
   const safeFor = list(params.get('safe_for'));
   const unknown = safeFor.filter((s) => !SAFE_FOR[s]);
@@ -25,7 +59,37 @@ export function parseFilters(params) {
     err.status = 400;
     throw err;
   }
+
+  const groups = list(params.get('group'));
+  const badGroup = groups.filter((g) => !AUDIENCE_GROUPS[g]);
+  if (badGroup.length) throw bad(`unknown group value: ${badGroup.join(', ')}. Use: ${Object.keys(AUDIENCE_GROUPS).join(', ')}`);
+  const audiences = list(params.get('audience'));
+  const badAudience = audiences.filter((a) => !AUDIENCES.has(a));
+  if (badAudience.length) throw bad(`unknown audience value: ${badAudience.join(', ')}`);
+
+  const country = (params.get('country') || '').trim().toUpperCase();
+  if (country && !/^[A-Z]{2}$/.test(country)) throw bad('country must be a two-letter ISO code, for example PK');
+
+  const statuses = list(params.get('status'));
+  const badStatus = statuses.filter((s) => !STATUSES.includes(s));
+  if (badStatus.length) throw bad(`unknown status value: ${badStatus.join(', ')}. Use: ${STATUSES.join(', ')}`);
+  // Default: only live offers. include_ended=true adds ended ones (Myths page). Unverified
+  // and paused offers appear only when asked for with ?status=.
+  const status = statuses.length ? statuses : params.get('include_ended') === 'true' ? ['active', 'ended'] : ['active'];
+
+  let endingWithin = null;
+  if (params.get('ending_within_days') != null) {
+    const n = Number(params.get('ending_within_days'));
+    if (!Number.isInteger(n) || n < 1 || n > 3650) throw bad('ending_within_days must be a whole number from 1 to 3650');
+    endingWithin = n;
+  }
+
   return {
+    today,
+    audience: new Set([...audiences, ...groups.flatMap((g) => AUDIENCE_GROUPS[g])]),
+    country,
+    status,
+    endingWithin,
     q: (params.get('q') || '').trim().toLowerCase(),
     kind: list(params.get('kind')),
     tier: list(params.get('tier')),
@@ -38,6 +102,13 @@ export function parseFilters(params) {
 
 export function filterResources(resources, f) {
   return resources.filter((r) => {
+    if (!f.status.includes(effectiveStatus(r, f.today))) return false;
+    if (f.audience.size && !(r.eligibility?.audiences ?? []).some((a) => f.audience.has(a))) return false;
+    if (f.country && !countryAllows(r, f.country)) return false;
+    if (f.endingWithin) {
+      const end = r.offer_window?.redeem_by ?? r.offer_window?.access_ends;
+      if (!end || end < f.today || end > addDays(f.today, f.endingWithin)) return false;
+    }
     if (f.kind.length && !f.kind.includes(r.kind)) return false;
     if (f.tier.length && !f.tier.includes(r.tier_type)) return false;
     if (f.provider.length && !f.provider.includes(r.provider.toLowerCase())) return false;
@@ -51,7 +122,11 @@ export function filterResources(resources, f) {
   });
 }
 
-export function summarize(r, siteUrl) {
+export function summarize(r, siteUrl, today = new Date().toISOString().slice(0, 10)) {
+  const status = effectiveStatus(r, today);
+  const offer = r.eligibility
+    ? { status, audiences: r.eligibility.audiences, redeem_by: r.offer_window?.redeem_by ?? null }
+    : status !== 'active' ? { status } : {};
   return {
     id: r.id,
     provider: r.provider,
@@ -63,5 +138,6 @@ export function summarize(r, siteUrl) {
     official: isOfficial(r),
     last_verified: r.last_verified,
     url: `${siteUrl}/resources/${r.id}/`,
+    ...offer,
   };
 }
