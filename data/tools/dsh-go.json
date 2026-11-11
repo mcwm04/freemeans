@@ -1,0 +1,68 @@
+{
+  "slug": "dsh-go",
+  "name": "dsh-Go",
+  "url": "https://github.com/ccch1mneyyy/dsh-Go",
+  "tagline": "Android app for DeepSeek Harness with local Linux environment and remote PC control",
+  "description": "dsh-Go is an Android client for DeepSeek Harness that runs a Linux, Node.js and DSH environment directly on the phone without root. It can also connect to a remote computer or server via SSH or DSHarness Remote. Users can chat with AI models, send images, use voice input, run plugins, and share or replay conversations. The app includes a web version that syncs with the mobile interface. It is open source under AGPL‑3.0 and provides tools for coding, automation and device control, aimed at developers and power users who want AI assistance on mobile.",
+  "categories": [
+    "chat",
+    "coding",
+    "app-builders"
+  ],
+  "tasks": [
+    "ask-questions",
+    "generate-code",
+    "explain-code",
+    "debug-code"
+  ],
+  "best_for": [
+    "Running AI chat on Android",
+    "Coding assistance on a phone",
+    "Remotely controlling a computer via AI",
+    "Using plugins and tool cards",
+    "Sharing and replaying AI conversations"
+  ],
+  "platforms": [
+    "android",
+    "web"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/ccch1mneyyy/dsh-Go",
+  "license": "AGPL-3.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Open source under AGPL-3.0",
+    "source_url": "https://github.com/ccch1mneyyy/dsh-Go",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "dsh-Go",
+    "wikipedia_article": null,
+    "github_repo": "ccch1mneyyy/dsh-Go",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/ccch1mneyyy/dsh-go",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
