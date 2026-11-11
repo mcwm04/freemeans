@@ -1,0 +1,118 @@
+---
+// Hub: "Free for who you are", with the eligibility checker. The checker runs in the browser
+// from the data embedded below and stores nothing. Without JavaScript the group links work.
+import Base from '../../layouts/Base.astro';
+import { formatDate } from '../../lib/catalog.js';
+import { GROUPS, COUNTRY_PAGES, groupOf, liveOffers, offersFor, endingSoon, myths, lastChecked, monthYear, offerFacts, today, MIN_OFFERS_TO_INDEX } from '../../lib/eligibility.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
+
+const live = liveOffers();
+const path = '/free-for/';
+const title = 'Free offers for students, teachers and nonprofits';
+const description = `${live.length} free offers checked against the provider's own page, grouped by who you are and where you live. See what you qualify for, what proof is needed and what it costs later.`;
+const jsonLd = graph([
+  webPageLd(Astro.site, { path, name: title, description, type: 'CollectionPage', dateModified: lastChecked(live) }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Free for who you are', path }]),
+  itemListLd(Astro.site, { name: 'Free offers by audience', items: Object.entries(GROUPS).map(([k, g]) => ({ name: `Free tools for ${g.who}`, path: `/free-for/${k}/` })) }),
+]);
+
+// Data for the checker: only what it needs to filter and to show a result line.
+const data = live.map((r) => {
+  const f = offerFacts(r);
+  return {
+    id: r.id, name: r.name, provider: r.provider, groups: groupOf(r),
+    countries: r.eligibility.countries, redeemBy: f.redeemBy, card: f.card, autoRenews: f.autoRenews,
+  };
+});
+const countryChoices = [
+  ...Object.values(COUNTRY_PAGES).map((c) => ({ code: c.code, name: c.name })),
+  { code: 'US', name: 'United States' }, { code: 'IN', name: 'India' }, { code: 'GB', name: 'United Kingdom' },
+  { code: 'ZZ', name: 'Another country' },
+];
+---
+<Base title={title} description={description} jsonLd={jsonLd} current="free-for">
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">Free for who you are</p>
+      <h1>Free for who you are</h1>
+      <p class="lede">Many free plans are only for students, teachers, nonprofits or startups, and some only in certain countries. Pick who you are and where you live.</p>
+      <div class="meta-row"><span>{live.length} live offers</span><span>Checked <b>{formatDate(lastChecked(live))}</b></span><span><a href="/free-for/ending-soon/">Ending soon ({endingSoon().length})</a></span><span><a href="/free-for/myths/">Offers that ended ({myths().length})</a></span></div>
+    </div>
+  </header>
+
+  <div class="page-body">
+    <div class="wrap">
+      <section aria-labelledby="checker">
+        <h2 id="checker">What do I qualify for?</h2>
+        <form class="toolbar" data-checker aria-label="Eligibility checker">
+          <label class="sr-only" for="c-who">Who you are</label>
+          <select id="c-who" name="who">
+            {Object.entries(GROUPS).map(([k, g]) => <option value={k}>{g.title}</option>)}
+          </select>
+          <label class="sr-only" for="c-country">Where you live</label>
+          <select id="c-country" name="country">
+            {countryChoices.map((c) => <option value={c.code}>{c.name}</option>)}
+          </select>
+          <span class="count" data-count role="status" aria-live="polite"></span>
+        </form>
+        <noscript><p class="small muted">The checker needs JavaScript. Use the links below instead.</p></noscript>
+        <ul class="plain-list" data-results></ul>
+        <p class="small muted" data-note hidden>We only know the country rules we have recorded. "Another country" shows offers open worldwide. Read each provider's page before you sign up.</p>
+      </section>
+
+      <section aria-labelledby="groups">
+        <h2 id="groups">Browse by group</h2>
+        <ul class="cards">
+          {Object.entries(GROUPS).map(([k, g]) => {
+            const n = offersFor({ group: k }).length;
+            return (
+              <li class="card">
+                <h3><a href={`/free-for/${k}/`}>{g.title}</a></h3>
+                <p class="small">{n} live offer{n === 1 ? '' : 's'}.</p>
+                {Object.entries(COUNTRY_PAGES).map(([slug, c]) => {
+                  const m = offersFor({ group: k, country: c.code }).length;
+                  return <p class="small"><a href={`/free-for/${k}/${slug}/`}>In {c.name} ({m})</a></p>;
+                })}
+              </li>
+            );
+          })}
+        </ul>
+      </section>
+
+      <section aria-labelledby="more">
+        <h2 id="more">More</h2>
+        <ul class="plain-list">
+          {Object.entries(COUNTRY_PAGES).map(([slug, c]) => <li><a href={`/in/${slug}/`}>Everything free in {c.name}</a></li>)}
+          <li><a href="/free-for/ending-soon/">Offers ending soon</a></li>
+          <li><a href="/free-for/myths/">Offers that ended, and what replaced them</a></li>
+        </ul>
+        <p class="small muted">Freemeans checks every offer on the provider's own page and shows the date. We never explain how to get around a check.</p>
+      </section>
+    </div>
+  </div>
+  <script type="application/json" id="offers-data" set:html={JSON.stringify(data)} />
+</Base>
+
+<script>
+  type Offer = { id: string; name: string; provider: string; groups: string[]; countries: { mode: string; codes?: string[] }; redeemBy: string | null; card: boolean; autoRenews: boolean };
+  const offers: Offer[] = JSON.parse(document.getElementById('offers-data')!.textContent || '[]');
+  const form = document.querySelector<HTMLFormElement>('[data-checker]')!;
+  const list = document.querySelector<HTMLElement>('[data-results]')!;
+  const count = document.querySelector<HTMLElement>('[data-count]')!;
+  const note = document.querySelector<HTMLElement>('[data-note]')!;
+  const allows = (o: Offer, code: string) => o.countries.mode === 'global' || (o.countries.mode === 'include' ? !!o.countries.codes?.includes(code) : !o.countries.codes?.includes(code));
+  const day = new Date().toISOString().slice(0, 10);
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
+  const run = () => {
+    const f = new FormData(form);
+    const who = String(f.get('who'));
+    const country = String(f.get('country'));
+    const hits = offers.filter((o) => o.groups.includes(who) && allows(o, country) && !(o.redeemBy && o.redeemBy < day));
+    count.textContent = `${hits.length} offer${hits.length === 1 ? '' : 's'}`;
+    list.innerHTML = hits.map((o) => `<li><a href="/resources/${esc(o.id)}/">${esc(o.name)}</a>${o.autoRenews ? ' <span class="badge stop">Charges after free period</span>' : ''}${o.card && !o.autoRenews ? ' <span class="badge info">Card required</span>' : ''}</li>`).join('');
+    note.hidden = false;
+  };
+  form.addEventListener('input', run);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  run();
+</script>

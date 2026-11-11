@@ -6,7 +6,7 @@ import { SITE_NAME, DEFAULT_IMAGE } from '../lib/seo.js';
 interface Props {
   title: string;
   description?: string;
-  current?: 'home' | 'catalog' | 'tools';
+  current?: 'home' | 'catalog' | 'tools' | 'free-for';
   // One schema.org JSON-LD object (use graph() from lib/seo.js to combine several).
   jsonLd?: object;
   // true for pages that must stay out of search results (404, previews, thin pages).
@@ -69,6 +69,7 @@ const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:l
         <a class="logo" href="/" aria-label="Freemeans home"><Logo /></a>
         <nav class="site-nav" aria-label="Main">
           <a href="/tools/" aria-current={current === 'tools' ? 'page' : undefined}>AI tools</a>
+          <a class="opt-sm" href="/free-for/" aria-current={current === 'free-for' ? 'page' : undefined}>Free for you</a>
           <a class="opt-sm" href="/catalog/" aria-current={current === 'catalog' ? 'page' : undefined}>Catalog</a>
           <a class="opt" href="/#how">How it works</a>
           <a class="opt" href="/#trust">Sources</a>
@@ -91,6 +92,8 @@ const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:l
             <h4>Product</h4>
             <ul>
               <li><a href="/tools/">AI tools directory</a></li>
+              <li><a href="/free-for/">Free for who you are</a></li>
+              <li><a href="/in/pakistan/">Free in Pakistan</a></li>
               <li><a href="/catalog/">Free-tier catalog</a></li>
               <li><a href="/#how">How it works</a></li>
               <li><a href="/#waitlist">Join the beta</a></li>

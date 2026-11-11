@@ -1,0 +1,34 @@
+---
+// "Who can get this" box (Eligibility PRD, chapter 5): who, where, proof, card, how long,
+// cost afterwards, re-checks, and the date we checked with a link to the source.
+import { offerFacts } from '../lib/eligibility.js';
+import { formatDate, hostOf } from '../lib/catalog.js';
+interface Props { r: any }
+const { r } = Astro.props;
+const f = offerFacts(r);
+const e = r.eligibility;
+const src = r.sources[0];
+---
+<section class="panel who-box" aria-labelledby="who-can-get">
+  <h2 id="who-can-get">Who can get this</h2>
+  <dl>
+    <div><dt>Who</dt><dd>{f.who.join(', ')}</dd></div>
+    <div><dt>Where</dt><dd>{f.where}</dd></div>
+    {e.min_age && <div><dt>Minimum age</dt><dd>{e.min_age}</dd></div>}
+    <div><dt>Proof needed</dt><dd>{f.proof.join(', ')}{e.verifier ? ` (checked by ${e.verifier})` : ''}</dd></div>
+    <div><dt>Card needed?</dt><dd>{f.card ? 'Yes, a payment card is required' : 'No card stated'}</dd></div>
+    {(f.howLong || f.redeemBy || f.accessEnds) && (
+      <div><dt>How long</dt><dd>
+        {f.howLong}{f.howLong && (f.redeemBy || f.accessEnds) ? '. ' : ''}
+        {f.redeemBy && <>Claim by <span class="ends" data-redeem-by={f.redeemBy}>{formatDate(f.redeemBy)}</span></>}
+        {f.accessEnds && <>Free until {formatDate(f.accessEnds)}</>}
+      </dd></div>
+    )}
+    <div><dt>Cost afterwards</dt><dd>{f.after ?? 'Not stated by the provider'}{f.autoRenews ? '. Charged automatically unless you cancel.' : ''}</dd></div>
+    {f.reverify && <div><dt>Re-checked</dt><dd>{f.reverify}</dd></div>}
+    {f.via && <div><dt>Who applies</dt><dd>{f.via}</dd></div>}
+    {e.excludes && <div><dt>Not for</dt><dd>{e.excludes}</dd></div>}
+    {e.notes && <div><dt>Good to know</dt><dd>{e.notes}</dd></div>}
+  </dl>
+  <p class="small muted">Checked on <span class="num">{formatDate(r.last_verified)}</span> · <a href={src.url} rel="nofollow noopener">{hostOf(src.url)}</a>. Freemeans links to the provider's own check. It never explains how to get around it.</p>
+</section>

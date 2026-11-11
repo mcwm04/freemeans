@@ -2,6 +2,7 @@
 // Every indexable page must appear in sitemapEntries(); tests/build.test.mjs fails the
 // build if a built page is missing, so new sections (for example /tools/) cannot be forgotten.
 import { resources, loadCatalog } from './catalog.js';
+import { liveOffers, offersFor, endingSoon, myths, lastChecked, GROUPS, COUNTRY_PAGES, today, MIN_OFFERS_TO_INDEX } from './eligibility.js';
 import { tools, liveCategories, liveTasks, inCategory, forTask, lastModified, directoryStats, MIN_TOOLS_TO_INDEX } from './directory.js';
 
 export const SITE_NAME = 'Freemeans';
@@ -78,6 +79,7 @@ export function sitemapEntries() {
     { path: '/catalog/', lastmod: latest },
     ...list.map((r) => ({ path: `/resources/${r.id}/`, lastmod: r.last_verified })),
     ...directoryEntries(),
+    ...eligibilityEntries(),
   ];
 }
 
@@ -96,4 +98,27 @@ function directoryEntries() {
     ...liveTasks().filter((t) => t.count >= MIN_TOOLS_TO_INDEX)
       .map((t) => ({ path: `/tools/t/${t.id}/`, lastmod: newest(forTask(t.id)) })),
   ];
+}
+
+// /free-for/, /in/pakistan/ and every live offer page. Thin pages (fewer than 5 offers) are built
+// with noindex and left out here, so this list matches what the pages say about themselves.
+function eligibilityEntries() {
+  const live = liveOffers();
+  if (!live.length) return [];
+  const out = [
+    { path: '/free-for/', lastmod: lastChecked(live) },
+    ...live.map((r) => ({ path: `/resources/${r.id}/`, lastmod: r.last_verified })),
+  ];
+  for (const g of Object.keys(GROUPS)) {
+    const list = offersFor({ group: g });
+    if (list.length >= MIN_OFFERS_TO_INDEX) out.push({ path: `/free-for/${g}/`, lastmod: lastChecked(list) });
+    for (const [slug, c] of Object.entries(COUNTRY_PAGES)) {
+      const inCountry = offersFor({ group: g, country: c.code });
+      if (inCountry.length >= MIN_OFFERS_TO_INDEX) out.push({ path: `/free-for/${g}/${slug}/`, lastmod: lastChecked(inCountry) });
+    }
+  }
+  for (const slug of Object.keys(COUNTRY_PAGES)) out.push({ path: `/in/${slug}/`, lastmod: lastChecked(live) });
+  if (endingSoon().length) out.push({ path: '/free-for/ending-soon/', lastmod: today() });
+  if (myths().length) out.push({ path: '/free-for/myths/', lastmod: lastChecked(myths()) });
+  return out;
 }

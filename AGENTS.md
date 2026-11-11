@@ -68,22 +68,17 @@ Node 22+, Python 3.12+. The owner works on **Windows PowerShell**, so give Power
 - **The bot branch `bot/source-check`** is opened by the nightly check. A person confirms every change: update the value and `verified_at` in the data file in the same PR, then merge.
 - After a catalog change is merged, run `npm run load-seed` in `db/` with `DATABASE_URL` set (the owner does this) to update the API.
 
-## 5. Current state and to-do (updated 10 Nov 2026)
+## 5. Current state and to-do (updated 11 Nov 2026)
 
 **Done and live:** website, API, Neon, email routing, Search Console + Bing + IndexNow, nightly source check. Directory Phase 0 and Phase 1 (pages, search, `/go` clicks, submit form, crawler, editor console) are merged into `main`.
 
 **To do, in order:**
 
-1. **Rebase `eligibility/m1-schema` onto `main` and merge it.**
-   - Its `db/migrations/003_eligibility.sql` clashes with `003_review_queue.sql` on `main`. Rename it to `004_eligibility.sql` and update any references (README, tests, loader).
-   - Resolve the merge conflicts in `.github/workflows/ci.yml` (keep the new directory jobs *and* the eligibility validation steps) and `db/tests/db.test.mjs` (keep both sets of tests).
-   - CI green, then merge. The owner then runs the migration on Neon (`npm run migrate` in `db/`).
-2. **Review the `bot/source-check` PR:** `digitalocean.signup-credit` (US$200). The referral page no longer states the amount. Point `source_url` at a DigitalOcean page that states it, or update the value, then merge.
-3. **Eligibility M2:** `data/catalog/eligibility.json` with the 30 seed offers and the Myths records (see `docs/ELIGIBILITY-PRD.md` ch. 7). B-confidence records start as `unverified`.
-4. **Eligibility M3:** API filters `audience`, `group`, `country`, `status`, `ending_within_days`, with status worked out at read time.
-5. **Eligibility M4:** pages `/free-for/…`, `/in/pakistan/`, the "Who can get this" box, the checker, JSON-LD and sitemap.
-6. **Eligibility M5:** `find_phrase()` watch phrases in the source check, a daily rebuild Action and the staleness list.
-7. **Eligibility M6:** launch.
+1. **Review the `bot/source-check` PR:** `digitalocean.signup-credit` (US$200). The referral page no longer states the amount. Point `source_url` at a DigitalOcean page that states it, or update the value, then merge.
+2. **Eligibility M1 to M3 are merged** (schema, `data/catalog/eligibility.json` with 30 offers and 4 Myths records, API filters). Six records are `unverified` until someone reads the provider's page: `google.ai-plus-student`, `cursor.pro-student`, `google.startups-cloud`, `microsoft.startups`, `mofept.cisco-netacad`, `openai.chatgpt-for-teachers`.
+3. **Eligibility M4 (pages)** is in review: `/free-for/…`, `/in/pakistan/`, the "Who can get this" box, the checker, JSON-LD and sitemap.
+4. **Eligibility M5:** `find_phrase()` watch phrases in the source check, a daily rebuild Action and the staleness list. Only two records have watch phrases so far.
+5. **Eligibility M6:** launch.
 
 **Deadline:** `/free-for/students/pakistan/` and `/free-for/ending-soon/` must be live by **mid-December 2026**. The Google AI Plus student offer must be redeemed by 31 Dec 2026, so searches will peak in December.
 

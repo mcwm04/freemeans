@@ -1,0 +1,49 @@
+---
+// Offers that ended or were misreported, with what replaced them. Built from records with
+// status "ended" (or a claim-by date that has passed). Nothing is deleted when an offer ends.
+import Base from '../../layouts/Base.astro';
+import { formatDate } from '../../lib/catalog.js';
+import { myths, getOffer, effectiveStatus, lastChecked, today } from '../../lib/eligibility.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
+
+const list = myths();
+const path = '/free-for/myths/';
+const title = 'Free offers that ended: what replaced them';
+const description = `${list.length} free offers that ended or changed, with what replaced each one. Check this page before you trust an old blog post or a video about a free plan.`;
+const noindex = list.length === 0;
+const jsonLd = graph([
+  webPageLd(Astro.site, { path, name: title, description, dateModified: lastChecked(list) ?? today() }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Free for who you are', path: '/free-for/' }, { name: 'Myths', path }]),
+  itemListLd(Astro.site, { name: title, items: list.map((r) => ({ name: r.name, path: `${path}#${r.id}` })) }),
+]);
+---
+<Base title={title} description={description} jsonLd={jsonLd} noindex={noindex} current="free-for">
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/free-for/">Free for who you are</a><span aria-hidden="true">/</span><span>Myths</span></nav>
+      <h1>Free offers that ended</h1>
+      <p class="lede">Old articles still say these are free. They are not any more. Here is what changed and what to use instead.</p>
+      <div class="meta-row"><span>Checked <b>{formatDate(lastChecked(list) ?? today())}</b></span></div>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap">
+      <ul class="cards">
+        {list.map((r) => {
+          const next = r.replaced_by ? getOffer(r.replaced_by) : null;
+          const nextLive = next && effectiveStatus(next) === 'active';
+          return (
+            <li class="card res-card" id={r.id}>
+              <div class="top"><span class="mono-mark" aria-hidden="true">{r.provider[0]}</span><div class="who"><div class="prov">{r.provider}</div></div></div>
+              <h3>{r.name}</h3>
+              <p class="small">{r.notes}</p>
+              {next && <p class="small"><b>Instead:</b> {nextLive ? <a href={`/resources/${next.id}/`}>{next.name}</a> : <>{next.name} (not verified yet)</>}</p>}
+              <div class="facts"><span class="badge stop">Ended</span><span>Checked {formatDate(r.last_verified)}</span></div>
+            </li>
+          );
+        })}
+      </ul>
+      {list.length === 0 && <p class="empty">No ended offers recorded yet.</p>}
+    </div>
+  </div>
+</Base>
