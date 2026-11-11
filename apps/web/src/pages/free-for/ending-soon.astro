@@ -1,0 +1,41 @@
+---
+// Offers whose last day to claim is within 60 days. Rebuilt daily (PRD chapter 6).
+import Base from '../../layouts/Base.astro';
+import OfferCard from '../../components/OfferCard.astro';
+import { formatDate } from '../../lib/catalog.js';
+import { endingSoon, monthYear, today } from '../../lib/eligibility.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
+
+const list = endingSoon(60);
+const path = '/free-for/ending-soon/';
+const title = `Free offers ending soon (${monthYear()})`;
+const description = list.length
+  ? `${list.length} free offer${list.length === 1 ? '' : 's'} with a claim-by date in the next 60 days, soonest first, with who qualifies and what it costs afterwards. Updated ${formatDate(today())}.`
+  : `Free offers with a claim-by date in the next 60 days. Nothing ends soon right now. We check every day and list each offer with who qualifies. Updated ${formatDate(today())}.`;
+// The PRD asks for this page to be indexed. Only an empty page stays out of search.
+const noindex = list.length === 0;
+const jsonLd = graph([
+  webPageLd(Astro.site, { path, name: title, description, type: 'CollectionPage', dateModified: today() }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Free for who you are', path: '/free-for/' }, { name: 'Ending soon', path }]),
+  itemListLd(Astro.site, { name: title, items: list.map((r) => ({ name: r.name, path: `/resources/${r.id}/` })) }),
+]);
+---
+<Base title={title} description={description} jsonLd={jsonLd} noindex={noindex} current="free-for">
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/free-for/">Free for who you are</a><span aria-hidden="true">/</span><span>Ending soon</span></nav>
+      <h1>Free offers ending soon</h1>
+      <p class="lede">Offers you must claim within the next 60 days, soonest first. Many turn into paid plans if you forget to cancel, so read the red badge.</p>
+      <div class="meta-row"><span>Updated <b>{formatDate(today())}</b></span></div>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap">
+      {list.length > 0 ? (
+        <ul class="cards">{list.map((r) => <OfferCard r={r} />)}</ul>
+      ) : (
+        <p class="empty">Nothing with a claim-by date ends in the next 60 days. Browse <a href="/free-for/">all offers</a>.</p>
+      )}
+    </div>
+  </div>
+</Base>

@@ -6,14 +6,18 @@ import {
   resources, KIND_LABELS, BADGES, TIER_LABELS, METRICS, SIGNALS,
   formatValue, formatDate, resetLabel, isOfficial, hostOf,
 } from '../../lib/catalog.js';
+import WhoCanGet from '../../components/WhoCanGet.astro';
 import { graph, breadcrumbLd, webPageLd } from '../../lib/seo.js';
+import { liveOffers, offerFacts, groupOf, GROUPS, countryName } from '../../lib/eligibility.js';
 
 export function getStaticPaths() {
-  return resources().map((r) => ({ params: { id: r.id }, props: { r } }));
+  // API free tiers (seed.json) and live eligibility offers. Ended and unverified offers get no page.
+  return [...resources(), ...liveOffers()].map((r) => ({ params: { id: r.id }, props: { r } }));
 }
 
 const { r } = Astro.props;
-const official = isOfficial(r);
+const isOffer = Boolean(r.eligibility);
+const official = isOffer ? r.sources.every((x) => SIGNALS[x.signal_type]?.official) : isOfficial(r);
 // Lead with the numbers people search for ("groq free tier limits"), then the date.
 const published = r.limit_rules.filter((l) => formatValue(l) !== 'Not published').slice(0, 2)
   .map((l) => {
@@ -22,8 +26,16 @@ const published = r.limit_rules.filter((l) => formatValue(l) !== 'Not published'
     const unit = /^(.*) \((.+)\)$/.exec(label); // "Session length (hours)" -> "session length 12 hours"
     return unit ? `${unit[1].toLowerCase()} ${formatValue(l)} ${unit[2]}` : `${formatValue(l)} ${label.toLowerCase()}`;
   });
-const description = `Current limits for ${r.name}${published.length ? ': ' + published.join(', ') : ''}. ${r.limit_rules.length} limit${r.limit_rules.length === 1 ? '' : 's'} with sources and usage rules, checked ${formatDate(r.last_verified)}.`;
-const title = /free|trial|credit/i.test(r.name) ? `${r.name}: limits and rules` : `${r.name}: free tier limits`;
+const clamp = (t, max) => (t.length <= max ? t : t.slice(0, t.lastIndexOf(' ', max - 1)).replace(/[ ,.;:]+$/, '') + '…');
+const fit = (list, max) => list.find((t) => t.length <= max) ?? clamp(list.at(-1), max);
+const facts = isOffer ? offerFacts(r) : null;
+const offerDescription = isOffer
+  ? clamp(`${r.name}: for ${facts.who.join(', ').toLowerCase()}. ${facts.where}. ${facts.card ? 'Card required. ' : ''}${facts.autoRenews ? 'Charges after the free period. ' : ''}Checked ${formatDate(r.last_verified)}, with sources.`, 170)
+  : '';
+const description = isOffer ? offerDescription : `Current limits for ${r.name}${published.length ? ': ' + published.join(', ') : ''}. ${r.limit_rules.length} limit${r.limit_rules.length === 1 ? '' : 's'} with sources and usage rules, checked ${formatDate(r.last_verified)}.`;
+const title = isOffer
+  ? fit([`${r.name}: who can get it`, `${r.name}: eligibility`, r.name], 58)
+  : /free|trial|credit/i.test(r.name) ? `${r.name}: limits and rules` : `${r.name}: free tier limits`;
 const path = `/resources/${r.id}/`;
 const jsonLd = graph([
   webPageLd(Astro.site, {
@@ -34,17 +46,24 @@ const jsonLd = graph([
         name: r.name,
         serviceType: KIND_LABELS[r.kind] ?? r.kind,
         provider: { '@type': 'Organization', name: r.provider },
-        offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: TIER_LABELS[r.tier_type] ?? r.tier_type },
+        offers: {
+          '@type': 'Offer', price: '0', priceCurrency: 'USD', description: TIER_LABELS[r.tier_type] ?? r.tier_type,
+          ...(isOffer && r.eligibility.countries.mode === 'include'
+            ? { eligibleRegion: r.eligibility.countries.codes.map((c) => ({ '@type': 'Country', name: countryName(c) })) } : {}),
+          ...(r.offer_window?.redeem_by ? { availabilityEnds: r.offer_window.redeem_by } : {}),
+        },
       },
     },
   }),
-  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Catalog', path: '/catalog/' }, { name: r.name, path }]),
+  breadcrumbLd(Astro.site, isOffer
+    ? [{ name: 'Home', path: '/' }, { name: 'Free for who you are', path: '/free-for/' }, { name: r.name, path }]
+    : [{ name: 'Home', path: '/' }, { name: 'Catalog', path: '/catalog/' }, { name: r.name, path }]),
 ]);
 ---
-<Base title={title} description={description} jsonLd={jsonLd} current="catalog">
+<Base title={title} description={description} jsonLd={jsonLd} current={isOffer ? 'free-for' : 'catalog'}>
   <header class="page-head">
     <div class="wrap">
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="/catalog/">Catalog</a><span aria-hidden="true">/</span><span>{r.provider}</span></nav>
+      <nav class="crumbs" aria-label="Breadcrumb">{isOffer ? <a href="/free-for/">Free for who you are</a> : <a href="/catalog/">Catalog</a>}<span aria-hidden="true">/</span><span>{r.provider}</span></nav>
       <div class="detail-head">
         <span class="mono-mark lg" aria-hidden="true">{r.provider[0]}</span>
         <div>
@@ -55,9 +74,9 @@ const jsonLd = graph([
         </div>
       </div>
       {official ? (
-        <p class="notice ok"><Icon name="shield" /><span>Every limit below comes from an official source.</span></p>
+        <p class="notice ok"><Icon name="shield" /><span>{isOffer ? "Every source below is the provider's own page." : 'Every limit below comes from an official source.'}</span></p>
       ) : (
-        <p class="notice"><Icon name="alert" /><span>Some limits below come from third-party snapshots, not the provider's own docs. Check the provider's page before you rely on them.</span></p>
+        <p class="notice"><Icon name="alert" /><span>{isOffer ? "Some sources below are not the provider's own page. Check the provider's page before you rely on this." : "Some limits below come from third-party snapshots, not the provider's own docs. Check the provider's page before you rely on them."}</span></p>
       )}
     </div>
   </header>
@@ -65,7 +84,8 @@ const jsonLd = graph([
   <div class="page-body">
     <div class="wrap detail-layout">
       <div>
-        <section aria-labelledby="limits">
+        {isOffer && <WhoCanGet r={r} />}
+        {r.limit_rules.length > 0 && <section aria-labelledby="limits">
           <h2 id="limits">Limits</h2>
           <div class="table-scroll">
             <table class="ledger">
@@ -83,7 +103,7 @@ const jsonLd = graph([
               </tbody>
             </table>
           </div>
-        </section>
+        </section>}
 
         {r.badges.length > 0 && (
           <section aria-labelledby="rules">
@@ -125,16 +145,17 @@ const jsonLd = graph([
             <div><dt>Provider</dt><dd>{r.provider}</dd></div>
             <div><dt>Type</dt><dd>{KIND_LABELS[r.kind] ?? r.kind}</dd></div>
             <div><dt>Plan</dt><dd>{TIER_LABELS[r.tier_type] ?? r.tier_type}</dd></div>
-            <div><dt>Limits tracked</dt><dd class="num">{r.limit_rules.length}</dd></div>
+            {!isOffer && <div><dt>Limits tracked</dt><dd class="num">{r.limit_rules.length}</dd></div>}
+            {isOffer && <div><dt>For</dt><dd>{groupOf(r).map((g) => GROUPS[g].title).join(', ') || 'Residents'}</dd></div>}
             <div><dt>Sources</dt><dd>{official ? 'Official' : 'Includes snapshots'}</dd></div>
             <div><dt>Last checked</dt><dd>{formatDate(r.last_verified)}</dd></div>
           </dl>
         </div>
-        <div class="panel cta">
+        {!isOffer && <div class="panel cta">
           <h3>Track this quota</h3>
           <p>The Freemeans agent watches your usage of {r.provider} and warns you before you hit the limit.</p>
           <a class="btn" href="/#waitlist">Join the beta</a>
-        </div>
+        </div>}
       </aside>
     </div>
   </div>

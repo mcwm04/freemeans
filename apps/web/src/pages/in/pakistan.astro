@@ -1,0 +1,60 @@
+---
+// Country hub: every free offer usable from Pakistan, including the public API free tiers.
+import Base from '../../layouts/Base.astro';
+import OfferCard from '../../components/OfferCard.astro';
+import { resources, formatDate } from '../../lib/catalog.js';
+import { GROUPS, COUNTRY_PAGES, liveOffers, groupOf, countryAllows, lastChecked, monthYear, today } from '../../lib/eligibility.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
+
+const c = COUNTRY_PAGES.pakistan;
+const offers = liveOffers().filter((r) => countryAllows(r, c.code));
+const tiers = resources(); // API free tiers have no eligibility, so they are open to everyone
+// Each offer appears once, under the first group it belongs to.
+const taken = new Set();
+const sections = Object.entries(GROUPS).map(([k, g]) => {
+  const items = offers.filter((r) => !taken.has(r.id) && groupOf(r).includes(k));
+  items.forEach((r) => taken.add(r.id));
+  return { key: k, title: `Free for ${g.who}`, items };
+});
+const rest = offers.filter((r) => !taken.has(r.id));
+const all = [...sections.flatMap((s) => s.items), ...rest, ...tiers];
+const path = '/in/pakistan/';
+const title = `Free AI tools and offers in ${c.name} (${monthYear()})`;
+const description = `${all.length} free tools, courses and AI plans you can use in ${c.name}: student, teacher and nonprofit offers plus free API tiers. Each one is dated and sourced.`;
+const jsonLd = graph([
+  webPageLd(Astro.site, { path, name: title, description, type: 'CollectionPage', dateModified: lastChecked([...offers, ...tiers]) ?? today() }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: c.name, path }]),
+  itemListLd(Astro.site, { name: title, items: all.map((r) => ({ name: r.name, path: `/resources/${r.id}/` })) }),
+]);
+---
+<Base title={title} description={description} jsonLd={jsonLd} current="free-for">
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">Pakistan</p>
+      <h1>Free AI tools and offers in {c.name}</h1>
+      <p class="lede">{all.length} things you can use from {c.name}, grouped by who they are for. Offers that do not work in {c.name} are left out.</p>
+      <div class="meta-row"><span>Checked <b>{formatDate(lastChecked([...offers, ...tiers]) ?? today())}</b></span><span><a href="/free-for/students/pakistan/">Students in {c.name}</a></span><span><a href="/free-for/ending-soon/">Ending soon</a></span></div>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap">
+      {sections.filter((s) => s.items.length).map((s) => (
+        <section aria-labelledby={`h-${s.key}`}>
+          <h2 id={`h-${s.key}`}>{s.title}</h2>
+          <ul class="cards">{s.items.map((r) => <OfferCard r={r} />)}</ul>
+        </section>
+      ))}
+      {rest.length > 0 && (
+        <section aria-labelledby="h-rest">
+          <h2 id="h-rest">Open to people in {c.name}</h2>
+          <ul class="cards">{rest.map((r) => <OfferCard r={r} />)}</ul>
+        </section>
+      )}
+      <section aria-labelledby="h-tiers">
+        <h2 id="h-tiers">Free AI and cloud tiers for everyone</h2>
+        <ul class="cards">{tiers.map((r) => <OfferCard r={r} />)}</ul>
+      </section>
+      <p class="small muted" style="margin-top:32px">Providers change or end offers without notice. Read the provider's page before you sign up, and watch for a card requirement or an automatic charge.</p>
+    </div>
+  </div>
+</Base>

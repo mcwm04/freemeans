@@ -1,0 +1,53 @@
+---
+// /free-for/students/, /free-for/teachers/ ... (Eligibility PRD, chapter 5).
+// Indexed only when 5 or more offers are live (thin-page rule, docs/SEO.md chapter 6).
+import Base from '../../../layouts/Base.astro';
+import OfferCard from '../../../components/OfferCard.astro';
+import { formatDate } from '../../../lib/catalog.js';
+import { GROUPS, COUNTRY_PAGES, offersFor, lastChecked, monthYear, today, MIN_OFFERS_TO_INDEX } from '../../../lib/eligibility.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../../lib/seo.js';
+
+export function getStaticPaths() {
+  return Object.keys(GROUPS).map((group) => ({ params: { group }, props: { group } }));
+}
+
+const { group } = Astro.props;
+const g = GROUPS[group];
+const list = offersFor({ group });
+const path = `/free-for/${group}/`;
+const title = `Free tools for ${g.short} (${monthYear()})`;
+const description = `${list.length} free offers for ${g.who}, with who qualifies, what proof is needed, whether a card is required and when each offer ends. Checked ${formatDate(lastChecked(list) ?? today())}.`;
+const noindex = list.length < MIN_OFFERS_TO_INDEX;
+const jsonLd = graph([
+  webPageLd(Astro.site, {
+    path, name: title, description, type: 'CollectionPage', dateModified: lastChecked(list),
+    extra: g.role ? { audience: { '@type': 'EducationalAudience', educationalRole: g.role } } : {},
+  }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Free for who you are', path: '/free-for/' }, { name: g.title, path }]),
+  itemListLd(Astro.site, { name: title, items: list.map((r) => ({ name: r.name, path: `/resources/${r.id}/` })) }),
+]);
+---
+<Base title={title} description={description} jsonLd={jsonLd} noindex={noindex} current="free-for">
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/free-for/">Free for who you are</a><span aria-hidden="true">/</span><span>{g.title}</span></nav>
+      <h1>Free tools for {g.who}</h1>
+      <p class="lede">{list.length} live offer{list.length === 1 ? '' : 's'}. Each one says who qualifies, what you must show, and what it costs afterwards.</p>
+      <div class="meta-row">
+        <span>Checked <b>{formatDate(lastChecked(list) ?? today())}</b></span>
+        {Object.entries(COUNTRY_PAGES).map(([slug, c]) => <span><a href={`/free-for/${group}/${slug}/`}>Only what works in {c.name}</a></span>)}
+        <span><a href="/free-for/ending-soon/">Ending soon</a></span>
+      </div>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap">
+      {list.length > 0 ? (
+        <ul class="cards">{list.map((r) => <OfferCard r={r} />)}</ul>
+      ) : (
+        <p class="empty">No live offers for {g.who} right now. We list an offer only after we have checked it on the provider's own page.</p>
+      )}
+      <p class="small muted" style="margin-top:32px">Providers change or end offers without notice. Always read the provider's page before you sign up, and look for a card requirement or an automatic charge. We link to each provider's own verification and never explain how to get around it.</p>
+    </div>
+  </div>
+</Base>

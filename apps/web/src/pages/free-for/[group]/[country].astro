@@ -1,0 +1,56 @@
+---
+// /free-for/students/pakistan/ ... Only the offers that work from that country.
+import Base from '../../../layouts/Base.astro';
+import OfferCard from '../../../components/OfferCard.astro';
+import { formatDate } from '../../../lib/catalog.js';
+import { GROUPS, COUNTRY_PAGES, offersFor, lastChecked, monthYear, today, MIN_OFFERS_TO_INDEX } from '../../../lib/eligibility.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../../lib/seo.js';
+
+export function getStaticPaths() {
+  return Object.keys(GROUPS).flatMap((group) => Object.keys(COUNTRY_PAGES).map((country) => ({ params: { group, country }, props: { group, country } })));
+}
+
+const { group, country } = Astro.props;
+const g = GROUPS[group];
+const c = COUNTRY_PAGES[country];
+const list = offersFor({ group, country: c.code });
+const path = `/free-for/${group}/${country}/`;
+const title = `Free tools for ${g.short} in ${c.name} (${monthYear()})`;
+const description = `${list.length} free offers that ${g.who} in ${c.name} can use, with proof, card rules and end dates. Offers that skip ${c.name} are left out. Checked ${formatDate(lastChecked(list) ?? today())}.`;
+const noindex = list.length < MIN_OFFERS_TO_INDEX;
+const jsonLd = graph([
+  webPageLd(Astro.site, {
+    path, name: title, description, type: 'CollectionPage', dateModified: lastChecked(list),
+    extra: g.role ? { audience: { '@type': 'EducationalAudience', educationalRole: g.role } } : {},
+  }),
+  breadcrumbLd(Astro.site, [
+    { name: 'Home', path: '/' }, { name: 'Free for who you are', path: '/free-for/' },
+    { name: g.title, path: `/free-for/${group}/` }, { name: c.name, path },
+  ]),
+  itemListLd(Astro.site, { name: title, items: list.map((r) => ({ name: r.name, path: `/resources/${r.id}/` })) }),
+]);
+---
+<Base title={title} description={description} jsonLd={jsonLd} noindex={noindex} current="free-for">
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/free-for/">Free for who you are</a><span aria-hidden="true">/</span><a href={`/free-for/${group}/`}>{g.title}</a><span aria-hidden="true">/</span><span>{c.name}</span></nav>
+      <h1>Free tools for {g.who} in {c.name}</h1>
+      <p class="lede">{list.length} live offer{list.length === 1 ? '' : 's'} that work from {c.name}. Check the proof each one asks for: some school emails need an extra document check.</p>
+      <div class="meta-row">
+        <span>Checked <b>{formatDate(lastChecked(list) ?? today())}</b></span>
+        <span><a href={`/in/${country}/`}>Everything free in {c.name}</a></span>
+        <span><a href="/free-for/ending-soon/">Ending soon</a></span>
+      </div>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap">
+      {list.length > 0 ? (
+        <ul class="cards">{list.map((r) => <OfferCard r={r} />)}</ul>
+      ) : (
+        <p class="empty">No live offers for {g.who} in {c.name} right now.</p>
+      )}
+      <p class="small muted" style="margin-top:32px">Providers change or end offers without notice. Read the provider's page before you sign up, and watch for a card requirement or an automatic charge after the free period.</p>
+    </div>
+  </div>
+</Base>

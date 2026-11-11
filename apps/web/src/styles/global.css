@@ -560,3 +560,10 @@ table.ledger { width: 100%; border-collapse: collapse; font-size: 14.5px; }
 .submit-form .notice { margin: 0; }
 .submit-form .btn { justify-self: start; margin-top: 8px; }
 [hidden] { display: none !important; }
+
+/* Eligibility pages */
+.who-box { margin-bottom: var(--space-6); }
+.who-box dl div { align-items: flex-start; }
+.who-box dd { margin: 0; text-align: right; max-width: 70%; }
+.ends.expired { color: var(--danger, #b3261e); }
+.plain-list { list-style: none; padding: 0; margin: var(--space-4) 0; display: grid; gap: 10px; }
