@@ -1,0 +1,73 @@
+{
+  "slug": "raea",
+  "name": "raea",
+  "url": "https://raea.io/",
+  "tagline": "Render Anything Engine for anyone",
+  "description": "raea is a creative studio where AI agents generate videos, motion graphics, 3D scenes, games, or apps based on text prompts. Users describe what they want in TypeScript and React, and the engine renders each frame on the GPU locally. The desktop app runs on macOS, Windows, and Linux without requiring an account, and it works with any AI model such as Claude, ChatGPT, Kimi, or a local model. Rendering is done on the user's computer, so there are no per‑render fees. The free tier includes the engine, the app, and unlimited local renders, while paid plans add cloud syncing and multi‑device features.",
+  "categories": [
+    "video",
+    "coding"
+  ],
+  "tasks": [
+    "text-to-video",
+    "generate-code",
+    "make-graphics"
+  ],
+  "best_for": [
+    "Creating short videos from text prompts",
+    "Building motion graphics with AI agents",
+    "Developing 3D scenes or games locally",
+    "Prototyping app interfaces using React and TypeScript",
+    "Rendering video assets without cloud services"
+  ],
+  "platforms": [
+    "macos",
+    "windows",
+    "linux",
+    "cli"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/shinyobjectz/raea",
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": false,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://raea.io/",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": {
+    "cheapest_paid_usd": 12,
+    "period": "month",
+    "source_url": "https://raea.io/",
+    "verified_at": "2026-11-11"
+  },
+  "signals": {
+    "trends_term": "raea",
+    "wikipedia_article": null,
+    "github_repo": "shinyobjectz/raea",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "raea.io",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
