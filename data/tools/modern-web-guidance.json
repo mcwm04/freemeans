@@ -1,0 +1,65 @@
+{
+  "slug": "modern-web-guidance",
+  "name": "Modern Web Guidance",
+  "url": "https://github.com/GoogleChrome/modern-web-guidance",
+  "tagline": "Guidance for AI coding agents to use modern web platform features.",
+  "description": "Modern Web Guidance is an open‑source collection of skills that embed web platform best practices, browser compatibility data, and modern APIs into coding agents. It helps AI‑driven code generators avoid legacy patterns and produce code that leverages native web capabilities, performance optimizations, and accessibility features. The repository is maintained by the Chrome, Edge, Firefox, and MDN teams and includes guides for over 250 modern web features across layout, performance, forms, and more. Users can install the CLI via npx, search for guides, retrieve specific instructions, or scan a codebase for legacy patterns to modernize.",
+  "categories": [
+    "coding"
+  ],
+  "tasks": [
+    "generate-code",
+    "explain-code",
+    "review-code"
+  ],
+  "best_for": [
+    "LLM coding assistants",
+    "AI pair‑programming tools",
+    "automated code generation pipelines",
+    "web developers using AI agents",
+    "codebase modernization scripts"
+  ],
+  "platforms": [
+    "cli",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/GoogleChrome/modern-web-guidance",
+  "license": "Apache-2.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/GoogleChrome/modern-web-guidance",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "Modern Web Guidance",
+    "wikipedia_article": null,
+    "github_repo": "GoogleChrome/modern-web-guidance",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/googlechrome/modern-web-guidance",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
