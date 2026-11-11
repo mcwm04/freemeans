@@ -103,6 +103,10 @@
         {
           "text": "no credit card",
           "source_url": "https://learn.microsoft.com/en-us/azure/education-hub/about-azure-for-students"
+        },
+        {
+          "text": "$100",
+          "source_url": "https://learn.microsoft.com/en-us/azure/education-hub/about-azure-for-students"
         }
       ],
       "notes": "US$100 Azure credit for 12 months, renewable each year while you are a student. No credit card needed.",
@@ -317,6 +321,9 @@
         "countries": {
           "mode": "exclude",
           "codes": [
+            "HK",
+            "MO",
+            "TN",
             "US"
           ]
         },
@@ -324,11 +331,11 @@
         "proof": [
           "sheerid"
         ],
-        "min_age": 16,
+        "min_age": 18,
         "verifier": "SheerID",
         "reverify": "yearly",
-        "excludes": "School-issued Google accounts; people with an active Google One plan. US students get the AI Pro offer instead.",
-        "notes": "Pakistan is reported as covered, and .edu.pk addresses may need SheerID document upload. UNVERIFIED: copy the full country list from Google's support page, and confirm Pakistan and the minimum age (16+ reported)."
+        "excludes": "Family groups, enterprise purchasers, people with a supervised Google Account, discounted Pixel bundle subscribers, and people with Google One through a third party. US students get the AI Pro offer instead.",
+        "notes": "Google's terms (updated 19 Aug 2026) say 18 or older, a SheerID check, a personal Google account and a payment method at sign-up. The plan depends on the country of your university. Not available in Hong Kong, Macau and Tunisia. .edu.pk addresses may need SheerID document upload. UNVERIFIED: the terms do not list countries, so confirm that Pakistan is covered."
       },
       "offer_window": {
         "redeem_by": "2026-12-31",
@@ -408,21 +415,32 @@
         {
           "type": "payment_method_required",
           "note": "A card is needed at sign-up.",
-          "source_url": "https://gemini.google/students"
+          "source_url": "https://one.google.com/offer/studentoffer8"
         },
         {
           "type": "auto_renews_paid",
           "note": "Charged after 12 months unless cancelled.",
-          "source_url": "https://gemini.google/students"
+          "source_url": "https://one.google.com/offer/studentoffer8"
         }
       ],
       "notes": "US college students aged 18 and over.",
       "last_verified": "2026-11-09",
       "sources": [
         {
+          "url": "https://one.google.com/offer/studentoffer8",
+          "fetched_at": "2026-11-11",
+          "signal_type": "official_docs"
+        },
+        {
           "url": "https://gemini.google/students",
           "fetched_at": "2026-11-09",
           "signal_type": "official_docs"
+        }
+      ],
+      "watch": [
+        {
+          "text": "December 31, 2026",
+          "source_url": "https://one.google.com/offer/studentoffer8"
         }
       ]
     },
@@ -658,6 +676,12 @@
           "fetched_at": "2026-11-09",
           "signal_type": "official_docs"
         }
+      ],
+      "watch": [
+        {
+          "text": "no cost",
+          "source_url": "https://edu.google.com/workspace-for-education/editions/education-fundamentals/"
+        }
       ]
     },
     {
@@ -829,6 +853,12 @@
           "fetched_at": "2026-11-09",
           "signal_type": "official_docs"
         }
+      ],
+      "watch": [
+        {
+          "text": "GitHub Team",
+          "source_url": "https://docs.github.com/en/nonprofit/quickstart"
+        }
       ]
     },
     {
@@ -891,6 +921,12 @@
           "fetched_at": "2026-11-09",
           "signal_type": "official_docs"
         }
+      ],
+      "watch": [
+        {
+          "text": "Zero Trust",
+          "source_url": "https://www.cloudflare.com/galileo/"
+        }
       ]
     },
     {
@@ -922,6 +958,16 @@
           "url": "https://aws.amazon.com/startups/credits",
           "fetched_at": "2026-11-09",
           "signal_type": "official_docs"
+        }
+      ],
+      "watch": [
+        {
+          "text": "$1,000",
+          "source_url": "https://aws.amazon.com/startups/credits"
+        },
+        {
+          "text": "10 years",
+          "source_url": "https://aws.amazon.com/startups/credits"
         }
       ]
     },
@@ -1026,6 +1072,12 @@
           "url": "https://digiskills.pk",
           "fetched_at": "2026-11-09",
           "signal_type": "official_docs"
+        }
+      ],
+      "watch": [
+        {
+          "text": "Batch-05",
+          "source_url": "https://digiskills.pk"
         }
       ]
     },

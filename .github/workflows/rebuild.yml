@@ -1,0 +1,41 @@
+# Rebuilds freemeans.com once a day, so an offer whose claim-by date has passed leaves the live
+# lists, "Ending soon" stays current and the sitemap's <lastmod> moves (Eligibility PRD, chapter 6).
+#
+# It calls a Cloudflare Workers Builds "deploy hook": a secret URL that starts a build of the
+# `main` branch. Free. One-time setup:
+#   1. Cloudflare dashboard → Workers & Pages → freemeans → Settings → Builds → Deploy hooks →
+#      add one named "daily", branch `main`, and copy the URL.
+#   2. GitHub repo → Settings → Secrets and variables → Actions → New repository secret:
+#      name CLOUDFLARE_DEPLOY_HOOK, value the URL. Treat it like a password: anyone with the URL
+#      can start builds. If it leaks, delete the hook in Cloudflare and make a new one.
+# Without the secret this workflow does nothing and says so; it does not fail.
+name: Daily rebuild
+
+on:
+  schedule:
+    - cron: "5 0 * * *"   # 00:05 UTC = 05:05 in Pakistan, just after the date changes in UTC
+  workflow_dispatch: {}   # "Run workflow" button for a manual rebuild
+
+permissions: {}
+
+concurrency:
+  group: daily-rebuild
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+    steps:
+      - name: Start a Cloudflare build of main
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::notice::CLOUDFLARE_DEPLOY_HOOK is not set, so nothing was rebuilt. See the setup steps at the top of this file."
+            echo "Daily rebuild skipped: no deploy hook secret." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          # -f: fail on an HTTP error. The response names the build, never the secret URL.
+          curl -fsS -X POST "$HOOK" -o response.json
+          echo "Cloudflare accepted the build request." >> "$GITHUB_STEP_SUMMARY"

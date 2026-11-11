@@ -76,8 +76,8 @@ Node 22+, Python 3.12+. The owner works on **Windows PowerShell**, so give Power
 
 1. **Review the `bot/source-check` PR:** `digitalocean.signup-credit` (US$200). The referral page no longer states the amount. Point `source_url` at a DigitalOcean page that states it, or update the value, then merge.
 2. **Eligibility M1 to M3 are merged** (schema, `data/catalog/eligibility.json` with 30 offers and 4 Myths records, API filters). Six records are `unverified` until someone reads the provider's page: `google.ai-plus-student`, `cursor.pro-student`, `google.startups-cloud`, `microsoft.startups`, `mofept.cisco-netacad`, `openai.chatgpt-for-teachers`.
-3. **Eligibility M4 (pages)** is in review: `/free-for/…`, `/in/pakistan/`, the "Who can get this" box, the checker, JSON-LD and sitemap.
-4. **Eligibility M5:** `find_phrase()` watch phrases in the source check, a daily rebuild Action and the staleness list. Only two records have watch phrases so far.
+3. **Eligibility M4 (pages)** is merged: `/free-for/…`, `/in/pakistan/`, the "Who can get this" box, the checker, JSON-LD and sitemap.
+4. **Eligibility M5 (freshness)** is in review: watch phrases in the nightly source check (10 phrases on 8 offers), the "Re-check by hand" list, and a daily rebuild Action. The owner adds the `CLOUDFLARE_DEPLOY_HOOK` secret (steps at the top of `.github/workflows/rebuild.yml`).
 5. **Eligibility M6:** launch.
 
 **Deadline:** `/free-for/students/pakistan/` and `/free-for/ending-soon/` must be live by **mid-December 2026**. The Google AI Plus student offer must be redeemed by 31 Dec 2026, so searches will peak in December.

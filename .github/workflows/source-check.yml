@@ -1,6 +1,7 @@
 # Nightly source check: fetches every limit's source page and opens (or updates) ONE pull
-# request when a number on file is no longer on its page. A person reviews and edits
-# data/catalog/seed.json in that PR; the bot never changes limits itself.
+# request when a number on file, or a watch phrase on an eligibility offer, is no longer on its
+# page. A person reviews and edits the data in that PR; the bot never changes limits itself.
+# The job summary also lists offers to re-check by hand (unverified, or older than 60 days).
 #
 # Free: GitHub Actions minutes are unlimited on public repos and 2,000/month on private ones.
 # A run takes about 1 minute. One-time setup: Settings → Actions → General → Workflow
@@ -56,7 +57,7 @@ jobs:
           delete-branch: true
           add-paths: |
             data/source-checks/*.md
-          commit-message: "Source check: ${{ steps.check.outputs.missing }} limit(s) to review"
-          title: "Source check: ${{ steps.check.outputs.missing }} limit(s) may have changed"
+          commit-message: "Source check: ${{ steps.check.outputs.missing }} item(s) to review"
+          title: "Source check: ${{ steps.check.outputs.missing }} limit(s) or offer(s) may have changed"
           body-path: ${{ steps.check.outputs.report }}
           labels: catalog, source-check
