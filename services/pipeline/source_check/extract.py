@@ -153,3 +153,26 @@ def nearby_mentions(text: str, metric: str, limit: int = 3) -> list[str]:
             if len(out) >= limit:
                 return out
     return out
+
+
+def _norm(s: str) -> str:
+    """Lower case, one space between words, straight quotes and dashes: so a phrase still
+    matches when the page breaks the line or uses curly quotes."""
+    s = (s.replace("\u2019", "'").replace("\u2018", "'").replace("\u201c", '"').replace("\u201d", '"')
+          .replace("\u2013", "-").replace("\u2014", "-"))
+    return re.sub(r"\s+", " ", s).strip().lower()
+
+
+def find_phrase(text: str, phrase: str) -> Match:
+    """Is the watch phrase (a date, an amount or a condition) still on the page?
+
+    Whole-word match: "$100" does not match "$1000". Returns status "found" or "missing"."""
+    t, p = _norm(text), _norm(phrase)
+    if not p:
+        return Match("missing")
+    pre = r"(?<!\w)" if p[0].isalnum() else ""
+    post = r"(?!\w)" if p[-1].isalnum() else ""
+    m = re.search(pre + re.escape(p) + post, t)
+    if not m:
+        return Match("missing")
+    return Match("found", phrase, _snippet(t, m.start(), m.end()))

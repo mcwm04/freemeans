@@ -4,7 +4,8 @@ from __future__ import annotations
 import json
 from dataclasses import asdict
 
-from .check import RuleResult, summary
+from .check import PHRASE, RuleResult, summary
+from .freshness import STALE_AFTER_DAYS, Recheck
 
 LABELS = {
     "missing": "Possibly changed",
@@ -27,7 +28,12 @@ def _file_for(resource_id: str) -> str:
     return "data/catalog/seed.json"
 
 
-def markdown(results: list[RuleResult], run_date: str, catalog_version: str) -> str:
+def _is_phrase(r: RuleResult) -> bool:
+    return r.metric == PHRASE
+
+
+def markdown(results: list[RuleResult], run_date: str, catalog_version: str, recheck: list[Recheck] | None = None) -> str:
+    recheck = recheck or []
     s = summary(results)
     lines = [
         f"# Source check · {run_date}",
@@ -40,6 +46,8 @@ def markdown(results: list[RuleResult], run_date: str, catalog_version: str) -> 
     for key in ["missing", "weak", "unreachable", "confirmed", "skipped"]:
         if s.get(key):
             lines.append(f"| {LABELS[key]} | {s[key]} |")
+    if recheck:
+        lines.append(f"| Offers to re-check by hand | {len(recheck)} |")
     lines.append("")
 
     missing = [r for r in results if r.status == "missing"]
@@ -54,9 +62,16 @@ def markdown(results: list[RuleResult], run_date: str, catalog_version: str) -> 
             "",
         ]
         for r in missing:
+            if _is_phrase(r):
+                lines.append(f"### `{r.resource_id}` · watch phrase “{r.value}”")
+                lines.append(f"- Source: {r.source_url} (last verified {r.verified_at})")
+                lines.append(f"- File: `{r.file or _file_for(r.resource_id)}`")
+                lines.append("- The phrase is no longer on the page. The offer may have changed or ended: read the page, then update the dates, amounts and `status` on the record, fix its `watch` list, and set `last_verified` to today.")
+                lines.append("")
+                continue
             lines.append(f"### `{r.resource_id}` · {r.metric} = {_fmt(r.value)} per {r.window}")
             lines.append(f"- Source: {r.source_url} ({r.signal_type}, last verified {r.verified_at})")
-            lines.append(f"- File: `{_file_for(r.resource_id)}`")
+            lines.append(f"- File: `{r.file or _file_for(r.resource_id)}`")
             if r.nearby:
                 lines.append("- What the page says nearby now:")
                 lines += [f"  > {n}" for n in r.nearby]
@@ -80,6 +95,15 @@ def markdown(results: list[RuleResult], run_date: str, catalog_version: str) -> 
             lines.append(f"- {url}: {rs[0].detail} ({len(rs)} limit{'s' if len(rs) > 1 else ''})")
         lines.append("")
 
+    if recheck:
+        lines += ["## Re-check by hand", "",
+                  f"Offers that are unverified, or were last checked more than {STALE_AFTER_DAYS} days ago. Open the provider's own page, confirm who qualifies, where, the dates and the price afterwards,",
+                  "then set `last_verified` to today (and `status` to `active` for an unverified offer).", ""]
+        for x in recheck:
+            why = "unverified" if x.reason == "unverified" else f"last checked {x.last_verified} ({x.age_days} days ago)"
+            lines.append(f"- `{x.resource_id}` {x.name}: {why}. File: `{x.file}`")
+        lines.append("")
+
     lines += [
         "---",
         "Opened by the nightly source check (`.github/workflows/source-check.yml`). The bot never edits limits itself;",
@@ -88,9 +112,9 @@ def markdown(results: list[RuleResult], run_date: str, catalog_version: str) -> 
     return "\n".join(lines) + "\n"
 
 
-def record(results: list[RuleResult], run_date: str, catalog_version: str) -> str:
+def record(results: list[RuleResult], run_date: str, catalog_version: str, recheck: list[Recheck] | None = None) -> str:
     return json.dumps(
-        {"run_date": run_date, "catalog_version": catalog_version, "summary": summary(results), "results": [asdict(r) for r in results]},
+        {"run_date": run_date, "catalog_version": catalog_version, "summary": summary(results), "recheck": [asdict(x) for x in recheck or []], "results": [asdict(r) for r in results]},
         indent=2,
         ensure_ascii=False,
     ) + "\n"

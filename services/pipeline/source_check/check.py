@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from typing import Callable
 from urllib.parse import urlsplit
 
-from .extract import Match, find_limit, page_text
+from .extract import Match, find_limit, find_phrase, page_text
 
 USER_AGENT = "FreemeansBot/0.3 (+https://freemeans.com/bot; source freshness check)"
 MAX_BYTES = 3_000_000
@@ -38,6 +38,7 @@ class RuleResult:
     detail: str = ""
     snippet: str | None = None
     nearby: list[str] = field(default_factory=list)
+    file: str = ""  # data file that holds the record, when it is not seed.json
 
 
 Fetcher = Callable[[str], Page]
@@ -116,6 +117,9 @@ class Robots:
 robots_allows = Robots()
 
 
+PHRASE = "phrase"  # metric name for a watch phrase (Eligibility PRD, chapter 6)
+
+
 def _classify(m: Match) -> tuple[str, str]:
     if m.status == "near_unit":
         return "confirmed", f"found “{m.variant}” next to its unit"
@@ -125,8 +129,9 @@ def _classify(m: Match) -> tuple[str, str]:
 
 
 def check_catalog(catalog: dict, fetch: Fetcher = http_fetch, allowed: RobotsCheck = robots_allows, pause: float = 1.0) -> list[RuleResult]:
-    rules = [(r, l) for r in catalog["resources"] for l in r["limit_rules"]]
-    urls = sorted({l["source_url"] for _, l in rules})
+    rules = [(r, l) for r in catalog["resources"] for l in r.get("limit_rules", [])]
+    watches = [(r, w) for r in catalog["resources"] for w in r.get("watch", [])]
+    urls = sorted({l["source_url"] for _, l in rules} | {w["source_url"] for _, w in watches})
     pages: dict[str, Page] = {}
     last_host = None
     for url in urls:
@@ -145,7 +150,7 @@ def check_catalog(catalog: dict, fetch: Fetcher = http_fetch, allowed: RobotsChe
     for r, l in rules:
         base = dict(
             resource_id=r["id"], metric=l["metric"], value=l.get("value"), window=l["window"],
-            source_url=l["source_url"], signal_type=l["signal_type"], verified_at=l["verified_at"],
+            source_url=l["source_url"], signal_type=l["signal_type"], verified_at=l["verified_at"], file=r.get("source_file", ""),
         )
         if l.get("value") is None or l.get("published") is False:
             results.append(RuleResult(**base, status="skipped", detail="limit is not published, nothing to compare"))
@@ -157,6 +162,22 @@ def check_catalog(catalog: dict, fetch: Fetcher = http_fetch, allowed: RobotsChe
         m = find_limit(page.text, l["metric"], l["value"])
         status, detail = _classify(m)
         results.append(RuleResult(**base, status=status, detail=detail, snippet=m.snippet, nearby=m.nearby))
+
+    for r, w in watches:
+        signal = next((s["signal_type"] for s in r.get("sources", []) if s["url"] == w["source_url"]), "official_docs")
+        base = dict(
+            resource_id=r["id"], metric=PHRASE, value=w["text"], window="page", source_url=w["source_url"],
+            signal_type=signal, verified_at=r.get("last_verified", ""), file=r.get("source_file", ""),
+        )
+        page = pages[w["source_url"]]
+        if not page.ok:
+            results.append(RuleResult(**base, status="unreachable", detail=page.error or "could not read the page"))
+            continue
+        m = find_phrase(page.text, w["text"])
+        if m.status == "found":
+            results.append(RuleResult(**base, status="confirmed", detail="phrase is still on the page", snippet=m.snippet))
+        else:
+            results.append(RuleResult(**base, status="missing", detail="phrase is no longer on the page"))
     return results
 
 

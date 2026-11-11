@@ -27,6 +27,15 @@ Account emails are left out on purpose, because this repo is public. The owner k
 - Each branch gets its own preview record that copies the **Previews Base** settings when the branch is first built. Changing Previews Base later does not update existing branches.
 - A branch made before the `previews` block reached `main` needs `main` merged in (or a rebase) before its Cloudflare check turns green.
 
+## Daily rebuild (offers that expire)
+
+The site is static, so an offer past its claim-by date leaves the live lists only when the site is rebuilt. `.github/workflows/rebuild.yml` starts a build every day at 05:05 Pakistan time through a Cloudflare deploy hook. One-time setup:
+
+1. Cloudflare dashboard → **Workers & Pages → freemeans → Settings → Builds → Deploy hooks**. Add a hook named `daily` for branch `main` and copy its URL.
+2. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**. Name `CLOUDFLARE_DEPLOY_HOOK`, value the URL. Keep it secret: anyone with the URL can start builds.
+
+Until the secret exists the workflow does nothing (it prints a notice). The API already treats a passed date as ended, and each page shows "Ended" in the browser, so a missed rebuild never shows an expired offer as live.
+
 ## Routine tasks
 
 - **Catalog change:** edit `data/catalog/seed.json`, then push (the site rebuilds and IndexNow pings). Then in `db/`: `npm run load-seed` with `DATABASE_URL` set (updates the API).
