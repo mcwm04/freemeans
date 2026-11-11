@@ -1,0 +1,66 @@
+{
+  "slug": "dsh-android",
+  "name": "DSH-Android",
+  "url": "https://github.com/jackwener/DSH-Android",
+  "tagline": "Run DeepSeek AI agent on Android to control apps, files, and system settings",
+  "description": "DSH-Android is an Android application that embeds the DeepSeek Harness engine, allowing a language model to operate other apps, manage files, modify system settings, and automate tasks on the phone. Users can issue voice or text commands to send messages, summarize chats, scrape content, place orders, and more. The app works without root or Termux, uses accessibility services for screen interaction, and supports optional Shizuku for deeper system control. It also provides a Linux environment for running Python scripts and can connect to remote computers via SSH. The tool targets users who want AI-driven automation directly on their Android device.",
+  "categories": [
+    "productivity",
+    "automation",
+    "app-builders"
+  ],
+  "tasks": [
+    "automate-workflows",
+    "build-ai-agents",
+    "plan-tasks"
+  ],
+  "best_for": [
+    "automating repetitive phone actions",
+    "controlling apps via natural language",
+    "managing files and system settings on Android",
+    "running Python scripts locally on the device",
+    "triggering actions based on Wi‑Fi, Bluetooth, or location"
+  ],
+  "platforms": [
+    "android"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/jackwener/DSH-Android",
+  "license": "Apache-2.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/jackwener/DSH-Android",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "DSH-Android",
+    "wikipedia_article": null,
+    "github_repo": "jackwener/DSH-Android",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/jackwener/dsh-android",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
