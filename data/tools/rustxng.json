@@ -1,0 +1,69 @@
+{
+  "slug": "rustxng",
+  "name": "RustXNG",
+  "url": "https://github.com/sahenjp/RustXNG",
+  "tagline": "Self‑hosted metasearch engine with JSON API for AI agents",
+  "description": "RustXNG is an open‑source metasearch engine written in Rust. It aggregates results from external search providers and can fetch page text through a JSON API or MCP, useful for AI agents. The tool runs as a local server on Linux, macOS or Windows and offers optional page indexing and Wikipedia imports. It provides configurable output formats and respects robots.txt. RustXNG is distributed under the AGPL‑3.0 license and can be installed via pre‑built binaries or Cargo.",
+  "categories": [
+    "research",
+    "productivity",
+    "data"
+  ],
+  "tasks": [
+    "search-with-sources",
+    "scrape-web-data"
+  ],
+  "best_for": [
+    "building AI agents that need web search",
+    "retrieving page text for language models",
+    "creating custom search indexes",
+    "integrating search into self‑hosted applications",
+    "researching documentation via API"
+  ],
+  "platforms": [
+    "linux",
+    "macos",
+    "windows",
+    "cli",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/sahenjp/RustXNG",
+  "license": "AGPL-3.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/sahenjp/RustXNG",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "RustXNG",
+    "wikipedia_article": null,
+    "github_repo": "sahenjp/RustXNG",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/sahenjp/rustxng",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
