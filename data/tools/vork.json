@@ -1,0 +1,76 @@
+{
+  "slug": "vork",
+  "name": "vork",
+  "url": "https://voyager.so/vork",
+  "tagline": "A headless 3D and VFX engine built for AI agents",
+  "description": "vork is a headless 3D and visual effects engine designed for AI agents. Agents write scene code that defines geometry, materials, lighting, simulation and compositing, and the engine renders the result on the GPU using Vulkan or Metal. It is written in Rust and Slang and runs on Windows, Linux and Apple Silicon. The engine provides a small kernel for low‑level operations while the agent generates the rest of the shader and scene logic on the fly. It can be used to create complex simulations, render high‑performance 3D shots, and composite 3D elements with real footage.",
+  "categories": [
+    "3d",
+    "image",
+    "video"
+  ],
+  "tasks": [
+    "generate-code",
+    "make-graphics"
+  ],
+  "best_for": [
+    "Creating 3D scenes programmatically",
+    "Running VFX simulations via AI agents",
+    "Generating high‑performance GPU renders",
+    "Compositing 3D elements with real footage",
+    "Developing custom shaders and geometry for agents"
+  ],
+  "platforms": [
+    "windows",
+    "linux",
+    "macos"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/voyager-so/vork",
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": {
+      "value": 1000,
+      "unit": "credits",
+      "period": "month"
+    },
+    "trial_days": null,
+    "card_required": false,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Free plan includes 1,000 credits per month, no card required.",
+    "source_url": "https://voyager.so/pricing",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": {
+    "cheapest_paid_usd": 19,
+    "period": "month",
+    "source_url": "https://voyager.so/pricing",
+    "verified_at": "2026-11-11"
+  },
+  "signals": {
+    "trends_term": "vork",
+    "wikipedia_article": null,
+    "github_repo": "voyager-so/vork",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "voyager.so",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
