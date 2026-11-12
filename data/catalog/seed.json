@@ -290,15 +290,16 @@
       "kind": "cloud_credit",
       "tier_type": "credit",
       "limit_rules": [
-        { "metric": "credit_usd", "value": 200, "window": "one_time", "reset": { "kind": "none" }, "scope": "account", "conditions": "60-day credit, granted after adding a valid payment method (via referral link).", "published": true, "verified_at": "2026-11-07", "source_url": "https://docs.digitalocean.com/platform/teams/refer-others", "signal_type": "official_docs" }
+        { "metric": "credit_usd", "value": 5, "window": "one_time", "reset": { "kind": "none" }, "scope": "account", "conditions": "Applied automatically to your first team, no promo code. Expires 90 days after signup. Needs a valid payment method before you can create resources.", "published": true, "verified_at": "2026-11-12", "source_url": "https://docs.digitalocean.com/platform/billing/signup-credit/", "signal_type": "official_docs" }
       ],
       "badges": [
-        { "type": "payment_method_required", "source_url": "https://docs.digitalocean.com/platform/teams/refer-others" }
+        { "type": "payment_method_required", "note": "A valid payment method is needed before you can create resources.", "source_url": "https://docs.digitalocean.com/platform/billing/signup-credit/" }
       ],
-      "notes": "Also a graduate-path option: DigitalOcean runs a referral program and an affiliate program.",
-      "last_verified": "2026-11-07",
+      "notes": "DigitalOcean used to advertise US$200 for new accounts. Its current docs (updated 15 Jul 2026) say US$5. Referral credits are separate: the referral page says US$25 for each referred person who spends US$25.",
+      "last_verified": "2026-11-12",
       "sources": [
-        { "url": "https://docs.digitalocean.com/platform/teams/refer-others", "fetched_at": "2026-11-07", "signal_type": "official_docs" }
+        { "url": "https://docs.digitalocean.com/platform/billing/signup-credit/", "fetched_at": "2026-11-12", "signal_type": "official_docs" },
+        { "url": "https://docs.digitalocean.com/platform/teams/refer-others", "fetched_at": "2026-11-12", "signal_type": "official_docs" }
       ]
     }
   ]
