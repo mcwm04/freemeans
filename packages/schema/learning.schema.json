@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://freemeans.com/schema/learning.schema.json",
+  "title": "Learning",
+  "description": "What a free course or certification is, how long it takes and what the certificate costs (Eligibility PRD, Chapter 11). Only for kinds course and certification. Referenced from resource.schema.json.",
+  "$defs": {
+    "learning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "certificate"],
+      "properties": {
+        "format": {
+          "type": "string", "enum": ["self_paced", "cohort", "live", "in_person"],
+          "description": "cohort = a batch with enrolment dates (put the dates in offer_window); self_paced = start any time."
+        },
+        "hours": { "type": "number", "exclusiveMinimum": 0, "description": "Total learning time as the provider states it." },
+        "level": { "type": "string", "enum": ["beginner", "intermediate", "advanced"] },
+        "languages": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z]{2,3}$", "description": "ISO 639-1 language code, lower case (en, ur)." }
+        },
+        "certificate": {
+          "type": "string", "enum": ["none", "free", "paid_optional", "paid_required"],
+          "description": "none = no certificate. free = a certificate at no cost. paid_optional = you can learn free and pay for a certificate. paid_required = the learning is free but any proof of completion costs money (needs the paid_certificate badge)."
+        },
+        "certificate_price": { "type": "string", "description": "What the certificate costs, as the provider states it. Say it for paid_optional and paid_required." },
+        "credential": {
+          "type": "string", "enum": ["completion", "badge", "professional_certificate", "specialization", "accredited_credit"],
+          "description": "completion = a completion document. badge = a digital badge. professional_certificate and specialization = a multi-course credential. accredited_credit = counts toward a degree."
+        },
+        "exam_voucher": { "type": "string", "enum": ["none", "free", "discounted"], "description": "Whether the program gives a free or discounted certification exam voucher." },
+        "roles": {
+          "type": "array", "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "description": "Target role as a slug, for example data-analyst, cloud-engineer, teacher." }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "version": "0.0.0-learning-example",
+  "generated_at": "2026-11-12",
+  "resources": [
+    {
+      "id": "example.cohort-course",
+      "provider": "Example Academy",
+      "name": "Example free cohort course with a free certificate",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": ["resident"],
+        "countries": { "mode": "include", "codes": ["PK"] },
+        "via": "individual",
+        "proof": ["sign_up"]
+      },
+      "offer_window": { "starts": "2026-12-01" },
+      "learning": {
+        "format": "cohort", "hours": 40, "level": "beginner", "languages": ["en", "ur"],
+        "certificate": "free", "credential": "completion", "exam_voucher": "none", "roles": ["freelancer"]
+      },
+      "limit_rules": [],
+      "badges": [],
+      "last_verified": "2026-11-12",
+      "sources": [{ "url": "https://example.com/course", "fetched_at": "2026-11-12", "signal_type": "official_docs" }]
+    },
+    {
+      "id": "example.paid-certificate-course",
+      "provider": "Example Academy",
+      "name": "Example free course where the certificate costs money",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": ["public"],
+        "countries": { "mode": "global" },
+        "via": "individual",
+        "proof": ["sign_up"]
+      },
+      "learning": {
+        "format": "self_paced", "hours": 12, "level": "intermediate", "languages": ["en"],
+        "certificate": "paid_required", "certificate_price": "US$49", "credential": "professional_certificate",
+        "exam_voucher": "discounted", "roles": ["data-analyst", "cloud-engineer"]
+      },
+      "limit_rules": [],
+      "badges": [
+        { "type": "paid_certificate", "note": "Watching is free. A certificate costs US$49.", "source_url": "https://example.com/pricing" }
+      ],
+      "last_verified": "2026-11-12",
+      "sources": [{ "url": "https://example.com/pricing", "fetched_at": "2026-11-12", "signal_type": "official_docs" }]
+    },
+    {
+      "id": "example.badge-only-training",
+      "provider": "Example Cloud",
+      "name": "Example self-paced training that earns a badge",
+      "kind": "certification",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": ["student_higher_ed", "educator_higher_ed"],
+        "countries": { "mode": "global" },
+        "via": "individual",
+        "proof": ["sign_up"]
+      },
+      "learning": { "format": "self_paced", "certificate": "none", "credential": "badge", "exam_voucher": "free" },
+      "limit_rules": [],
+      "badges": [],
+      "last_verified": "2026-11-12",
+      "sources": [{ "url": "https://example.com/training", "fetched_at": "2026-11-12", "signal_type": "official_docs" }]
+    }
+  ]
+}

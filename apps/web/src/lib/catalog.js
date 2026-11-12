@@ -56,6 +56,8 @@ export const BADGES = {
   // Red on purpose (Eligibility PRD, decision 2): the free period becomes a paid plan by itself.
   auto_renews_paid: { label: 'Charges after free period', tone: 'stop', meaning: 'Becomes a paid subscription automatically unless you cancel before the free period ends. Set a reminder.' },
   educational_use_only: { label: 'Education use only', tone: 'warn', meaning: 'Only for learning and teaching. Not for any paid, client or company work.' },
+  // The learning is free, the proof of it is not (Eligibility PRD, chapter 11).
+  paid_certificate: { label: 'Certificate costs money', tone: 'warn', meaning: 'The learning is free, but a certificate or proof of completion costs money.' },
 };
 
 export const METRICS = {

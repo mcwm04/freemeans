@@ -27,6 +27,7 @@
     },
     "eligibility": { "$ref": "eligibility.schema.json#/$defs/eligibility" },
     "offer_window": { "$ref": "eligibility.schema.json#/$defs/offer_window" },
+    "learning": { "$ref": "learning.schema.json#/$defs/learning" },
     "replaced_by": { "type": "string", "pattern": "^[a-z0-9]+(\\.[a-z0-9-]+)+$", "description": "For ended offers: the id of what replaced it (Myths page)." },
     "endpoint": {
       "type": "object",

@@ -293,7 +293,7 @@ M1–M4 are the critical path for the December deadline.
 - `offer_window` for enrolment windows and batch dates (e.g. DigiSkills Batch-05: enrol from 2 Nov, starts 1 Dec 2026)
 - watch phrases for batch and deadline text
 
-**To add when that module starts** (an optional `learning` block):
+**The `learning` block** (built in L1; schema in `packages/schema/learning.schema.json`; `language` became a list, `languages`, because one course can be offered in several):
 
 | Field | Why people need it |
 | --- | --- |
@@ -307,4 +307,22 @@ M1–M4 are the critical path for the December deadline.
 
 **Pages then:** `/learn/`, `/learn/certificates/`, `/learn/for/teachers/`, `/learn/pakistan/`, plus "Free certificate, not just free course" filters. The thin-content rule (5+ active items) and the no-workarounds rule apply as before.
 
-**Honesty rule specific to learning:** a course counts as free only if the learning is free. Show `certificate: paid_required` with a warning badge, just like `auto_renews_paid`.
+**Honesty rule specific to learning:** a course counts as free only if the learning is free. Show `certificate: paid_required` with a warning badge, just like `auto_renews_paid`. Built as the amber badge `paid_certificate` ("Certificate costs money"). CI rejects a `paid_required` course without the badge, and the badge on any other course.
+
+### 11.1 Build plan
+
+Each module ends with green CI. The owner says "next" for each one. Branches are named `learning/l1-schema` and so on.
+
+| Module | Work | Done when |
+| --- | --- | --- |
+| **L1 Schema** ✅ built | `learning` block, badge `paid_certificate`, migration `005_learning.sql`, rule "a course or certification needs a `learning` block unless it is unverified or ended", rule "`paid_required` needs the badge, both ways", example file, tests | Old records still validate, the two active courses (`digiskills.dstp3`, `aws.educate`) carry a `learning` block, the DB CHECK list matches the schema |
+| **L2 Seed data** | `data/catalog/learning.json` (a third file, loaded with the other two) with about 15 free courses and certifications, each confirmed on the provider's own page. Candidates: Google Skills and career certificates audit options, Microsoft Learn, AWS Skill Builder, Coursera financial aid, Cisco Networking Academy, university MOOCs, Pakistani programs (DigiSkills, NAVTTC, Virtual University) | Every record has a source and a date; anything unconfirmed starts `unverified` |
+| **L3 API** | filters `format`, `certificate`, `language`, `level`, `role`, `credential`, and `free_certificate=true` | Tests for each filter and for the paid-certificate rule |
+| **L4 Pages** | `/learn/`, `/learn/certificates/` (free certificate, not just a free course), `/learn/for/{group}/`, `/learn/pakistan/`, a "What you get" box on each course page, JSON-LD (`Course`, with `offers` at price 0 and `hasCourseInstance` for cohorts) | `npm test` build guards pass; thin pages stay `noindex` |
+| **L5 Freshness** | watch phrases for batch and deadline text; courses in the Re-check list | One nightly run covering the new records |
+
+### 11.2 Decisions needed before L2
+
+1. **Which providers go first?** Suggested: five Pakistan-relevant programs, then the global programs students ask about most.
+2. **Does a free audit count as free?** Suggested: yes, shown as `certificate: paid_optional` with the price, never as a free certificate.
+3. **Do we list courses with a paid certificate at all?** Suggested: yes, with the amber badge, because that is the common trap people need to see.
