@@ -249,12 +249,12 @@ Each module ends with green CI. The owner says "next" for each one.
 
 | Module | Work | Done when |
 | --- | --- | --- |
-| **M1 Schema** ✅ built (branch `eligibility/m1-schema`, **not merged yet: needs rebase onto `main` and migration renamed to `004`**) | Add `eligibility`, `offer_window`, `status`, `watch` and the new enums to `packages/schema/`; write the eligibility migration; update `db/load-seed` | Old records still validate, the 30 new ones validate, and the migration runs on Neon |
-| **M2 Seed data** | `data/catalog/eligibility.json` (kept apart from the API-tier `seed.json`; both loaded together) with the 30 offers and the Myths records | Every record has at least one source with a date; B-confidence records start as `unverified` |
-| **M3 API** | `audience`, `group`, `country`, `status`, `ending_within_days`; status worked out at read time | Tests for country include/exclude logic and expiry |
-| **M4 Pages** | `/free-for/…`, `/in/pakistan/`, the "Who can get this" box, the checker, JSON-LD, sitemap | `npm test` build guards pass; Rich Results Test shows valid breadcrumbs |
-| **M5 Freshness** | `find_phrase()` in the source check; daily rebuild Action; staleness list | One full nightly run with watch phrases, shown in the Summary |
-| **M6 Launch** | Ship the PK student page and Ending soon by mid-December; share with UAF students; one dev.to/LinkedIn post: "Free things Pakistani students qualify for and nobody tells them" | Pages indexed in Search Console |
+| **M1 Schema** ✅ merged | Add `eligibility`, `offer_window`, `status`, `watch` and the new enums to `packages/schema/`; write the eligibility migration; update `db/load-seed` | Old records still validate, the 30 new ones validate, and the migration runs on Neon |
+| **M2 Seed data** ✅ merged | `data/catalog/eligibility.json` (kept apart from the API-tier `seed.json`; both loaded together) with the 30 offers and the Myths records | Every record has at least one source with a date; B-confidence records start as `unverified` |
+| **M3 API** ✅ merged | `audience`, `group`, `country`, `status`, `ending_within_days`; status worked out at read time | Tests for country include/exclude logic and expiry |
+| **M4 Pages** ✅ merged | `/free-for/…`, `/in/pakistan/`, the "Who can get this" box, the checker, JSON-LD, sitemap | `npm test` build guards pass; Rich Results Test shows valid breadcrumbs |
+| **M5 Freshness** ✅ merged | `find_phrase()` in the source check; daily rebuild Action; staleness list | One full nightly run with watch phrases, shown in the Summary |
+| **M6 Launch** (checklist and post drafts: `docs/ELIGIBILITY-LAUNCH.md`) | Ship the PK student page and Ending soon by mid-December; share with UAF students; one dev.to/LinkedIn post: "Free things Pakistani students qualify for and nobody tells them" | Pages indexed in Search Console |
 
 M1–M4 are the critical path for the December deadline.
 
@@ -278,8 +278,10 @@ M1–M4 are the critical path for the December deadline.
 | --- | --- | --- |
 | 1 | One catalog file or two? | **Two.** `data/catalog/eligibility.json` sits beside `seed.json`. The DB loader merges both, so the agent's API-tier catalog stays clean (built in M1) |
 | 2 | Offers that need a card and start charging after the free period (e.g. Google AI Plus) | **Listed, with a red warning badge** (decided 9 Nov 2026). Badge `auto_renews_paid`, label "Charges after free period", tone `stop` (red). CI rejects any offer with `offer_window.after.auto_renews = true` that lacks the badge, and the reverse (built in M1) |
-| 3 | K-12 audiences in v1? | Open. Recommended: yes, labelled clearly |
-| 4 | Urdu summary block on `/free-for/students/pakistan/` now? | Open |
+| 3 | K-12 audiences in v1? | **Yes, labelled clearly** (decided 12 Nov 2026) |
+| 4 | Urdu summary block on `/free-for/students/pakistan/` now? | **No. Wait for the planned `/ur/` pages** (decided 12 Nov 2026) |
+| 5 | Keep `/free-for/ending-soon/` indexed when it lists few offers? | **Yes** (decided 12 Nov 2026). It is `noindex` only when empty |
+| 6 | Which audiences make up the "nonprofits" group? | **`nonprofit` and `journalist_civil_society`** (decided 12 Nov 2026). `open_source_maintainer`, `researcher`, `resident` and `public` belong to no group |
 
 ## Chapter 11. Next scope: free learning (trainings, certificates, courses, specializations)
 
