@@ -313,7 +313,6 @@
       "name": "Google AI Plus, 12 months free for students",
       "kind": "ai_subscription",
       "tier_type": "trial",
-      "status": "unverified",
       "eligibility": {
         "audiences": [
           "student_higher_ed"
@@ -325,7 +324,8 @@
             "MO",
             "TN",
             "US"
-          ]
+          ],
+          "source_url": "https://support.google.com/googleone/answer/17422238"
         },
         "via": "individual",
         "proof": [
@@ -335,13 +335,13 @@
         "verifier": "SheerID",
         "reverify": "yearly",
         "excludes": "Family groups, enterprise purchasers, people with a supervised Google Account, discounted Pixel bundle subscribers, and people with Google One through a third party. US students get the AI Pro offer instead.",
-        "notes": "Google's terms (updated 19 Aug 2026) say 18 or older, a SheerID check, a personal Google account and a payment method at sign-up. The plan depends on the country of your university. Not available in Hong Kong, Macau and Tunisia. .edu.pk addresses may need SheerID document upload. UNVERIFIED: the terms do not list countries, so confirm that Pakistan is covered."
+        "notes": "Open to students at higher-education institutions in countries where Google AI Plus is available, except Hong Kong, Macau, Tunisia and the United States. Pakistan is on Google's list of AI Plus countries. Google may ask for more information to verify you. The plan depends on the country of your university."
       },
       "offer_window": {
         "redeem_by": "2026-12-31",
         "duration_months": 12,
         "after": {
-          "price": "about US$4.99/month or local price",
+          "price": "The standard monthly Google AI Plus price in your country",
           "auto_renews": true
         }
       },
@@ -362,19 +362,37 @@
         {
           "text": "December 31, 2026",
           "source_url": "https://one.google.com/offer/studentoffer8"
+        },
+        {
+          "text": "excluding Hong Kong, Macau, Tunisia, and the United States",
+          "source_url": "https://support.google.com/googleone/answer/17422238"
+        },
+        {
+          "text": "Pakistan",
+          "source_url": "https://support.google.com/googleone/answer/16548195"
         }
       ],
-      "notes": "Higher Gemini limits and 400 GB storage.",
-      "last_verified": "2026-11-09",
+      "notes": "A 12-month Google AI Plus (400 GB) student trial, with more access to Gemini tools.",
+      "last_verified": "2026-11-12",
       "sources": [
         {
           "url": "https://one.google.com/offer/studentoffer8",
-          "fetched_at": "2026-11-09",
+          "fetched_at": "2026-11-12",
+          "signal_type": "official_docs"
+        },
+        {
+          "url": "https://support.google.com/googleone/answer/17422238",
+          "fetched_at": "2026-11-12",
+          "signal_type": "official_docs"
+        },
+        {
+          "url": "https://support.google.com/googleone/answer/16548195",
+          "fetched_at": "2026-11-12",
           "signal_type": "official_docs"
         },
         {
           "url": "https://gemini.google/students",
-          "fetched_at": "2026-11-09",
+          "fetched_at": "2026-11-12",
           "signal_type": "official_docs"
         }
       ]
@@ -463,7 +481,7 @@
           "sheerid"
         ],
         "verifier": "SheerID",
-        "notes": "UNVERIFIED: reports say the country list is now narrower. Confirm countries, the card rule and the renewal price on Cursor's page."
+        "notes": "UNVERIFIED: Cursor's student page gives no terms. Community reports say verification works only for a limited list of countries, mostly with .edu addresses, and that Pakistan is missing from the country list. Do not show it for Pakistan until Cursor confirms."
       },
       "offer_window": {
         "duration_months": 12
@@ -616,7 +634,6 @@
       "name": "ChatGPT for Teachers",
       "kind": "ai_subscription",
       "tier_type": "free",
-      "status": "unverified",
       "eligibility": {
         "audiences": [
           "educator_k12"
@@ -633,17 +650,35 @@
         ],
         "verifier": "SheerID",
         "excludes": "Educators outside US K-12 schools.",
-        "notes": "UNVERIFIED: OpenAI's pages disagree on the end of the free period (June 2027 in the announcement, June 2028 in some help-center versions). Confirm on the live help page, then set offer_window.access_ends."
+        "notes": "Teachers, staff and administrators at US K-12 schools. Verification is handled by SheerID. Each workspace is for educators of one school or district."
       },
       "limit_rules": [],
       "badges": [],
-      "notes": "Workspace for verified US K-12 teachers, staff and administrators.",
-      "last_verified": "2026-11-09",
+      "notes": "Free for verified US K-12 educators through June 2028, according to OpenAI's announcement page.",
+      "last_verified": "2026-11-12",
       "sources": [
         {
-          "url": "https://help.openai.com/en/articles/12844995-chatgpt-for-teachers",
-          "fetched_at": "2026-11-09",
+          "url": "https://openai.com/index/chatgpt-for-teachers/",
+          "fetched_at": "2026-11-12",
           "signal_type": "official_docs"
+        },
+        {
+          "url": "https://help.openai.com/en/articles/12844995-chatgpt-for-teachers",
+          "fetched_at": "2026-11-12",
+          "signal_type": "official_docs"
+        }
+      ],
+      "offer_window": {
+        "access_ends": "2028-06-30",
+        "after": {
+          "price": "Not stated. OpenAI says it may adjust pricing after the free period.",
+          "auto_renews": false
+        }
+      },
+      "watch": [
+        {
+          "text": "through June 2028",
+          "source_url": "https://openai.com/index/chatgpt-for-teachers/"
         }
       ]
     },
@@ -990,11 +1025,11 @@
         "proof": [
           "company_website"
         ],
-        "notes": "UNVERIFIED: confirm the Start-tier amount (about US$2,000 reported) on cloud.google.com."
+        "notes": "UNVERIFIED: Google's page confirms up to US$350,000 in credits over two years for AI startups. I did not find the smaller tier amount (about US$2,000 reported), the 10-year founding limit or the US$5,000 prior-credit limit on that page. Read Google's apply page."
       },
       "limit_rules": [],
       "badges": [],
-      "notes": "Funded AI startups can get up to US$350,000 over 2 years. Startups founded within 10 years, with under US$5,000 of previous credits.",
+      "notes": "Up to US$350,000 in Google Cloud credits over two years, according to Google's startup page.",
       "last_verified": "2026-11-09",
       "sources": [
         {
@@ -1010,7 +1045,6 @@
       "name": "Microsoft for Startups Founders Hub",
       "kind": "cloud_credit",
       "tier_type": "credit",
-      "status": "unverified",
       "eligibility": {
         "audiences": [
           "startup_self_funded",
@@ -1024,17 +1058,33 @@
           "company_website",
           "investor_referral"
         ],
-        "notes": "UNVERIFIED: the amounts (about US$5,000 self-serve) come from secondary guides. Read them on Microsoft's own page first."
+        "notes": "The company must make a software product it owns, be privately held and for-profit, and be based in a country where Azure is available. You need a personal Microsoft account with no prior Azure account. An investor in Microsoft's Investor Network can give you a referral code for higher tiers.",
+        "excludes": "Educational institutions, government organizations, consultancies, agencies, crypto-mining businesses, companies that raised Series C or later, and companies that already received more than US$350,000 in lifetime free Azure credits."
       },
       "limit_rules": [],
       "badges": [],
-      "notes": "Self-serve Azure credits, with more through an investor referral. For-profit startups in supported countries.",
-      "last_verified": "2026-11-09",
+      "notes": "US$1,000 of starter Azure credits at once after you apply. Startups referred by an investor in Microsoft's network may get up to US$150,000.",
+      "last_verified": "2026-11-12",
       "sources": [
         {
-          "url": "https://www.microsoft.com/en-us/startups",
-          "fetched_at": "2026-11-09",
+          "url": "https://learn.microsoft.com/en-us/startups/microsoft-for-startups/application",
+          "fetched_at": "2026-11-12",
           "signal_type": "official_docs"
+        },
+        {
+          "url": "https://www.microsoft.com/en-us/startups",
+          "fetched_at": "2026-11-12",
+          "signal_type": "official_docs"
+        }
+      ],
+      "watch": [
+        {
+          "text": "$1,000 in startup credits",
+          "source_url": "https://learn.microsoft.com/en-us/startups/microsoft-for-startups/application"
+        },
+        {
+          "text": "$350,000",
+          "source_url": "https://learn.microsoft.com/en-us/startups/microsoft-for-startups/application"
         }
       ]
     },

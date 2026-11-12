@@ -75,7 +75,7 @@ Node 22+, Python 3.12+. The owner works on **Windows PowerShell**, so give Power
 **To do, in order:**
 
 1. **Review the `bot/source-check` PR:** `digitalocean.signup-credit` (US$200). The referral page no longer states the amount. Point `source_url` at a DigitalOcean page that states it, or update the value, then merge.
-2. **Eligibility M1 to M3 are merged** (schema, `data/catalog/eligibility.json` with 30 offers and 4 Myths records, API filters). Six records are `unverified` until someone reads the provider's page: `google.ai-plus-student`, `cursor.pro-student`, `google.startups-cloud`, `microsoft.startups`, `mofept.cisco-netacad`, `openai.chatgpt-for-teachers`.
+2. **Eligibility M1 to M3 are merged** (schema, `data/catalog/eligibility.json` with 30 offers and 4 Myths records, API filters). Three records are still `unverified`: `cursor.pro-student` (community reports say Pakistan is not supported), `google.startups-cloud` (only the US$350,000 figure is confirmed) and `mofept.cisco-netacad` (no official page found). The other three were confirmed on 12 Nov 2026.
 3. **Eligibility M4 (pages)** is merged: `/free-for/…`, `/in/pakistan/`, the "Who can get this" box, the checker, JSON-LD and sitemap.
 4. **Eligibility M5 (freshness)** is in review: watch phrases in the nightly source check (10 phrases on 8 offers), the "Re-check by hand" list, and a daily rebuild Action. The owner adds the `CLOUDFLARE_DEPLOY_HOOK` secret (steps at the top of `.github/workflows/rebuild.yml`).
 5. **Eligibility M6:** launch.
