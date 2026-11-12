@@ -345,14 +345,14 @@ test('default catalog hides ended and unverified offers', async () => {
   const ids = await idsOf(eligApp(), '');
   assert.ok(ids.includes('github.copilot-student'));
   assert.ok(ids.includes('groq.gpt-oss-120b'), 'API free tiers without a status stay visible');
-  for (const hidden of ['google.ai-plus-student', 'cursor.pro-student', 'aws.educate-credits', 'github.copilot-pro-student']) {
+  for (const hidden of ['cursor.pro-student', 'google.startups-cloud', 'aws.educate-credits', 'github.copilot-pro-student']) {
     assert.ok(!ids.includes(hidden), hidden);
   }
 });
 
 test('status and include_ended: unverified and ended appear only when asked for', async () => {
   const app = eligApp();
-  assert.ok((await idsOf(app, 'status=unverified')).includes('google.ai-plus-student'));
+  assert.ok((await idsOf(app, 'status=unverified')).includes('cursor.pro-student'));
   assert.ok(!(await idsOf(app, 'status=unverified')).includes('github.copilot-student'));
   const withEnded = await idsOf(app, 'include_ended=true');
   assert.ok(withEnded.includes('aws.educate-credits') && withEnded.includes('github.copilot-student'));
@@ -379,9 +379,10 @@ test('country filter: global, include and exclude rules', async () => {
   assert.ok((await idsOf(app, 'country=pk&audience=resident')).includes('digiskills.dstp3'), 'lower case is accepted');
   assert.ok(!(await idsOf(app, 'country=US&audience=resident')).includes('digiskills.dstp3'));
   assert.ok((await idsOf(app, 'country=US&group=students')).includes('google.ai-pro-student-us'));
-  // an exclude rule: Google AI Plus excludes US but is unverified, so ask for it explicitly
-  assert.ok((await idsOf(app, 'status=unverified&country=PK&group=students')).includes('google.ai-plus-student'));
-  assert.ok(!(await idsOf(app, 'status=unverified&country=US&group=students')).includes('google.ai-plus-student'));
+  // an exclude rule: Google AI Plus excludes HK, MO, TN and US
+  assert.ok((await idsOf(app, 'country=PK&group=students')).includes('google.ai-plus-student'));
+  assert.ok(!(await idsOf(app, 'country=US&group=students')).includes('google.ai-plus-student'));
+  assert.ok(!(await idsOf(app, 'country=HK&group=students')).includes('google.ai-plus-student'));
   assert.ok((await idsOf(app, 'country=PK')).includes('groq.gpt-oss-120b'), 'API tiers have no country rule');
 });
 

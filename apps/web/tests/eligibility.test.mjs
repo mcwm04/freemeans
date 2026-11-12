@@ -44,7 +44,7 @@ test('ending soon: only live offers with a claim-by date inside the window, soon
   assert.ok(soon.includes('google.ai-pro-student-us'));
   assert.deepEqual(endingSoon(10, '2026-11-11'), []);
   assert.deepEqual(endingSoon(60, '2027-02-01'), [], 'already past');
-  assert.ok(!soon.includes('google.ai-plus-student'), 'unverified offers are never listed');
+  for (const r of allOffers().filter((x) => x.status === 'unverified')) assert.ok(!soon.includes(r.id), `unverified ${r.id} must not be listed`);
 });
 
 // ---------- built pages ----------
