@@ -77,9 +77,9 @@ Node 22+, Python 3.12+. The owner works on **Windows PowerShell**, so give Power
 1. **Review the `bot/source-check` PR:** `digitalocean.signup-credit` (US$200). The referral page no longer states the amount. Point `source_url` at a DigitalOcean page that states it, or update the value, then merge.
 2. **Eligibility M1 to M3 are merged** (schema, `data/catalog/eligibility.json` with 30 offers and 4 Myths records, API filters). Three records are still `unverified`: `cursor.pro-student` (community reports say Pakistan is not supported), `google.startups-cloud` (only the US$350,000 figure is confirmed) and `mofept.cisco-netacad` (no official page found). The other three were confirmed on 12 Nov 2026.
 3. **Eligibility M4 (pages)** is merged: `/free-for/…`, `/in/pakistan/`, the "Who can get this" box, the checker, JSON-LD and sitemap.
-4. **Eligibility M5 (freshness)** is in review: watch phrases in the nightly source check (10 phrases on 8 offers), the "Re-check by hand" list, and a daily rebuild Action. The owner adds the `CLOUDFLARE_DEPLOY_HOOK` secret (steps at the top of `.github/workflows/rebuild.yml`).
-5. **Eligibility M6:** launch.
+4. **Eligibility M5 (freshness)** is merged: 15 watch phrases in the nightly source check, the "Re-check by hand" list, and the daily rebuild (needs the `CLOUDFLARE_DEPLOY_HOOK` secret, which is set).
+5. **Eligibility M6:** launch. Checklist and post drafts are in `docs/ELIGIBILITY-LAUNCH.md`; Search Console steps are the owner's.
 
 **Deadline:** `/free-for/students/pakistan/` and `/free-for/ending-soon/` must be live by **mid-December 2026**. The Google AI Plus student offer must be redeemed by 31 Dec 2026, so searches will peak in December.
 
-**Open decisions (ask the owner, don't decide):** K-12 audiences in v1? An Urdu summary block on the Pakistan student page now?
+**Decided 12 Nov 2026:** K-12 audiences stay in v1, labelled clearly. No Urdu block until the planned `/ur/` pages. `/free-for/ending-soon/` stays indexed unless empty. The "nonprofits" group includes journalists and civil society. See `docs/ELIGIBILITY-PRD.md`, chapter 10, and `docs/ELIGIBILITY-LAUNCH.md` for the launch checklist.
