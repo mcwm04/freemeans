@@ -1,0 +1,73 @@
+{
+  "slug": "google-antigravity",
+  "name": "Google Antigravity",
+  "url": "https://antigravity.google/",
+  "tagline": "Agentic development platform for building and managing AI agents.",
+  "description": "Google Antigravity is an agentic development platform that lets developers build, run, and manage AI agents. It provides a desktop application for coordinating multiple local agents, a terminal‑first CLI for executing autonomous coding agents and shell commands, a full‑featured IDE with agent management and codebase awareness, and an SDK for creating custom Python agents. The platform supports scheduling messages, parallel multi‑agent orchestration, and integration with various development environments. It is aimed at professional developers, hobbyists, and teams who want to automate software‑engineering tasks, prototype AI‑driven workflows, and incorporate agents into their codebases.",
+  "categories": [
+    "automation",
+    "productivity"
+  ],
+  "tasks": [
+    "automate-workflows",
+    "build-ai-agents"
+  ],
+  "best_for": [
+    "Develop AI agents",
+    "Automate repetitive coding tasks",
+    "Manage multiple agents across projects",
+    "Integrate agents into IDEs and terminals",
+    "Prototype custom Python agents"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "api",
+    "cli"
+  ],
+  "open_source": false,
+  "repo_url": null,
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Access to a variety of agent models, unlimited tab completions, unlimited command requests, basic weekly rate limits",
+    "source_url": "https://antigravity.google/pricing",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": {
+    "cheapest_paid_usd": 30,
+    "period": "month",
+    "source_url": "https://antigravity.google/pricing",
+    "verified_at": "2026-11-12"
+  },
+  "signals": {
+    "trends_term": "Google Antigravity",
+    "wikipedia_article": null,
+    "github_repo": null,
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "antigravity.google",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
