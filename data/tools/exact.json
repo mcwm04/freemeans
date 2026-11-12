@@ -1,0 +1,68 @@
+{
+  "slug": "exact",
+  "name": "Exact",
+  "url": "https://github.com/expo/exact",
+  "tagline": "Write an app once and run it natively on web, macOS, iOS, and Linux",
+  "description": "Exact is an open‑source cross‑platform application runtime. Developers describe the UI in a small declarative language called Contract and write data logic in TypeScript or Rust. The Contract compiler produces a compact plan that runs on the web as a lightweight ES module and on macOS, iOS, and Linux via a Rust runner that renders with native toolkits. The framework is designed for AI agents to build, run, test, and verify apps across all supported hosts without human intervention.",
+  "categories": [
+    "coding",
+    "app-builders"
+  ],
+  "tasks": [
+    "generate-code",
+    "build-apps"
+  ],
+  "best_for": [
+    "Developing cross‑platform applications",
+    "Prototyping UI with a single codebase",
+    "Building apps that can be tested by AI agents",
+    "Creating apps for web, macOS, iOS, and Linux simultaneously",
+    "Open‑source projects needing a Rust‑based runtime"
+  ],
+  "platforms": [
+    "web",
+    "macos",
+    "ios",
+    "linux",
+    "cli"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/expo/exact",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/expo/exact",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "Exact",
+    "wikipedia_article": null,
+    "github_repo": "expo/exact",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/expo/exact",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
