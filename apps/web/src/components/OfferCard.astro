@@ -2,11 +2,13 @@
 // One card for an eligibility offer, or for an API free tier on the country page.
 import Badge from './Badge.astro';
 import { KIND_LABELS, TIER_LABELS, formatDate } from '../lib/catalog.js';
-import { offerFacts, groupOf, GROUPS } from '../lib/eligibility.js';
+import { offerFacts } from '../lib/eligibility.js';
+import { learningFacts } from '../lib/learning.js';
 interface Props { r: any }
 const { r } = Astro.props;
 const isOffer = Boolean(r.eligibility);
 const f = isOffer ? offerFacts(r) : null;
+const lf = r.learning ? learningFacts(r) : null;
 // Red badge first: people must see "charges after free period" before they click.
 const badges = [...(r.badges ?? [])].sort((a, b) => (b.type === 'auto_renews_paid') - (a.type === 'auto_renews_paid'));
 ---
@@ -19,6 +21,9 @@ const badges = [...(r.badges ?? [])].sort((a, b) => (b.type === 'auto_renews_pai
   {isOffer && <p class="small">{f.who.join(', ')}. {f.where}.</p>}
   <div class="facts">
     <span>{TIER_LABELS[r.tier_type] ?? r.tier_type}</span>
+    {lf && lf.format && <span>{lf.format}</span>}
+    {lf && lf.hours && <span>About {lf.hours} hours</span>}
+    {lf && lf.certificate && <span><b>{lf.certificate}</b></span>}
     {f && f.howLong && <span>{f.howLong}</span>}
     {f && f.redeemBy && <span>Claim by <b class="ends" data-redeem-by={f.redeemBy}>{formatDate(f.redeemBy)}</b></span>}
     {!isOffer && <span>{r.limit_rules.length} limit{r.limit_rules.length === 1 ? '' : 's'}</span>}

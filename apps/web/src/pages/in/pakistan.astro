@@ -4,6 +4,7 @@ import Base from '../../layouts/Base.astro';
 import OfferCard from '../../components/OfferCard.astro';
 import { resources, formatDate } from '../../lib/catalog.js';
 import { GROUPS, COUNTRY_PAGES, liveOffers, groupOf, countryAllows, lastChecked, monthYear, today } from '../../lib/eligibility.js';
+import { coursesFor } from '../../lib/learning.js';
 import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
 
 const c = COUNTRY_PAGES.pakistan;
@@ -17,7 +18,10 @@ const sections = Object.entries(GROUPS).map(([k, g]) => {
   return { key: k, title: `Free for ${g.who}`, items };
 });
 const rest = offers.filter((r) => !taken.has(r.id));
-const all = [...sections.flatMap((s) => s.items), ...rest, ...tiers];
+// Courses that sit only in learning.json. DigiSkills and AWS Educate are already above.
+const listed = new Set([...sections.flatMap((s) => s.items), ...rest].map((r) => r.id));
+const courses = coursesFor({ country: c.code }).filter((r) => !listed.has(r.id));
+const all = [...sections.flatMap((s) => s.items), ...rest, ...courses, ...tiers];
 const path = '/in/pakistan/';
 const title = `Free AI tools and offers in ${c.name} (${monthYear()})`;
 const description = `${all.length} free tools, courses and AI plans you can use in ${c.name}: student, teacher and nonprofit offers plus free API tiers. Each one is dated and sourced.`;
@@ -48,6 +52,13 @@ const jsonLd = graph([
         <section aria-labelledby="h-rest">
           <h2 id="h-rest">Open to people in {c.name}</h2>
           <ul class="cards">{rest.map((r) => <OfferCard r={r} />)}</ul>
+        </section>
+      )}
+      {courses.length > 0 && (
+        <section aria-labelledby="h-courses">
+          <h2 id="h-courses">Free courses and certificates</h2>
+          <p class="small muted"><a href="/learn/pakistan/">See all courses for {c.name}</a>, with what each certificate costs.</p>
+          <ul class="cards">{courses.map((r) => <OfferCard r={r} />)}</ul>
         </section>
       )}
       <section aria-labelledby="h-tiers">

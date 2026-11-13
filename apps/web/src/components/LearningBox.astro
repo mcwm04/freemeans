@@ -1,0 +1,23 @@
+---
+// "What you get" box for a course or certification (Eligibility PRD, chapter 11): format, time,
+// level, languages, and above all what the certificate costs.
+import { learningFacts } from '../lib/learning.js';
+interface Props { r: any }
+const { r } = Astro.props;
+const f = learningFacts(r);
+const costs = ['paid_optional', 'paid_required'].includes(r.learning.certificate);
+---
+<section class="panel who-box" aria-labelledby="what-you-get">
+  <h2 id="what-you-get">What you get</h2>
+  <dl>
+    {f.format && <div><dt>Format</dt><dd>{f.format}</dd></div>}
+    {f.hours && <div><dt>Time</dt><dd>About {f.hours} hours</dd></div>}
+    {f.level && <div><dt>Level</dt><dd>{f.level}</dd></div>}
+    {f.languages.length > 0 && <div><dt>Languages</dt><dd>{f.languages.join(', ')}</dd></div>}
+    <div><dt>Certificate</dt><dd>{f.certificate}{f.certificatePrice ? `. ${f.certificatePrice}` : ''}</dd></div>
+    {f.credential && <div><dt>You earn</dt><dd>{f.credential}</dd></div>}
+    {f.voucher && <div><dt>Exam voucher</dt><dd>{f.voucher}</dd></div>}
+    {f.roles.length > 0 && <div><dt>Useful for</dt><dd>{f.roles.join(', ')}</dd></div>}
+  </dl>
+  {costs && <p class="small"><b>The learning is free. The certificate is not.</b> Check the price on the provider's page before you start.</p>}
+</section>
