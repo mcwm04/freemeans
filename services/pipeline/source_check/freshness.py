@@ -40,3 +40,22 @@ def offers_to_recheck(resources: list[dict], run_date: str, days: int = STALE_AF
             out.append(Recheck(r["id"], r.get("name", r["id"]), lv, "stale", age, file))
     # Unverified first, then the oldest checks.
     return sorted(out, key=lambda x: (x.reason != "unverified", -(x.age_days or 0), x.resource_id))
+
+
+@dataclass
+class Unwatched:
+    resource_id: str
+    name: str
+    file: str
+
+
+def offers_without_watch(resources: list[dict]) -> list[Unwatched]:
+    """Live offers and courses with no watch phrase: nothing checks them between hand re-checks.
+
+    Unverified offers are left out (they are on the re-check list already) and so are ended ones."""
+    out = []
+    for r in resources:
+        if not r.get("eligibility") or r.get("status") in ("ended", "unverified") or r.get("watch"):
+            continue
+        out.append(Unwatched(r["id"], r.get("name", r["id"]), r.get("source_file", "data/catalog/eligibility.json")))
+    return sorted(out, key=lambda x: x.resource_id)

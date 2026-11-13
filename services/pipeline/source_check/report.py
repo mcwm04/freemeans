@@ -5,7 +5,7 @@ import json
 from dataclasses import asdict
 
 from .check import PHRASE, RuleResult, summary
-from .freshness import STALE_AFTER_DAYS, Recheck
+from .freshness import STALE_AFTER_DAYS, Recheck, Unwatched
 
 LABELS = {
     "missing": "Possibly changed",
@@ -32,8 +32,10 @@ def _is_phrase(r: RuleResult) -> bool:
     return r.metric == PHRASE
 
 
-def markdown(results: list[RuleResult], run_date: str, catalog_version: str, recheck: list[Recheck] | None = None) -> str:
+def markdown(results: list[RuleResult], run_date: str, catalog_version: str, recheck: list[Recheck] | None = None,
+             unwatched: list[Unwatched] | None = None) -> str:
     recheck = recheck or []
+    unwatched = unwatched or []
     s = summary(results)
     lines = [
         f"# Source check · {run_date}",
@@ -48,6 +50,8 @@ def markdown(results: list[RuleResult], run_date: str, catalog_version: str, rec
             lines.append(f"| {LABELS[key]} | {s[key]} |")
     if recheck:
         lines.append(f"| Offers to re-check by hand | {len(recheck)} |")
+    if unwatched:
+        lines.append(f"| Offers with no watch phrase | {len(unwatched)} |")
     lines.append("")
 
     missing = [r for r in results if r.status == "missing"]
@@ -104,6 +108,15 @@ def markdown(results: list[RuleResult], run_date: str, catalog_version: str, rec
             lines.append(f"- `{x.resource_id}` {x.name}: {why}. File: `{x.file}`")
         lines.append("")
 
+    if unwatched:
+        lines += [
+            f"<details><summary>{len(unwatched)} offers and courses have no watch phrase</summary>", "",
+            "Nothing checks these between hand re-checks. Add a `watch` phrase (a date, an amount or a condition) when the provider's page can be read by the bot.",
+            "Pages that need JavaScript cannot be watched.", "",
+        ]
+        lines += [f"- `{u.resource_id}` {u.name}. File: `{u.file}`" for u in unwatched]
+        lines += ["", "</details>", ""]
+
     lines += [
         "---",
         "Opened by the nightly source check (`.github/workflows/source-check.yml`). The bot never edits limits itself;",
@@ -112,9 +125,10 @@ def markdown(results: list[RuleResult], run_date: str, catalog_version: str, rec
     return "\n".join(lines) + "\n"
 
 
-def record(results: list[RuleResult], run_date: str, catalog_version: str, recheck: list[Recheck] | None = None) -> str:
+def record(results: list[RuleResult], run_date: str, catalog_version: str, recheck: list[Recheck] | None = None,
+           unwatched: list[Unwatched] | None = None) -> str:
     return json.dumps(
-        {"run_date": run_date, "catalog_version": catalog_version, "summary": summary(results), "recheck": [asdict(x) for x in recheck or []], "results": [asdict(r) for r in results]},
+        {"run_date": run_date, "catalog_version": catalog_version, "summary": summary(results), "recheck": [asdict(x) for x in recheck or []], "unwatched": [asdict(x) for x in unwatched or []], "results": [asdict(r) for r in results]},
         indent=2,
         ensure_ascii=False,
     ) + "\n"
