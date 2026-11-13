@@ -22,6 +22,11 @@ export const AUDIENCE_GROUPS = {
 };
 const AUDIENCES = new Set([...Object.values(AUDIENCE_GROUPS).flat(), 'open_source_maintainer', 'researcher', 'resident', 'public']);
 const STATUSES = ['active', 'paused', 'ended', 'unverified'];
+// Learning filters (Eligibility PRD, chapter 11). The values mirror packages/schema/learning.schema.json.
+const FORMATS = ['self_paced', 'cohort', 'live', 'in_person'];
+const CERTIFICATES = ['none', 'free', 'paid_optional', 'paid_required'];
+const LEVELS = ['beginner', 'intermediate', 'advanced'];
+const CREDENTIALS = ['completion', 'badge', 'professional_certificate', 'specialization', 'accredited_credit'];
 
 const bad = (message) => Object.assign(new Error(message), { status: 400 });
 const DAY = 86400000;
@@ -77,6 +82,27 @@ export function parseFilters(params, today = new Date().toISOString().slice(0, 1
   // and paused offers appear only when asked for with ?status=.
   const status = statuses.length ? statuses : params.get('include_ended') === 'true' ? ['active', 'ended'] : ['active'];
 
+  // Each learning filter takes a comma list (any of). A record with no `learning` block never matches one.
+  const oneOf = (name, allowed) => {
+    const values = list(params.get(name));
+    const unknown = values.filter((v) => !allowed.includes(v));
+    if (unknown.length) throw bad(`unknown ${name} value: ${unknown.join(', ')}. Use: ${allowed.join(', ')}`);
+    return values;
+  };
+  const languages = list(params.get('language')).map((l) => l.toLowerCase());
+  if (languages.some((l) => !/^[a-z]{2,3}$/.test(l))) throw bad('language must be a two- or three-letter code, for example en or ur');
+  const roles = list(params.get('role')).map((r) => r.toLowerCase());
+  if (roles.some((r) => !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(r))) throw bad('role must be a slug such as data-analyst');
+  const learning = {
+    format: oneOf('format', FORMATS),
+    certificate: oneOf('certificate', CERTIFICATES),
+    level: oneOf('level', LEVELS),
+    credential: oneOf('credential', CREDENTIALS),
+    languages,
+    roles,
+    freeCertificate: params.get('free_certificate') === 'true',
+  };
+
   let endingWithin = null;
   if (params.get('ending_within_days') != null) {
     const n = Number(params.get('ending_within_days'));
@@ -90,6 +116,7 @@ export function parseFilters(params, today = new Date().toISOString().slice(0, 1
     country,
     status,
     endingWithin,
+    learning,
     q: (params.get('q') || '').trim().toLowerCase(),
     kind: list(params.get('kind')),
     tier: list(params.get('tier')),
@@ -105,6 +132,7 @@ export function filterResources(resources, f) {
     if (!f.status.includes(effectiveStatus(r, f.today))) return false;
     if (f.audience.size && !(r.eligibility?.audiences ?? []).some((a) => f.audience.has(a))) return false;
     if (f.country && !countryAllows(r, f.country)) return false;
+    if (!learningMatches(r.learning, f.learning)) return false;
     if (f.endingWithin) {
       const end = r.offer_window?.redeem_by ?? r.offer_window?.access_ends;
       if (!end || end < f.today || end > addDays(f.today, f.endingWithin)) return false;
@@ -120,6 +148,23 @@ export function filterResources(resources, f) {
     }
     return true;
   });
+}
+
+// A learning filter is on when any of its values is set. Records with no learning block, or with
+// the field missing, never match an active filter: unknown is not a match.
+export function learningMatches(l, f) {
+  const on = f.format.length || f.certificate.length || f.level.length || f.credential.length
+    || f.languages.length || f.roles.length || f.freeCertificate;
+  if (!on) return true;
+  if (!l) return false;
+  if (f.format.length && !f.format.includes(l.format)) return false;
+  if (f.certificate.length && !f.certificate.includes(l.certificate)) return false;
+  if (f.freeCertificate && l.certificate !== 'free') return false;
+  if (f.level.length && !f.level.includes(l.level)) return false;
+  if (f.credential.length && !f.credential.includes(l.credential)) return false;
+  if (f.languages.length && !(l.languages ?? []).some((x) => f.languages.includes(x))) return false;
+  if (f.roles.length && !(l.roles ?? []).some((x) => f.roles.includes(x))) return false;
+  return true;
 }
 
 export function summarize(r, siteUrl, today = new Date().toISOString().slice(0, 10)) {
@@ -139,5 +184,13 @@ export function summarize(r, siteUrl, today = new Date().toISOString().slice(0, 
     last_verified: r.last_verified,
     url: `${siteUrl}/resources/${r.id}/`,
     ...offer,
+    ...(r.learning ? { learning: summarizeLearning(r.learning) } : {}),
   };
+}
+
+// The fields people filter and compare on, without the longer notes.
+function summarizeLearning(l) {
+  const out = { format: l.format, certificate: l.certificate };
+  for (const k of ['hours', 'level', 'languages', 'credential', 'certificate_price']) if (l[k] !== undefined) out[k] = l[k];
+  return out;
 }
