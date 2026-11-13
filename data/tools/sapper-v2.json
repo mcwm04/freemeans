@@ -1,0 +1,70 @@
+{
+  "slug": "sapper-v2",
+  "name": "sapper-v2",
+  "url": "https://github.com/N1nEmAn/nvwabase",
+  "tagline": "Open‑source CLI for shared memory and coordination of multi‑agent AI workflows",
+  "description": "sapper-v2 is an open‑source framework that provides the History pillar of the Nüwa Foundation. It implements a layered fact‑intent graph stored as JSON files, which serves as shared working memory for long‑horizon multi‑agent AI projects. The CLI (fgc) lets users create AI individuals, dispatch sub‑agents, record facts, and run autonomous loops without external dependencies. Features include concurrency‑safe graph updates, semantic search over past work, and visualisation of the graph as an interactive HTML DAG. It is aimed at developers building autonomous AI workflows such as pentesting, research, or any task that benefits from coordinated agents.",
+  "categories": [
+    "coding",
+    "automation",
+    "research"
+  ],
+  "tasks": [
+    "generate-code",
+    "debug-code",
+    "automate-workflows"
+  ],
+  "best_for": [
+    "building autonomous pentest agents",
+    "coordinating multiple AI assistants for long‑term projects",
+    "storing and reusing AI‑generated facts across sessions",
+    "visualising AI workflow graphs",
+    "running zero‑dependency AI pipelines on any OS"
+  ],
+  "platforms": [
+    "cli",
+    "linux",
+    "macos",
+    "windows",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/N1nEmAn/sapper-v2",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/N1nEmAn/nvwabase",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "sapper-v2",
+    "wikipedia_article": null,
+    "github_repo": "N1nEmAn/sapper-v2",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/n1neman/nvwabase",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
