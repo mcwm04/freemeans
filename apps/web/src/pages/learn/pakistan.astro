@@ -1,0 +1,48 @@
+---
+// Free courses a person in Pakistan can take. Programs made for Pakistan come first.
+import Base from '../../layouts/Base.astro';
+import OfferCard from '../../components/OfferCard.astro';
+import { formatDate } from '../../lib/catalog.js';
+import { COUNTRY_PAGES, lastChecked, monthYear, today, MIN_OFFERS_TO_INDEX } from '../../lib/eligibility.js';
+import { coursesFor } from '../../lib/learning.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
+
+const c = COUNTRY_PAGES.pakistan;
+const list = coursesFor({ country: c.code });
+const local = list.filter((r) => r.eligibility.countries.mode === 'include');
+const world = list.filter((r) => r.eligibility.countries.mode !== 'include');
+const path = '/learn/pakistan/';
+const title = `Free courses and certificates in ${c.name} (${monthYear()})`;
+const description = `${list.length} free courses you can take from ${c.name}, with what each certificate costs and how long it takes. Programs made for ${c.name} come first. Checked ${formatDate(lastChecked(list) ?? today())}.`;
+const noindex = list.length < MIN_OFFERS_TO_INDEX;
+const jsonLd = graph([
+  webPageLd(Astro.site, { path, name: title, description, type: 'CollectionPage', dateModified: lastChecked(list) }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Learn', path: '/learn/' }, { name: c.name, path }]),
+  itemListLd(Astro.site, { name: title, items: [...local, ...world].map((r) => ({ name: r.name, path: `/resources/${r.id}/` })) }),
+]);
+---
+<Base title={title} description={description} jsonLd={jsonLd} noindex={noindex} current="learn">
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/learn/">Learn</a><span aria-hidden="true">/</span><span>{c.name}</span></nav>
+      <h1>Free courses and certificates in {c.name}</h1>
+      <p class="lede">{list.length} courses you can take from {c.name}. Each one says what the certificate costs.</p>
+      <div class="meta-row"><span>Checked <b>{formatDate(lastChecked(list) ?? today())}</b></span><span><a href="/learn/certificates/">Free certificates</a></span><span><a href={`/in/${'pakistan'}/`}>Everything free in {c.name}</a></span></div>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap">
+      {local.length > 0 && (
+        <section aria-labelledby="h-local">
+          <h2 id="h-local">Made for {c.name} ({local.length})</h2>
+          <ul class="cards">{local.map((r) => <OfferCard r={r} />)}</ul>
+        </section>
+      )}
+      <section aria-labelledby="h-world">
+        <h2 id="h-world">Open worldwide ({world.length})</h2>
+        <ul class="cards">{world.map((r) => <OfferCard r={r} />)}</ul>
+      </section>
+      <p class="small muted" style="margin-top:32px">Providers change prices and programs without notice. Read the provider's page before you sign up.</p>
+    </div>
+  </div>
+</Base>

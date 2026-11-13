@@ -7,16 +7,23 @@ import {
   formatValue, formatDate, resetLabel, isOfficial, hostOf,
 } from '../../lib/catalog.js';
 import WhoCanGet from '../../components/WhoCanGet.astro';
+import LearningBox from '../../components/LearningBox.astro';
 import { graph, breadcrumbLd, webPageLd } from '../../lib/seo.js';
 import { liveOffers, offerFacts, groupOf, GROUPS, countryName } from '../../lib/eligibility.js';
+import { liveCourses, learningFacts } from '../../lib/learning.js';
 
 export function getStaticPaths() {
   // API free tiers (seed.json) and live eligibility offers. Ended and unverified offers get no page.
-  return [...resources(), ...liveOffers()].map((r) => ({ params: { id: r.id }, props: { r } }));
+  // Courses from learning.json too. DigiSkills and AWS Educate are in both lists, so each id once.
+  const offers = liveOffers();
+  const seen = new Set(offers.map((o) => o.id));
+  const courses = liveCourses().filter((c) => !seen.has(c.id));
+  return [...resources(), ...offers, ...courses].map((r) => ({ params: { id: r.id }, props: { r } }));
 }
 
 const { r } = Astro.props;
 const isOffer = Boolean(r.eligibility);
+const isCourse = Boolean(r.learning);
 const official = isOffer ? r.sources.every((x) => SIGNALS[x.signal_type]?.official) : isOfficial(r);
 // Lead with the numbers people search for ("groq free tier limits"), then the date.
 const published = r.limit_rules.filter((l) => formatValue(l) !== 'Not published').slice(0, 2)
@@ -32,8 +39,14 @@ const facts = isOffer ? offerFacts(r) : null;
 const offerDescription = isOffer
   ? clamp(`${r.name}: for ${facts.who.join(', ').toLowerCase()}. ${facts.where}. ${facts.card ? 'Card required. ' : ''}${facts.autoRenews ? 'Charges after the free period. ' : ''}Checked ${formatDate(r.last_verified)}, with sources.`, 170)
   : '';
-const description = isOffer ? offerDescription : `Current limits for ${r.name}${published.length ? ': ' + published.join(', ') : ''}. ${r.limit_rules.length} limit${r.limit_rules.length === 1 ? '' : 's'} with sources and usage rules, checked ${formatDate(r.last_verified)}.`;
-const title = isOffer
+const lf = isCourse ? learningFacts(r) : null;
+const courseDescription = isCourse
+  ? clamp(`${r.name}: ${lf.format.toLowerCase()}${lf.hours ? `, about ${lf.hours} hours` : ''}. ${lf.certificate}. ${facts.where}. Checked ${formatDate(r.last_verified)}, with sources.`, 170)
+  : '';
+const description = isCourse ? courseDescription : isOffer ? offerDescription : `Current limits for ${r.name}${published.length ? ': ' + published.join(', ') : ''}. ${r.limit_rules.length} limit${r.limit_rules.length === 1 ? '' : 's'} with sources and usage rules, checked ${formatDate(r.last_verified)}.`;
+const title = isCourse
+  ? fit([`${r.name}: what you get`, `${r.name}: free course`, r.name], 58)
+  : isOffer
   ? fit([`${r.name}: who can get it`, `${r.name}: eligibility`, r.name], 58)
   : /free|trial|credit/i.test(r.name) ? `${r.name}: limits and rules` : `${r.name}: free tier limits`;
 const path = `/resources/${r.id}/`;
@@ -42,9 +55,9 @@ const jsonLd = graph([
     path, name: title, description, dateModified: r.last_verified,
     extra: {
       about: {
-        '@type': 'Service',
+        '@type': isCourse ? 'Course' : 'Service',
         name: r.name,
-        serviceType: KIND_LABELS[r.kind] ?? r.kind,
+        ...(isCourse ? { description: r.notes ?? description } : { serviceType: KIND_LABELS[r.kind] ?? r.kind }),
         provider: { '@type': 'Organization', name: r.provider },
         offers: {
           '@type': 'Offer', price: '0', priceCurrency: 'USD', description: TIER_LABELS[r.tier_type] ?? r.tier_type,
@@ -52,18 +65,22 @@ const jsonLd = graph([
             ? { eligibleRegion: r.eligibility.countries.codes.map((c) => ({ '@type': 'Country', name: countryName(c) })) } : {}),
           ...(r.offer_window?.redeem_by ? { availabilityEnds: r.offer_window.redeem_by } : {}),
         },
+        ...(isCourse && r.learning.format === 'cohort' && r.offer_window?.starts
+          ? { hasCourseInstance: [{ '@type': 'CourseInstance', courseMode: 'online', startDate: r.offer_window.starts }] } : {}),
       },
     },
   }),
-  breadcrumbLd(Astro.site, isOffer
+  breadcrumbLd(Astro.site, isCourse
+    ? [{ name: 'Home', path: '/' }, { name: 'Learn', path: '/learn/' }, { name: r.name, path }]
+    : isOffer
     ? [{ name: 'Home', path: '/' }, { name: 'Free for who you are', path: '/free-for/' }, { name: r.name, path }]
     : [{ name: 'Home', path: '/' }, { name: 'Catalog', path: '/catalog/' }, { name: r.name, path }]),
 ]);
 ---
-<Base title={title} description={description} jsonLd={jsonLd} current={isOffer ? 'free-for' : 'catalog'}>
+<Base title={title} description={description} jsonLd={jsonLd} current={isCourse ? 'learn' : isOffer ? 'free-for' : 'catalog'}>
   <header class="page-head">
     <div class="wrap">
-      <nav class="crumbs" aria-label="Breadcrumb">{isOffer ? <a href="/free-for/">Free for who you are</a> : <a href="/catalog/">Catalog</a>}<span aria-hidden="true">/</span><span>{r.provider}</span></nav>
+      <nav class="crumbs" aria-label="Breadcrumb">{isCourse ? <a href="/learn/">Learn</a> : isOffer ? <a href="/free-for/">Free for who you are</a> : <a href="/catalog/">Catalog</a>}<span aria-hidden="true">/</span><span>{r.provider}</span></nav>
       <div class="detail-head">
         <span class="mono-mark lg" aria-hidden="true">{r.provider[0]}</span>
         <div>
@@ -84,6 +101,7 @@ const jsonLd = graph([
   <div class="page-body">
     <div class="wrap detail-layout">
       <div>
+        {isCourse && <LearningBox r={r} />}
         {isOffer && <WhoCanGet r={r} />}
         {r.limit_rules.length > 0 && <section aria-labelledby="limits">
           <h2 id="limits">Limits</h2>
@@ -146,7 +164,7 @@ const jsonLd = graph([
             <div><dt>Type</dt><dd>{KIND_LABELS[r.kind] ?? r.kind}</dd></div>
             <div><dt>Plan</dt><dd>{TIER_LABELS[r.tier_type] ?? r.tier_type}</dd></div>
             {!isOffer && <div><dt>Limits tracked</dt><dd class="num">{r.limit_rules.length}</dd></div>}
-            {isOffer && <div><dt>For</dt><dd>{groupOf(r).map((g) => GROUPS[g].title).join(', ') || 'Residents'}</dd></div>}
+            {isOffer && <div><dt>For</dt><dd>{groupOf(r).map((g) => GROUPS[g].title).join(', ') || (r.eligibility.audiences.includes('public') ? 'Anyone' : 'Residents')}</dd></div>}
             <div><dt>Sources</dt><dd>{official ? 'Official' : 'Includes snapshots'}</dd></div>
             <div><dt>Last checked</dt><dd>{formatDate(r.last_verified)}</dd></div>
           </dl>

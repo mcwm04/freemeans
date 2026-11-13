@@ -3,6 +3,7 @@
 // build if a built page is missing, so new sections (for example /tools/) cannot be forgotten.
 import { resources, loadCatalog } from './catalog.js';
 import { liveOffers, offersFor, endingSoon, myths, lastChecked, GROUPS, COUNTRY_PAGES, today, MIN_OFFERS_TO_INDEX } from './eligibility.js';
+import { liveCourses, coursesFor, hasFreeCertificate } from './learning.js';
 import { tools, liveCategories, liveTasks, inCategory, forTask, lastModified, directoryStats, MIN_TOOLS_TO_INDEX } from './directory.js';
 
 export const SITE_NAME = 'Freemeans';
@@ -80,6 +81,7 @@ export function sitemapEntries() {
     ...list.map((r) => ({ path: `/resources/${r.id}/`, lastmod: r.last_verified })),
     ...directoryEntries(),
     ...eligibilityEntries(),
+    ...learningEntries(),
   ];
 }
 
@@ -120,5 +122,22 @@ function eligibilityEntries() {
   for (const slug of Object.keys(COUNTRY_PAGES)) out.push({ path: `/in/${slug}/`, lastmod: lastChecked(live) });
   if (endingSoon().length) out.push({ path: '/free-for/ending-soon/', lastmod: today() });
   if (myths().length) out.push({ path: '/free-for/myths/', lastmod: lastChecked(myths()) });
+  return out;
+}
+
+// /learn/ pages and the course pages that are not already listed with the eligibility offers.
+// Thin pages (fewer than 5 courses) are built with noindex and left out, like everywhere else.
+function learningEntries() {
+  const courses = liveCourses();
+  if (!courses.length) return [];
+  const offerIds = new Set(liveOffers().map((o) => o.id));
+  const out = courses.filter((c) => !offerIds.has(c.id)).map((c) => ({ path: `/resources/${c.id}/`, lastmod: c.last_verified }));
+  if (courses.length >= MIN_OFFERS_TO_INDEX) out.push({ path: '/learn/', lastmod: lastChecked(courses) });
+  const free = courses.filter(hasFreeCertificate);
+  if (free.length >= MIN_OFFERS_TO_INDEX) out.push({ path: '/learn/certificates/', lastmod: lastChecked([...free, ...courses.filter((c) => !hasFreeCertificate(c))]) });
+  for (const [slug, c] of Object.entries(COUNTRY_PAGES)) {
+    const here = coursesFor({ country: c.code });
+    if (here.length >= MIN_OFFERS_TO_INDEX && slug === 'pakistan') out.push({ path: `/learn/${slug}/`, lastmod: lastChecked(here) });
+  }
   return out;
 }

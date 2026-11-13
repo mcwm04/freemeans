@@ -1,0 +1,49 @@
+---
+// "Free certificate, not just a free course" (Eligibility PRD, chapter 11).
+// The first list is only courses whose certificate is free. The second shows the traps, with the price.
+import Base from '../../layouts/Base.astro';
+import OfferCard from '../../components/OfferCard.astro';
+import { formatDate } from '../../lib/catalog.js';
+import { lastChecked, monthYear, today, MIN_OFFERS_TO_INDEX } from '../../lib/eligibility.js';
+import { liveCourses, hasFreeCertificate, certificateCostsMoney } from '../../lib/learning.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
+
+const all = liveCourses();
+const free = all.filter(hasFreeCertificate);
+const costs = all.filter(certificateCostsMoney);
+const path = '/learn/certificates/';
+const title = `Free courses with a free certificate (${monthYear()})`;
+const description = `${free.length} courses where the certificate is free too, plus ${costs.length} where it costs money, with the price. We check each provider's own page and show the date.`;
+const noindex = free.length < MIN_OFFERS_TO_INDEX;
+const jsonLd = graph([
+  webPageLd(Astro.site, { path, name: title, description, type: 'CollectionPage', dateModified: lastChecked([...free, ...costs]) }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Learn', path: '/learn/' }, { name: 'Free certificates', path }]),
+  itemListLd(Astro.site, { name: title, items: free.map((r) => ({ name: r.name, path: `/resources/${r.id}/` })) }),
+]);
+---
+<Base title={title} description={description} jsonLd={jsonLd} noindex={noindex} current="learn">
+  <header class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/learn/">Learn</a><span aria-hidden="true">/</span><span>Free certificates</span></nav>
+      <h1>Free courses with a free certificate</h1>
+      <p class="lede">A free course is not always a free certificate. The first list is only courses where the certificate costs nothing.</p>
+      <div class="meta-row"><span>Checked <b>{formatDate(lastChecked([...free, ...costs]) ?? today())}</b></span><span><a href="/learn/pakistan/">In Pakistan</a></span></div>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap">
+      <section aria-labelledby="h-free">
+        <h2 id="h-free">The certificate is free ({free.length})</h2>
+        {free.length > 0 ? <ul class="cards">{free.map((r) => <OfferCard r={r} />)}</ul> : <p class="empty">No course with a free certificate is live right now.</p>}
+      </section>
+      {costs.length > 0 && (
+        <section aria-labelledby="h-costs">
+          <h2 id="h-costs">Free to learn, but the certificate costs money ({costs.length})</h2>
+          <p class="small muted">You can learn for free. The certificate is a separate price, and some providers offer financial aid.</p>
+          <ul class="cards">{costs.map((r) => <OfferCard r={r} />)}</ul>
+        </section>
+      )}
+      <p class="small muted" style="margin-top:32px">A digital badge is not counted as a certificate here. Providers change prices without notice.</p>
+    </div>
+  </div>
+</Base>

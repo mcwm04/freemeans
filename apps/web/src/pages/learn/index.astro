@@ -1,0 +1,57 @@
+---
+// /learn/: every free course and certification we have checked, sorted by what the certificate costs.
+// Indexed only when 5 or more courses are live (thin-page rule, docs/SEO.md chapter 6).
+import Base from '../../layouts/Base.astro';
+import OfferCard from '../../components/OfferCard.astro';
+import { formatDate } from '../../lib/catalog.js';
+import { lastChecked, monthYear, today, MIN_OFFERS_TO_INDEX } from '../../lib/eligibility.js';
+import { liveCourses, hasFreeCertificate, certificateCostsMoney } from '../../lib/learning.js';
+import { graph, breadcrumbLd, itemListLd, webPageLd } from '../../lib/seo.js';
+
+const list = liveCourses();
+const free = list.filter(hasFreeCertificate);
+const costs = list.filter(certificateCostsMoney);
+const other = list.filter((r) => !hasFreeCertificate(r) && !certificateCostsMoney(r));
+const path = '/learn/';
+const title = `Free online courses and certificates (${monthYear()})`;
+const description = `${list.length} free courses and certifications, each with what the certificate costs, how long it takes and who can join. Checked ${formatDate(lastChecked(list) ?? today())}.`;
+const noindex = list.length < MIN_OFFERS_TO_INDEX;
+const jsonLd = graph([
+  webPageLd(Astro.site, { path, name: title, description, type: 'CollectionPage', dateModified: lastChecked(list) }),
+  breadcrumbLd(Astro.site, [{ name: 'Home', path: '/' }, { name: 'Learn', path }]),
+  itemListLd(Astro.site, { name: title, items: list.map((r) => ({ name: r.name, path: `/resources/${r.id}/` })) }),
+]);
+const sections = [
+  { id: 'free', title: 'Free certificate', note: 'The learning and the certificate are both free.', items: free },
+  { id: 'badge', title: 'Free, with a badge or no certificate', note: 'You learn for free and may earn a digital badge. These are not certificates.', items: other },
+  { id: 'costs', title: 'Free to learn, certificate costs money', note: 'Read the price before you start. Some offer financial aid.', items: costs },
+];
+---
+<Base title={title} description={description} jsonLd={jsonLd} noindex={noindex} current="learn">
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">Learn</p>
+      <h1>Free online courses and certificates</h1>
+      <p class="lede">"Free course" often means free videos and a paid certificate. Here every course says what the certificate costs.</p>
+      <div class="meta-row">
+        <span>{list.length} live courses</span>
+        <span>Checked <b>{formatDate(lastChecked(list) ?? today())}</b></span>
+        <span><a href="/learn/certificates/">Free certificates</a></span>
+        <span><a href="/learn/pakistan/">In Pakistan</a></span>
+      </div>
+    </div>
+  </header>
+  <div class="page-body">
+    <div class="wrap">
+      {sections.filter((s) => s.items.length).map((s) => (
+        <section aria-labelledby={`h-${s.id}`}>
+          <h2 id={`h-${s.id}`}>{s.title} ({s.items.length})</h2>
+          <p class="small muted">{s.note}</p>
+          <ul class="cards">{s.items.map((r) => <OfferCard r={r} />)}</ul>
+        </section>
+      ))}
+      {list.length === 0 && <p class="empty">No live courses yet.</p>}
+      <p class="small muted" style="margin-top:32px">Providers change prices and programs without notice. Read the provider's page before you sign up. We never explain how to get around a check.</p>
+    </div>
+  </div>
+</Base>
