@@ -301,3 +301,14 @@ test('005 runs on a database that already has 001 to 004 and keeps existing badg
   const { rows } = await db.query(`SELECT type FROM badges WHERE resource_id = 'google.x' ORDER BY type`);
   assert.deepEqual(rows.map((r) => r.type), ['auto_renews_paid', 'paid_certificate']);
 });
+
+test('all three default catalog files load together with unique ids', async () => {
+  const db = await freshDb();
+  await migrate(db);
+  const catalog = readCatalogs();
+  assert.match(catalog.version, /^0\.1\.0-seed\+0\.1\.0-eligibility\+0\.1\.0-learning$/);
+  const out = await loadCatalog(db, catalog);
+  assert.equal(out.resources, catalog.resources.length);
+  const { rows } = await db.query(`SELECT count(*)::int AS n FROM resources WHERE kind IN ('course','certification')`);
+  assert.ok(rows[0].n >= 10, 'the learning courses are stored');
+});

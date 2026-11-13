@@ -13,7 +13,8 @@ export const SEED_PATH = resolve(here, '../../data/catalog/seed.json');
 // file so the agent's API-tier catalog stays clean. Both files are loaded together, because the
 // loader replaces the whole catalog: loading one file alone would delete the other's rows.
 export const ELIGIBILITY_PATH = resolve(here, '../../data/catalog/eligibility.json');
-export const DEFAULT_CATALOG_PATHS = [SEED_PATH, ELIGIBILITY_PATH];
+export const LEARNING_PATH = resolve(here, '../../data/catalog/learning.json');
+export const DEFAULT_CATALOG_PATHS = [SEED_PATH, ELIGIBILITY_PATH, LEARNING_PATH];
 
 export async function migrate(db, dir = MIGRATIONS_DIR) {
   await db.exec(`CREATE TABLE IF NOT EXISTS schema_migrations (

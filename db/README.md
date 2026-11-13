@@ -4,7 +4,7 @@
 - `migrations/002_directory.sql` adds the AI tools directory tables.
 - `migrations/004_eligibility.sql` adds eligibility-based offers (students, teachers, nonprofits, startups, countries): wider CHECK lists, the columns `status`, `redeem_by`, `access_ends`, `audiences`, `country_mode`, `countries`, the `watch_phrases` table, and the `resources_live` view. In that view, `effective_status` turns to `ended` once `redeem_by` or `access_ends` has passed, even if the catalog has not been reloaded.
 - `scripts/migrate.mjs` applies new migrations. It records each one in `schema_migrations`.
-- `scripts/load-seed.mjs` loads `data/catalog/seed.json` **and** `data/catalog/eligibility.json` (when it exists) as one catalog, in one transaction. It is safe to repeat. Resources dropped from the catalog are deleted together with their rules, and a failed load changes nothing. Always load both files together: loading one alone would remove the other's rows.
+- `scripts/load-seed.mjs` loads `data/catalog/seed.json`, `data/catalog/eligibility.json` **and** `data/catalog/learning.json` (when they exist) as one catalog, in one transaction. It is safe to repeat. Resources dropped from the catalog are deleted together with their rules, and a failed load changes nothing. Always load both files together: loading one alone would remove the other's rows.
 
 ```bash
 npm ci

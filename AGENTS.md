@@ -79,7 +79,7 @@ Node 22+, Python 3.12+. The owner works on **Windows PowerShell**, so give Power
 3. **Eligibility M4 (pages)** is merged: `/free-for/…`, `/in/pakistan/`, the "Who can get this" box, the checker, JSON-LD and sitemap.
 4. **Eligibility M5 (freshness)** is merged: 15 watch phrases in the nightly source check, the "Re-check by hand" list, and the daily rebuild (needs the `CLOUDFLARE_DEPLOY_HOOK` secret, which is set).
 5. **Eligibility M6:** launch. Checklist and post drafts are in `docs/ELIGIBILITY-LAUNCH.md`; Search Console steps are the owner's.
-6. **Free learning (PRD chapter 11):** L1 (schema, `paid_certificate` badge, migration 005) is in review. Next: L2 seed data, L3 API, L4 pages, L5 freshness. Three decisions are needed before L2 (PRD 11.2).
+6. **Free learning (PRD chapter 11):** L1 (schema, `paid_certificate` badge, migration 005) is merged. L2 (`data/catalog/learning.json`, 10 records) is in review. Next: L3 API filters, L4 pages, L5 freshness (the nightly check does not read `learning.json` watch phrases until L5). The three L2 decisions are recorded in PRD 11.2.
 
 **Deadline:** `/free-for/students/pakistan/` and `/free-for/ending-soon/` must be live by **mid-December 2026**. The Google AI Plus student offer must be redeemed by 31 Dec 2026, so searches will peak in December.
 
