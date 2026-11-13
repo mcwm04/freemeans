@@ -89,7 +89,7 @@ Commands below are shown for **Windows PowerShell** first, then macOS/Linux. You
 | Method | Path | What it does |
 | --- | --- | --- |
 | GET | `/health` | Status, store in use (`neon`, `seed`, or `seed (fallback)`), catalog version |
-| GET | `/catalog` | Summaries. Filters: `kind`, `tier`, `provider`, `q`, `exclude_badges`, `official=true`, `safe_for=client,commercial,eu,production,minors,automation`, `group=students|teachers|institutions|nonprofits|startups`, `audience=…` (comma list), `country=PK`, `status=active` (default) or `include_ended=true`, `ending_within_days=60`, `full=true` |
+| GET | `/catalog` | Summaries. Filters: `kind`, `tier`, `provider`, `q`, `exclude_badges`, `official=true`, `safe_for=client,commercial,eu,production,minors,automation`, `group=students|teachers|institutions|nonprofits|startups`, `format`, `certificate`, `free_certificate=true`, `level`, `credential`, `language`, `role` (for courses), `audience=…` (comma list), `country=PK`, `status=active` (default) or `include_ended=true`, `ending_within_days=60`, `full=true` |
 | GET | `/resources/{id}` | Full record, e.g. `/resources/groq.gpt-oss-120b` |
 | POST | `/waitlist` | JSON `{ "email", "consent": true, "source" }` or a normal HTML form post (redirects back to the site) |
 

@@ -447,3 +447,66 @@ test('free courses are in the catalog, and the unverified one stays hidden', asy
   const full = await body(await call(app, '/resources/harvard.cs50x'));
   assert.equal(full.learning.certificate, 'paid_optional');
 });
+
+// --- Learning filters (L3) -----------------------------------------------------
+
+test('learning filters: format, certificate, free_certificate, level, language, credential, role', async () => {
+  const app = eligApp();
+  const ids = (qs) => idsOf(app, qs);
+
+  assert.deepEqual((await ids('kind=course,certification&free_certificate=true')).sort(),
+    ['cisco.netacad-free', 'digiskills.dstp3', 'freecodecamp.certifications', 'ibm.skillsbuild', 'kaggle.learn'].sort());
+  const paid = await ids('certificate=paid_optional');
+  assert.deepEqual(paid.sort(), ['coursera.financial-aid', 'harvard.cs50x']);
+  assert.ok(!(await ids('certificate=paid_required')).length, 'no course here has a paid-only certificate');
+  assert.ok((await ids('certificate=none')).includes('microsoft.learn'));
+
+  assert.deepEqual(await ids('format=cohort'), ['digiskills.dstp3'], 'the unverified cohort course stays hidden');
+  assert.ok((await ids('format=self_paced')).includes('harvard.cs50x'));
+  assert.deepEqual(await ids('level=beginner'), ['harvard.cs50x']);
+  assert.deepEqual((await ids('language=es')), ['harvard.cs50x']);
+  assert.ok((await ids('language=en,ur')).includes('harvard.cs50x'), 'any of the languages matches');
+  assert.ok((await ids('credential=badge')).includes('microsoft.learn'));
+  assert.ok(!(await ids('credential=badge')).includes('kaggle.learn'));
+});
+
+test('learning filters never match records without a learning block or without that field', async () => {
+  const app = eligApp();
+  const all = await idsOf(app, 'format=self_paced,cohort,live,in_person');
+  assert.ok(!all.includes('groq.gpt-oss-120b') && !all.includes('github.copilot-student'), 'only courses can match');
+  assert.deepEqual(await idsOf(app, 'role=data-analyst'), [], 'no record has role data yet, and unknown is not a match');
+  assert.ok(!(await idsOf(app, 'level=intermediate,advanced')).includes('ibm.skillsbuild'), 'a missing level is not a match');
+});
+
+test('learning filters combine with the existing ones', async () => {
+  const app = eligApp();
+  const ids = await idsOf(app, 'free_certificate=true&country=PK&audience=public');
+  assert.ok(ids.includes('ibm.skillsbuild'), 'a public free-certificate course works from Pakistan');
+  assert.ok(!ids.includes('digiskills.dstp3'), 'DigiSkills is for residents, not the public audience');
+  assert.deepEqual((await idsOf(app, 'free_certificate=true&audience=resident&country=PK')), ['digiskills.dstp3']);
+  assert.deepEqual(await idsOf(app, 'free_certificate=true&audience=resident&country=US'), [], 'DigiSkills is Pakistan only');
+  assert.deepEqual(await idsOf(app, 'free_certificate=true&status=unverified'), ['vu.netacad']);
+});
+
+test('course summaries carry a compact learning object; other records do not', async () => {
+  const b = await body(await call(eligApp(), '/catalog?provider=harvard'));
+  assert.deepEqual(b.resources[0].learning, {
+    format: 'self_paced', certificate: 'paid_optional', level: 'beginner', languages: ['en', 'es', 'pt'],
+    certificate_price: 'Not stated on the course page. See the certificate pages it links to.',
+  });
+  const groq = (await body(await call(eligApp(), '/catalog?provider=groq'))).resources[0];
+  assert.ok(!('learning' in groq));
+});
+
+test('bad learning filter values are a 400 that names the allowed values', async () => {
+  const app = eligApp();
+  for (const [qs, re] of [
+    ['format=video', /self_paced, cohort, live, in_person/], ['certificate=maybe', /none, free, paid_optional, paid_required/],
+    ['level=expert', /beginner, intermediate, advanced/], ['credential=diploma', /completion, badge/],
+    ['language=English', /two- or three-letter/], ['role=Data Analyst', /slug/],
+  ]) {
+    const res = await call(app, `/catalog?${qs}`);
+    assert.equal(res.status, 400, qs);
+    assert.match((await body(res)).error, re, qs);
+  }
+});
