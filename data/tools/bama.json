@@ -1,0 +1,67 @@
+{
+  "slug": "bama",
+  "name": "bama",
+  "url": "https://github.com/daveebbelaar/bama",
+  "tagline": "Build native macOS apps from ideas using AI-driven agent skills",
+  "description": "BAMA (Build Any Mac App) is an open-source collection of AI agent skills that can turn an idea or an existing app into a native macOS application written in Swift and SwiftUI. It can clone an app's UI, generate user stories, write Swift code, design UI components, and run tests, all without using the Xcode GUI. The tool runs locally on macOS and is driven through a command line interface or compatible AI agents such as Claude Code, Codex, or Gemini CLI. It is intended for developers who want to automate the full app creation pipeline on macOS.",
+  "categories": [
+    "app-builders",
+    "coding"
+  ],
+  "tasks": [
+    "generate-code",
+    "build-apps",
+    "design-ui-mockups"
+  ],
+  "best_for": [
+    "Creating a new macOS app from a concept",
+    "Rebuilding an existing app as a native macOS version",
+    "Automating UI design and layout for macOS",
+    "Generating SwiftUI code and project scaffolding",
+    "Testing and optimizing macOS app performance"
+  ],
+  "platforms": [
+    "macos",
+    "cli",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/daveebbelaar/bama",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/daveebbelaar/bama",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "bama",
+    "wikipedia_article": null,
+    "github_repo": "daveebbelaar/bama",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/daveebbelaar/bama",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
