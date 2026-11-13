@@ -16,7 +16,7 @@ async function freshDb() {
 
 test('migration creates every table and is idempotent', async () => {
   const db = await freshDb();
-  assert.deepEqual(await migrate(db), ['001_init.sql', '002_directory.sql', '003_review_queue.sql', '004_eligibility.sql']);
+  assert.deepEqual(await migrate(db), ['001_init.sql', '002_directory.sql', '003_review_queue.sql', '004_eligibility.sql', '005_learning.sql']);
   assert.deepEqual(await migrate(db), []);
   const { rows } = await db.query(
     `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' ORDER BY table_name`,
@@ -118,7 +118,7 @@ test('002 can run on a database that already has 001 applied (the live Neon case
   copyFileSync(new URL('../migrations/001_init.sql', import.meta.url), join(dir001, '001_init.sql'));
   assert.deepEqual(await migrate(db, dir001), ['001_init.sql']);
   await db.query(`INSERT INTO waitlist (email, consent_at) VALUES ('old@example.com', now())`);
-  assert.deepEqual(await migrate(db), ['002_directory.sql', '003_review_queue.sql', '004_eligibility.sql']);
+  assert.deepEqual(await migrate(db), ['002_directory.sql', '003_review_queue.sql', '004_eligibility.sql', '005_learning.sql']);
   const { rows } = await db.query(`SELECT lists FROM waitlist WHERE email = 'old@example.com'`);
   assert.deepEqual(rows[0].lists, ['waitlist']);
 });
@@ -162,7 +162,7 @@ test('004 runs on a database that already has 001, 002 and 003 with the live see
   await db.query(`INSERT INTO catalog_versions (version, resource_count) VALUES ('old', 1)`);
   await db.query(`INSERT INTO resources (id, provider, name, kind, tier_type, last_verified, record, catalog_version)
                   VALUES ('groq.x', 'Groq', 'X', 'llm_api', 'free', '2026-11-01', '{}', 'old')`);
-  assert.deepEqual(await migrate(db), ['004_eligibility.sql']);
+  assert.deepEqual(await migrate(db), ['004_eligibility.sql', '005_learning.sql']);
   const { rows } = await db.query(`SELECT status, audiences, country_mode, countries FROM resources WHERE id = 'groq.x'`);
   assert.deepEqual(rows[0], { status: 'active', audiences: [], country_mode: 'global', countries: [] });
 });
@@ -271,4 +271,33 @@ test('003 review queue: fixed reject reasons, flags default to empty', async () 
   assert.deepEqual(rows[0], { flags: [], attempts: 0, status: 'new' });
   await assert.rejects(db.query(`UPDATE tool_candidates SET status='rejected', reject_reason='meh'`), /check constraint/);
   await db.query(`UPDATE tool_candidates SET status='rejected', reject_reason='dead_site'`);
+});
+
+test('a free course with a paid certificate loads with its badge (migration 005)', async () => {
+  const db = await freshDb();
+  await migrate(db);
+  const learning = JSON.parse(readFileSync(new URL('../../packages/schema/examples/learning.example.json', import.meta.url), 'utf8'));
+  await loadCatalog(db, mergeCatalogs([readSeed(), learning]));
+  const badges = (await db.query(`SELECT type FROM badges WHERE resource_id = 'example.paid-certificate-course'`)).rows;
+  assert.deepEqual(badges.map((b) => b.type), ['paid_certificate']);
+  const { rows } = await db.query(`SELECT record FROM resources WHERE id = 'example.cohort-course'`);
+  const record = typeof rows[0].record === 'string' ? JSON.parse(rows[0].record) : rows[0].record;
+  assert.equal(record.learning.format, 'cohort', 'the learning block stays in the stored record');
+});
+
+test('005 runs on a database that already has 001 to 004 and keeps existing badges', async () => {
+  const db = await freshDb();
+  const dir = mkdtempSync(join(tmpdir(), 'mig-'));
+  for (const f of ['001_init.sql', '002_directory.sql', '003_review_queue.sql', '004_eligibility.sql'])
+    copyFileSync(new URL(`../migrations/${f}`, import.meta.url), join(dir, f));
+  await migrate(db, dir);
+  await db.query(`INSERT INTO catalog_versions (version, resource_count) VALUES ('old', 1)`);
+  await db.query(`INSERT INTO resources (id, provider, name, kind, tier_type, last_verified, record, catalog_version)
+                  VALUES ('google.x', 'Google', 'X', 'ai_subscription', 'trial', '2026-11-01', '{}', 'old')`);
+  await db.query(`INSERT INTO badges (resource_id, type, source_url) VALUES ('google.x', 'auto_renews_paid', 'https://example.com')`);
+  await assert.rejects(db.query(`INSERT INTO badges (resource_id, type, source_url) VALUES ('google.x', 'paid_certificate', 'https://example.com')`));
+  assert.deepEqual(await migrate(db), ['005_learning.sql']);
+  await db.query(`INSERT INTO badges (resource_id, type, source_url) VALUES ('google.x', 'paid_certificate', 'https://example.com')`);
+  const { rows } = await db.query(`SELECT type FROM badges WHERE resource_id = 'google.x' ORDER BY type`);
+  assert.deepEqual(rows.map((r) => r.type), ['auto_renews_paid', 'paid_certificate']);
 });

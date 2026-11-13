@@ -529,7 +529,12 @@
           "fetched_at": "2026-11-09",
           "signal_type": "official_docs"
         }
-      ]
+      ],
+      "learning": {
+        "format": "self_paced",
+        "certificate": "none",
+        "credential": "badge"
+      }
     },
     {
       "id": "microsoft.office365-a1",
@@ -1129,7 +1134,12 @@
           "text": "Batch-05",
           "source_url": "https://digiskills.pk"
         }
-      ]
+      ],
+      "learning": {
+        "format": "cohort",
+        "certificate": "free",
+        "credential": "completion"
+      }
     },
     {
       "id": "hec.digital-library",

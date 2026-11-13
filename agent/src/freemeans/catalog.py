@@ -138,12 +138,36 @@ def validate_catalog(data: dict[str, Any], schema_dir: Path) -> list[str]:
             errors.append(f"resources/{i}/id: duplicate id '{rid}'")
         seen.add(rid)
         errors.extend(f"resources/{i}: {msg}" for msg in eligibility_problems(r))
+        errors.extend(f"resources/{i}: {msg}" for msg in learning_problems(r))
     return errors
 
 
 # Kinds the local agent routes requests to. Every other kind is an eligibility-based
 # offer (student, teacher, nonprofit, startup, country) and must say who qualifies.
 API_KINDS = frozenset({"llm_api", "speech_api", "embedding_api", "inference_platform", "gpu_notebook", "cloud_credit"})
+
+
+LEARNING_KINDS = frozenset({"course", "certification"})
+
+
+def learning_problems(r: dict[str, Any]) -> list[str]:
+    """Rules for free courses and certifications (Eligibility PRD, Chapter 11)."""
+    out: list[str] = []
+    rid = r.get("id", "?")
+    kind = r.get("kind")
+    learning = r.get("learning")
+    # Unverified and ended records may lack the details nobody has confirmed yet.
+    if kind in LEARNING_KINDS and not learning and r.get("status") not in ("unverified", "ended"):
+        out.append(f"{rid}: kind '{kind}' needs a learning block (format and certificate)")
+    if learning and kind not in LEARNING_KINDS:
+        out.append(f"{rid}: a learning block is only for kinds course and certification")
+    certificate = (learning or {}).get("certificate")
+    has_badge = any(b.get("type") == "paid_certificate" for b in r.get("badges", []))
+    if certificate == "paid_required" and not has_badge:
+        out.append(f"{rid}: a certificate that costs money needs the paid_certificate badge")
+    if has_badge and certificate != "paid_required":
+        out.append(f"{rid}: paid_certificate badge needs learning.certificate = paid_required")
+    return out
 
 
 def eligibility_problems(r: dict[str, Any]) -> list[str]:

@@ -24,6 +24,7 @@ jobs:
           python -m pytest -q
           freemeans validate-catalog ../data/catalog/seed.json
           freemeans validate-catalog ../packages/schema/examples/eligibility.example.json
+          freemeans validate-catalog ../packages/schema/examples/learning.example.json
           if [ -f ../data/catalog/eligibility.json ]; then freemeans validate-catalog ../data/catalog/eligibility.json; fi
       - name: Pipeline tests
         working-directory: services/pipeline
