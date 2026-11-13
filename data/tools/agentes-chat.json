@@ -1,0 +1,76 @@
+{
+  "slug": "agentes-chat",
+  "name": "agentes-chat",
+  "url": "https://agentes.chat/",
+  "tagline": "AI agents work in your team chat and ask for approval before sensitive actions",
+  "description": "agentes.chat provides AI agents that integrate into team chat channels. The agents can investigate issues, perform tasks, and request human approval for sensitive actions such as rollbacks or financial changes. It works on iPhone, Android, Mac, Windows, Linux and in browsers. The platform can be self‑hosted for free or run in the cloud with paid plans. All features are available in the open‑source version under an AGPL license, and users can bring their own AI keys. It is aimed at engineering, finance, support and marketing teams that want automated assistance while keeping control.",
+  "categories": [
+    "chat",
+    "productivity",
+    "automation"
+  ],
+  "tasks": [
+    "build-ai-agents",
+    "automate-workflows",
+    "ask-questions"
+  ],
+  "best_for": [
+    "software development teams automating incident handling",
+    "finance teams automating invoice checks",
+    "support teams triaging tickets",
+    "marketing teams summarizing data",
+    "any team that wants AI agents to assist in chat"
+  ],
+  "platforms": [
+    "web",
+    "ios",
+    "android",
+    "windows",
+    "macos",
+    "linux"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/agentes-chat/agentes-chat",
+  "license": "AGPL",
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": true,
+    "works_in_pk": null,
+    "notes": "Self‑hosted version is free forever and includes all features.",
+    "source_url": "https://agentes.chat/",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": {
+    "cheapest_paid_usd": 24,
+    "period": "month",
+    "source_url": "https://agentes.chat/pricing",
+    "verified_at": "2026-11-13"
+  },
+  "signals": {
+    "trends_term": "agentes-chat",
+    "wikipedia_article": null,
+    "github_repo": "agentes-chat/agentes-chat",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "agentes.chat",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
