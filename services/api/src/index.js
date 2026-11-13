@@ -3,6 +3,7 @@
 // not CPU, so a Neon query does not eat the 10 ms.
 import seed from '../../../data/catalog/seed.json' with { type: 'json' };
 import eligibility from '../../../data/catalog/eligibility.json' with { type: 'json' };
+import learning from '../../../data/catalog/learning.json' with { type: 'json' };
 import { createApp } from './app.js';
 import { seedStore, sqlStore, withFallback, neonQuery } from './store.js';
 import { linkSource, cacheDedupe } from './links.js';
@@ -24,8 +25,8 @@ export function turnstile(secret, fetcher = fetch) {
 
 // Same merge as db/scripts/lib.mjs, so the bundled copy matches what Neon holds.
 const bundled = {
-  version: `${seed.version}+${eligibility.version}`,
-  resources: [...seed.resources, ...eligibility.resources],
+  version: `${seed.version}+${eligibility.version}+${learning.version}`,
+  resources: [...seed.resources, ...eligibility.resources, ...learning.resources],
 };
 
 let cache; // one app per isolate, rebuilt only if the settings change

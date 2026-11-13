@@ -1,0 +1,424 @@
+{
+  "version": "0.1.0-learning",
+  "generated_at": "2026-11-13",
+  "resources": [
+    {
+      "id": "ibm.skillsbuild",
+      "provider": "IBM",
+      "name": "IBM SkillsBuild free courses",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "public"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ]
+      },
+      "learning": {
+        "format": "self_paced",
+        "certificate": "free",
+        "credential": "badge"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "watch": [
+        {
+          "text": "100% free",
+          "source_url": "https://skillsbuild.org/"
+        }
+      ],
+      "notes": "IBM says its learning is 100% free and comes with industry-recognized digital credentials. Courses are offered in 20+ languages.",
+      "last_verified": "2026-11-13",
+      "sources": [
+        {
+          "url": "https://skillsbuild.org/",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "harvard.cs50x",
+      "provider": "Harvard",
+      "name": "CS50x: Introduction to Computer Science (OpenCourseWare)",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "public"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "none"
+        ]
+      },
+      "learning": {
+        "format": "self_paced",
+        "level": "beginner",
+        "languages": [
+          "en",
+          "es",
+          "pt"
+        ],
+        "certificate": "paid_optional",
+        "certificate_price": "Not stated on the course page. See the certificate pages it links to."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "watch": [
+        {
+          "text": "for free via this OpenCourseWare",
+          "source_url": "https://cs50.harvard.edu/x/"
+        }
+      ],
+      "notes": "Anyone can take the course for free through the OpenCourseWare. A verified certificate, a professional certificate and transfer credit are separate options with their own pages; check them for the price.",
+      "last_verified": "2026-11-13",
+      "sources": [
+        {
+          "url": "https://cs50.harvard.edu/x/",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "microsoft.learn",
+      "provider": "Microsoft",
+      "name": "Microsoft Learn free training",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "public"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "none"
+        ]
+      },
+      "learning": {
+        "format": "self_paced",
+        "certificate": "none",
+        "credential": "badge"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "watch": [
+        {
+          "text": "Microsoft Learn training is free",
+          "source_url": "https://learn.microsoft.com/en-us/training/support/faq"
+        }
+      ],
+      "notes": "Microsoft says Learn training is free for anyone. You do not need a profile; signing in adds progress tracking and achievement badges. Certification exams are separate.",
+      "last_verified": "2026-11-13",
+      "sources": [
+        {
+          "url": "https://learn.microsoft.com/en-us/training/support/faq",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        },
+        {
+          "url": "https://learn.microsoft.com/en-us/training/",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "aws.skill-builder",
+      "provider": "AWS",
+      "name": "AWS Skill Builder free digital courses",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "public"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ]
+      },
+      "learning": {
+        "format": "self_paced",
+        "certificate": "none",
+        "credential": "badge"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "watch": [
+        {
+          "text": "free self-paced digital courses",
+          "source_url": "https://aws.amazon.com/training/digital/"
+        }
+      ],
+      "notes": "AWS lists over 900 free self-paced digital courses. Hands-on labs, immersive learning and exam prep need a paid Skill Builder subscription. Training badges are earned by passing a learning plan's assessment and claimed through Credly.",
+      "last_verified": "2026-11-13",
+      "sources": [
+        {
+          "url": "https://aws.amazon.com/training/digital/",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        },
+        {
+          "url": "https://aws.amazon.com/training/badges/",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "google.skills-starter",
+      "provider": "Google",
+      "name": "Google Skills Starter plan (free)",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "public"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ],
+        "notes": "Needs a Google Account and a Developer Profile."
+      },
+      "learning": {
+        "format": "self_paced",
+        "certificate": "none",
+        "credential": "badge"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "watch": [
+        {
+          "text": "35 free credits every month",
+          "source_url": "https://www.skills.google/payments/new"
+        }
+      ],
+      "notes": "The Starter plan costs nothing: limited hands-on labs, skill badges and 35 free credits a month. The Pro plan (US$29 a month on Google's page) unlocks unlimited labs.",
+      "last_verified": "2026-11-13",
+      "sources": [
+        {
+          "url": "https://www.skills.google/payments/new",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "cisco.netacad-free",
+      "provider": "Cisco",
+      "name": "Cisco Networking Academy free self-paced courses",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "public"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ]
+      },
+      "learning": {
+        "format": "self_paced",
+        "certificate": "free",
+        "credential": "badge"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Free self-paced courses in cybersecurity, networking, Python and AI. Cisco says a certificate of completion goes to everyone who completes a course, and digital badges are free to earn through Credly. A certificate of completion is not a Cisco certification exam. The provider's page needs JavaScript, so the nightly source check cannot read it. These details come from the provider's own pages and search results on its own domain.",
+      "last_verified": "2026-11-13",
+      "sources": [
+        {
+          "url": "https://www.netacad.com/catalogs/learn",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        },
+        {
+          "url": "https://www.netacad.com/",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "freecodecamp.certifications",
+      "provider": "freeCodeCamp",
+      "name": "freeCodeCamp free certifications",
+      "kind": "certification",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "public"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ]
+      },
+      "learning": {
+        "format": "self_paced",
+        "languages": [
+          "en"
+        ],
+        "certificate": "free",
+        "credential": "completion"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "freeCodeCamp says everything on its site, including its certifications, is free. You earn a certification by building projects and passing an exam. The provider's page needs JavaScript, so the nightly source check cannot read it. These details come from the provider's own pages and search results on its own domain.",
+      "last_verified": "2026-11-13",
+      "sources": [
+        {
+          "url": "https://www.freecodecamp.org/certification",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "kaggle.learn",
+      "provider": "Kaggle",
+      "name": "Kaggle Learn free courses",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "public"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ]
+      },
+      "learning": {
+        "format": "self_paced",
+        "languages": [
+          "en"
+        ],
+        "certificate": "free",
+        "credential": "completion"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "Each Kaggle Learn course shows its cost as No cost. Course pages estimate about 3 to 5 hours each (for example Python and Intro to Machine Learning). Certificates are on the main Learn page. The provider's page needs JavaScript, so the nightly source check cannot read it. These details come from the provider's own pages and search results on its own domain.",
+      "last_verified": "2026-11-13",
+      "sources": [
+        {
+          "url": "https://www.kaggle.com/learn",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "coursera.financial-aid",
+      "provider": "Coursera",
+      "name": "Coursera: free course preview and financial aid",
+      "kind": "course",
+      "tier_type": "free",
+      "eligibility": {
+        "audiences": [
+          "public"
+        ],
+        "countries": {
+          "mode": "global"
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ]
+      },
+      "learning": {
+        "format": "self_paced",
+        "certificate": "paid_optional",
+        "certificate_price": "Set per course. Eligible learners can apply for financial aid to get certificates free or cheaper."
+      },
+      "limit_rules": [],
+      "badges": [],
+      "watch": [
+        {
+          "text": "Eligible learners can still apply for financial aid",
+          "source_url": "https://blog.coursera.org/introducing-courseras-new-course-preview-experience/"
+        }
+      ],
+      "notes": "You can preview the first module of most courses for free. Full access and a certificate normally cost money; Coursera says eligible learners can apply for financial aid to get both free or at a reduced cost.",
+      "last_verified": "2026-11-13",
+      "sources": [
+        {
+          "url": "https://blog.coursera.org/introducing-courseras-new-course-preview-experience/",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        }
+      ]
+    },
+    {
+      "id": "vu.netacad",
+      "provider": "Virtual University of Pakistan",
+      "name": "Virtual University NetAcad (Cisco) courses",
+      "kind": "course",
+      "tier_type": "free",
+      "status": "unverified",
+      "eligibility": {
+        "audiences": [
+          "resident"
+        ],
+        "countries": {
+          "mode": "include",
+          "codes": [
+            "PK"
+          ]
+        },
+        "via": "individual",
+        "proof": [
+          "sign_up"
+        ],
+        "notes": "UNVERIFIED: the page does not say who may register. Read it when a session opens."
+      },
+      "learning": {
+        "format": "cohort",
+        "certificate": "free"
+      },
+      "limit_rules": [],
+      "badges": [],
+      "notes": "UNVERIFIED. Virtual University runs Cisco Networking Academy courses in sessions. On 13 Nov 2026 its page said registration was closed and to wait for the next session. The cost differs from batch to batch and free courses show FREE. A Cisco certificate can be downloaded after the exam and feedback.",
+      "last_verified": "2026-11-13",
+      "sources": [
+        {
+          "url": "https://vu.edu.pk/netacad/",
+          "fetched_at": "2026-11-13",
+          "signal_type": "official_docs"
+        }
+      ]
+    }
+  ]
+}

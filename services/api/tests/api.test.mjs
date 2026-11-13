@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { PGlite } from '@electric-sql/pglite';
 import seed from '../../../data/catalog/seed.json' with { type: 'json' };
 import eligibility from '../../../data/catalog/eligibility.json' with { type: 'json' };
+import learning from '../../../data/catalog/learning.json' with { type: 'json' };
 import { createApp } from '../src/app.js';
 import { seedStore, sqlStore, withFallback } from '../src/store.js';
 import { migrate, loadCatalog } from '../../../db/scripts/lib.mjs';
@@ -162,7 +163,7 @@ test('Worker entry point serves the seed when DATABASE_URL is not set', async ()
   const res = await worker.fetch(new Request('https://api.freemeans.com/health'), { SITE_URL: SITE });
   const b = await res.json();
   assert.equal(b.store, 'seed');
-  assert.equal(b.catalog_version, `${seed.version}+${eligibility.version}`);
+  assert.equal(b.catalog_version, `${seed.version}+${eligibility.version}+${learning.version}`);
   const nf = await worker.fetch(new Request('https://api.freemeans.com/nothing'), {});
   assert.equal(nf.status, 404);
 });
@@ -336,7 +337,7 @@ test('Turnstile check posts the token and secret to Cloudflare', async () => {
 
 // --- Eligibility filters (M3) ------------------------------------------------
 
-const both = { version: 'test', resources: [...seed.resources, ...eligibility.resources] };
+const both = { version: 'test', resources: [...seed.resources, ...eligibility.resources, ...learning.resources] };
 const NOW = '2026-11-11';
 const eligApp = (day = NOW) => createApp({ store: seedStore(both), siteUrl: SITE, now: () => new Date(`${day}T12:00:00Z`) });
 const idsOf = async (app, qs) => (await body(await call(app, `/catalog?${qs}`))).resources.map((r) => r.id);
@@ -434,4 +435,15 @@ test('Worker without a database serves the seed and the eligibility offers toget
   const b = await body(res);
   assert.ok(b.resources.some((r) => r.id === 'github.copilot-student'));
   assert.match(b.version, /\+/);
+});
+
+test('free courses are in the catalog, and the unverified one stays hidden', async () => {
+  const app = eligApp();
+  const courses = await idsOf(app, 'kind=course,certification');
+  for (const id of ['ibm.skillsbuild', 'harvard.cs50x', 'microsoft.learn', 'freecodecamp.certifications']) assert.ok(courses.includes(id), id);
+  assert.ok(!courses.includes('vu.netacad'), 'unverified courses are not listed by default');
+  assert.ok((await idsOf(app, 'kind=course&status=unverified')).includes('vu.netacad'));
+  assert.ok((await idsOf(app, 'audience=public&country=PK')).includes('ibm.skillsbuild'), 'public courses work from Pakistan');
+  const full = await body(await call(app, '/resources/harvard.cs50x'));
+  assert.equal(full.learning.certificate, 'paid_optional');
 });

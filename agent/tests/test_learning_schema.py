@@ -80,3 +80,17 @@ def test_format_and_certificate_are_required():
     data = _one("example.badge-only-training")
     del data["resources"][0]["learning"]["certificate"]
     assert any("certificate" in e and "required" in e for e in validate_catalog(data, SCHEMAS))
+
+
+def test_real_learning_file_is_valid_and_sourced():
+    data = json.loads((REPO / "data" / "catalog" / "learning.json").read_text(encoding="utf-8"))
+    assert validate_catalog(data, SCHEMAS) == []
+    ids = [r["id"] for r in data["resources"]]
+    assert len(ids) == len(set(ids))
+    eligibility = json.loads((REPO / "data" / "catalog" / "eligibility.json").read_text(encoding="utf-8"))
+    seed = json.loads((REPO / "data" / "catalog" / "seed.json").read_text(encoding="utf-8"))
+    other = {r["id"] for r in eligibility["resources"]} | {r["id"] for r in seed["resources"]}
+    assert not set(ids) & other, "ids must be unique across the three catalog files"
+    for r in data["resources"]:
+        assert r["learning"], r["id"]
+        assert r["sources"] and r["last_verified"], r["id"]

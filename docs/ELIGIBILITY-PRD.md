@@ -315,14 +315,14 @@ Each module ends with green CI. The owner says "next" for each one. Branches are
 
 | Module | Work | Done when |
 | --- | --- | --- |
-| **L1 Schema** ✅ built | `learning` block, badge `paid_certificate`, migration `005_learning.sql`, rule "a course or certification needs a `learning` block unless it is unverified or ended", rule "`paid_required` needs the badge, both ways", example file, tests | Old records still validate, the two active courses (`digiskills.dstp3`, `aws.educate`) carry a `learning` block, the DB CHECK list matches the schema |
-| **L2 Seed data** | `data/catalog/learning.json` (a third file, loaded with the other two) with about 15 free courses and certifications, each confirmed on the provider's own page. Candidates: Google Skills and career certificates audit options, Microsoft Learn, AWS Skill Builder, Coursera financial aid, Cisco Networking Academy, university MOOCs, Pakistani programs (DigiSkills, NAVTTC, Virtual University) | Every record has a source and a date; anything unconfirmed starts `unverified` |
+| **L1 Schema** ✅ merged | `learning` block, badge `paid_certificate`, migration `005_learning.sql`, rule "a course or certification needs a `learning` block unless it is unverified or ended", rule "`paid_required` needs the badge, both ways", example file, tests | Old records still validate, the two active courses (`digiskills.dstp3`, `aws.educate`) carry a `learning` block, the DB CHECK list matches the schema |
+| **L2 Seed data** ✅ built | `data/catalog/learning.json` (a third file, loaded with the other two): 10 records, 9 active and 1 unverified. IBM SkillsBuild, Harvard CS50x, Microsoft Learn, AWS Skill Builder, Google Skills Starter, Cisco Networking Academy, freeCodeCamp, Kaggle Learn, Coursera (preview and financial aid) and Virtual University NetAcad (unverified: registration closed). DigiSkills and AWS Educate stay in `eligibility.json`. Not yet confirmed, so not listed: NAVTTC e-learning (no terms on the portal), Khan Academy (certificates unconfirmed), Hugging Face courses (page does not say free) | Every record has a source and a date; anything unconfirmed starts `unverified` |
 | **L3 API** | filters `format`, `certificate`, `language`, `level`, `role`, `credential`, and `free_certificate=true` | Tests for each filter and for the paid-certificate rule |
 | **L4 Pages** | `/learn/`, `/learn/certificates/` (free certificate, not just a free course), `/learn/for/{group}/`, `/learn/pakistan/`, a "What you get" box on each course page, JSON-LD (`Course`, with `offers` at price 0 and `hasCourseInstance` for cohorts) | `npm test` build guards pass; thin pages stay `noindex` |
 | **L5 Freshness** | watch phrases for batch and deadline text; courses in the Re-check list | One nightly run covering the new records |
 
-### 11.2 Decisions needed before L2
+### 11.2 Decisions (13 Nov 2026)
 
-1. **Which providers go first?** Suggested: five Pakistan-relevant programs, then the global programs students ask about most.
-2. **Does a free audit count as free?** Suggested: yes, shown as `certificate: paid_optional` with the price, never as a free certificate.
-3. **Do we list courses with a paid certificate at all?** Suggested: yes, with the amber badge, because that is the common trap people need to see.
+1. **Which providers go first?** Pakistan-relevant programs first, then the global programs students ask about most. Only programs confirmed on the provider's own pages are listed. Few Pakistani programs publish terms in a form we can read, so the Pakistan list is short for now (DigiSkills, Virtual University NetAcad). More are added as official pages are found.
+2. **Does a free audit count as free?** Yes, shown as `certificate: paid_optional` with the price, never as a free certificate.
+3. **Do we list courses with a paid certificate at all?** Yes, with the amber badge, because that is the common trap people need to see.
