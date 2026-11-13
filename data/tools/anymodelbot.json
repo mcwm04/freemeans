@@ -1,0 +1,77 @@
+{
+  "slug": "anymodelbot",
+  "name": "AnyModelBot",
+  "url": "https://anymodel.bot/",
+  "tagline": "AI robot team that runs on your computer",
+  "description": "AnyModelBot is an open‑source desktop application for Windows, macOS and Linux, also available as Docker and CLI. It lets users create multiple AI agents, each with its own model and persistent markdown memory stored locally. Agents can chat, run code, handle files, generate images or short videos, and more, while model usage is billed per token through Modelflare. A single API key provides access to 68 models from 11 providers. The app itself is free, with no subscription, and new users receive a $1 credit for initial model usage.",
+  "categories": [
+    "chat",
+    "productivity",
+    "local-ai"
+  ],
+  "tasks": [
+    "ask-questions",
+    "write-essays",
+    "generate-code",
+    "debug-code",
+    "summarize-text",
+    "text-to-image",
+    "text-to-video"
+  ],
+  "best_for": [
+    "building custom AI assistants",
+    "automating file and document workflows",
+    "getting coding help and debugging",
+    "summarizing research or long texts",
+    "creating quick images or short videos"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "cli"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/modelflare-ai/AnyModelBot",
+  "license": "MIT",
+  "free_tier": {
+    "type": "credits",
+    "quota": {
+      "value": 1,
+      "unit": "USD",
+      "period": "once"
+    },
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Free app; model usage billed per token after the $1 credit.",
+    "source_url": "https://anymodel.bot/pricing",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "AnyModelBot",
+    "wikipedia_article": null,
+    "github_repo": "modelflare-ai/AnyModelBot",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "anymodel.bot",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
