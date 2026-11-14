@@ -1,0 +1,62 @@
+{
+  "slug": "retirement-savings-are-fueling-the-ai-bubble",
+  "name": "Retirement Savings Are Fueling the AI Bubble",
+  "url": "https://lpeproject.org/blog/your-retirement-savings-are-fueling-the-ai-bubble/",
+  "tagline": "An article examining how retirement savings fund AI data center expansion",
+  "description": "The article explains how public and private retirement accounts are being used to finance the rapid build‑out of AI data centers. It outlines the financial risks tied to massive AI spending, the role of private equity, and the potential impact on pension fund holders. The piece also discusses political reactions, regulatory concerns, and possible alternatives for directing retirement money toward more productive investments. It is aimed at policymakers, investors, pension trustees, and anyone interested in the intersection of finance and AI infrastructure.",
+  "categories": [
+    "research"
+  ],
+  "tasks": [
+    "summarize-text"
+  ],
+  "best_for": [
+    "Understanding AI financing risks",
+    "Learning how retirement funds are invested in tech",
+    "Assessing pension fund exposure to AI debt",
+    "Evaluating policy options for pension investments",
+    "Informing investors about AI‑related market volatility"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": null,
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Free to read",
+    "source_url": "https://lpeproject.org/blog/your-retirement-savings-are-fueling-the-ai-bubble/",
+    "verified_at": "2026-11-14"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "Retirement Savings Are Fueling the AI Bubble",
+    "wikipedia_article": null,
+    "github_repo": null,
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "lpeproject.org",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-14",
+  "changelog": [
+    {
+      "date": "2026-11-14",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
