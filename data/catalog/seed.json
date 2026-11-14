@@ -1,6 +1,6 @@
 {
   "version": "0.1.0-seed",
-  "generated_at": "2026-11-08",
+  "generated_at": "2026-11-14",
   "resources": [
     {
       "id": "groq.gpt-oss-120b",
@@ -273,15 +273,17 @@
       "kind": "cloud_credit",
       "tier_type": "credit",
       "limit_rules": [
-        { "metric": "credit_usd", "value": 5, "window": "one_time", "reset": { "kind": "none" }, "scope": "account", "conditions": "Granted after adding a verified payment method; expires 30 days after grant.", "published": true, "verified_at": "2026-10-16", "source_url": "https://benchlm.ai/md/free-tier.md", "signal_type": "third_party_snapshot" }
+        { "metric": "credit_usd", "value": 5, "window": "one_time", "reset": { "kind": "none" }, "scope": "account", "conditions": "Granted after adding a verified payment method; expires 30 days after grant.", "published": true, "verified_at": "2026-11-14", "source_url": "https://inference-docs.cerebras.ai/support/rate-limits", "signal_type": "official_docs" }
       ],
       "badges": [
-        { "type": "payment_method_required", "source_url": "https://benchlm.ai/md/free-tier.md" }
+        { "type": "payment_method_required", "source_url": "https://inference-docs.cerebras.ai/support/rate-limits" }
       ],
-      "last_verified": "2026-10-16",
+      "last_verified": "2026-11-14",
       "sources": [
-        { "url": "https://benchlm.ai/md/free-tier.md", "fetched_at": "2026-11-07", "signal_type": "third_party_snapshot" }
-      ]
+        { "url": "https://inference-docs.cerebras.ai/support/rate-limits", "fetched_at": "2026-11-14", "signal_type": "official_docs" },
+        { "url": "https://www.cerebras.ai/pricing", "fetched_at": "2026-11-14", "signal_type": "official_docs" }
+      ],
+      "notes": "The rate-limits page calls this the Free Trial: US$5 after adding a verified payment method, expiring 30 days after it is granted. It says there is no permanently free tier. While the credit lasts, gpt-oss-120b is limited to 5 requests per minute and 1M tokens per day, and qwen-3.8-27b to 300 requests per minute."
     },
     {
       "id": "digitalocean.signup-credit",
@@ -300,6 +302,91 @@
       "sources": [
         { "url": "https://docs.digitalocean.com/platform/billing/signup-credit/", "fetched_at": "2026-11-12", "signal_type": "official_docs" },
         { "url": "https://docs.digitalocean.com/platform/teams/refer-others", "fetched_at": "2026-11-12", "signal_type": "official_docs" }
+      ]
+    },
+    {
+      "id": "voyage.embeddings-free-tokens",
+      "provider": "Voyage AI",
+      "name": "Voyage AI embeddings free tokens",
+      "kind": "embedding_api",
+      "tier_type": "credit",
+      "models": ["voyage-4-large", "voyage-4", "voyage-4-lite", "voyage-context-4", "voyage-code-4", "voyage-code-3"],
+      "limit_rules": [
+        { "metric": "rpm", "value": 2000, "window": "minute", "reset": { "kind": "unknown" }, "scope": "account", "applies_to": ["voyage-4"], "conditions": "Basic limit from the rate-limits table. The page does not say whether an account without a payment method gets it.", "published": true, "verified_at": "2026-11-14", "source_url": "https://docs.voyageai.com/docs/rate-limits", "signal_type": "official_docs" },
+        { "metric": "tpm", "value": 8000000, "window": "minute", "reset": { "kind": "unknown" }, "scope": "account", "applies_to": ["voyage-4"], "conditions": "Basic limit from the rate-limits table. The page does not say whether an account without a payment method gets it.", "published": true, "verified_at": "2026-11-14", "source_url": "https://docs.voyageai.com/docs/rate-limits", "signal_type": "official_docs" }
+      ],
+      "badges": [],
+      "notes": "The pricing page says the first 200 million tokens are free for every account on voyage-4-large, voyage-4, voyage-4-lite, voyage-context-4, voyage-code-4 and voyage-code-3, and the first 50 million tokens on voyage-multilingual-2, voyage-finance-2, voyage-law-2 and voyage-code-2. Rerankers also get 200 million free tokens. Older models such as voyage-3.5 have no free tokens, and the Batch API does not use free tokens. Other models have different rate limits on the same page. Higher tiers need a payment method; free tokens still apply after one is added.",
+      "last_verified": "2026-11-14",
+      "sources": [
+        { "url": "https://docs.voyageai.com/docs/pricing", "fetched_at": "2026-11-14", "signal_type": "official_docs" },
+        { "url": "https://docs.voyageai.com/docs/rate-limits", "fetched_at": "2026-11-14", "signal_type": "official_docs" }
+      ]
+    },
+    {
+      "id": "deepgram.signup-credit",
+      "provider": "Deepgram",
+      "name": "Deepgram free signup credit",
+      "kind": "speech_api",
+      "tier_type": "credit",
+      "limit_rules": [
+        { "metric": "credit_usd", "value": 200, "window": "one_time", "reset": { "kind": "none" }, "scope": "account", "conditions": "The pricing page says no minimums, no expiration and no credit card required.", "published": true, "verified_at": "2026-11-14", "source_url": "https://deepgram.com/pricing", "signal_type": "official_docs" }
+      ],
+      "badges": [],
+      "notes": "After the credit, usage is pay as you go. The pricing FAQ says pay as you go allows 150 concurrent streaming speech-to-text connections; limits apply per project and differ by plan and region.",
+      "last_verified": "2026-11-14",
+      "sources": [
+        { "url": "https://deepgram.com/pricing", "fetched_at": "2026-11-14", "signal_type": "official_docs" }
+      ]
+    },
+    {
+      "id": "assemblyai.free-credits",
+      "provider": "AssemblyAI",
+      "name": "AssemblyAI free credits",
+      "kind": "speech_api",
+      "tier_type": "credit",
+      "limit_rules": [
+        { "metric": "credit_usd", "value": 50, "window": "one_time", "reset": { "kind": "none" }, "scope": "account", "conditions": "The pricing page (last updated 10 Nov 2026) says no credit card is required.", "published": true, "verified_at": "2026-11-14", "source_url": "https://www.assemblyai.com/pricing", "signal_type": "official_docs" }
+      ],
+      "badges": [],
+      "notes": "Free accounts can start 5 new streaming sessions per minute and run 5 parallel pre-recorded transcriptions, according to the rate-limit pages. Free accounts do not scale up automatically. Paid accounts get far higher limits.",
+      "last_verified": "2026-11-14",
+      "sources": [
+        { "url": "https://www.assemblyai.com/pricing", "fetched_at": "2026-11-14", "signal_type": "official_docs" },
+        { "url": "https://www.assemblyai.com/docs/streaming/rate-limits.md", "fetched_at": "2026-11-14", "signal_type": "official_docs" },
+        { "url": "https://www.assemblyai.com/docs/pre-recorded-audio/rate-limits.md", "fetched_at": "2026-11-14", "signal_type": "official_docs" }
+      ]
+    },
+    {
+      "id": "speechmatics.signup-credit",
+      "provider": "Speechmatics",
+      "name": "Speechmatics free signup credit",
+      "kind": "speech_api",
+      "tier_type": "credit",
+      "limit_rules": [
+        { "metric": "credit_usd", "value": 100, "window": "one_time", "reset": { "kind": "none" }, "scope": "account", "conditions": "No card required. The page says sign-up bonus credits last 12 months. API access is paused when the credits run out.", "published": true, "verified_at": "2026-11-14", "source_url": "https://www.speechmatics.com/pricing", "signal_type": "official_docs" }
+      ],
+      "badges": [],
+      "notes": "The plan comparison table lists 2 concurrent real-time sessions on the free plan (50 on self-serve). The page also mentions the first 1 million text-to-speech characters free but does not say whether that renews, so it is not counted here.",
+      "last_verified": "2026-11-14",
+      "sources": [
+        { "url": "https://www.speechmatics.com/pricing", "fetched_at": "2026-11-14", "signal_type": "official_docs" }
+      ]
+    },
+    {
+      "id": "modal.starter-free-credit",
+      "provider": "Modal",
+      "name": "Modal Starter plan monthly free credit",
+      "kind": "cloud_credit",
+      "tier_type": "free",
+      "limit_rules": [
+        { "metric": "credit_usd", "value": 30, "window": "month", "reset": { "kind": "unknown" }, "scope": "account", "conditions": "Starter plan. The pricing page does not say whether a payment method is needed to sign up.", "published": true, "verified_at": "2026-11-14", "source_url": "https://modal.com/pricing", "signal_type": "official_docs" }
+      ],
+      "badges": [],
+      "notes": "The Starter plan block lists 100 containers and 10 GPU concurrency, 3 workspace seats and 1 TiB of free network egress per month. Scheduled and web functions are limited. The credit covers GPUs, CPUs and memory; usage beyond it is billed.",
+      "last_verified": "2026-11-14",
+      "sources": [
+        { "url": "https://modal.com/pricing", "fetched_at": "2026-11-14", "signal_type": "official_docs" }
       ]
     }
   ]

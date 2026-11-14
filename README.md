@@ -11,7 +11,7 @@ The repo so far (Step 1 + Step 2):
 | Part | Folder | Status |
 | --- | --- | --- |
 | JSON schemas for `badge`, `limit_rule`, `resource`, `catalog` | `packages/schema/` | ✅ Step 1 |
-| Seed catalog: 15 free resources, every limit with source link + date | `data/catalog/seed.json` | ✅ Step 1 (12 of 15 still rely on third-party snapshots) |
+| Seed catalog: 20 free resources, every limit with source link + date | `data/catalog/seed.json` | ✅ Step 1 (11 of 20 still rely on third-party snapshots) |
 | Local agent: free-aware router, usage meter, policy engine, CLI | `agent/` | ✅ Step 1, 41 tests |
 | Brand: design tokens + logos | `packages/brand/` | ✅ Step 2 |
 | Website (Astro, static) for Cloudflare Pages | `apps/web/` | ✅ Step 2, 9 tests |
@@ -154,7 +154,7 @@ When no provider can take a request, the router answers **HTTP 429** with `Retry
 
 - **No streaming** yet (`stream: true` returns 400).
 - **Only OpenAI-compatible endpoints** (Groq, Gemini, OpenRouter, Mistral, SambaNova, NVIDIA). The transport is pluggable (`transport.py`), so a LiteLLM-backed transport can be added for other providers.
-- **Catalog freshness:** 12 of 15 resources use third-party snapshots (dated Oct 2026, one May 2026). `validate-catalog` lists them. The freshness pipeline (later step) upgrades them to official sources.
+- **Catalog freshness:** 11 of 20 resources use third-party snapshots (dated Oct 2026, one May 2026). `validate-catalog` lists them. The freshness pipeline (later step) upgrades them to official sources.
 - **Model IDs** in `freemeans.example.yaml` (e.g. `gemini-3.8-flash`, `google/gemma-4-31b-it:free`) come from Oct 2026 sources. Check current IDs before use.
 - Token estimates for counting use ~4 characters per token. Provider headers, where available, override the estimate.
 - Not yet tested against the live provider APIs: this build environment has no access to them. It was tested end-to-end against a local mock that sends Groq's documented headers. Your first run with real keys is the live test.

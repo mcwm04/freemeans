@@ -16,7 +16,7 @@ SEED = REPO / "data" / "catalog" / "seed.json"
 def test_seed_catalog_is_valid_and_has_15_resources():
     data = json.loads(SEED.read_text())
     assert validate_catalog(data, SCHEMAS) == []
-    assert len(data["resources"]) == 15
+    assert len(data["resources"]) == 20
 
 
 def test_every_limit_has_evidence():

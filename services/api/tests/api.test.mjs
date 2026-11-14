@@ -46,7 +46,8 @@ test('catalog filters: kind, provider, q, safe_for and full records', async () =
   const app = createApp({ store: seedStore(seed), siteUrl: SITE });
   const ids = async (qs) => (await body(await call(app, `/catalog?${qs}`))).resources.map((r) => r.id);
 
-  assert.deepEqual(await ids('kind=speech_api'), ['groq.whisper-large-v3']);
+  assert.deepEqual((await ids('kind=speech_api')).sort(),
+    ['assemblyai.free-credits', 'deepgram.signup-credit', 'groq.whisper-large-v3', 'speechmatics.signup-credit']);
   assert.ok((await ids('provider=groq')).every((id) => id.startsWith('groq.')));
   assert.deepEqual(await ids('q=whisper'), ['groq.whisper-large-v3']);
 
