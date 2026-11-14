@@ -1,0 +1,65 @@
+{
+  "slug": "whale-girl",
+  "name": "whale_girl",
+  "url": "https://github.com/Banan1cee/whale_girl",
+  "tagline": "A Windows desktop chatbot that lets DeepSeek respond in WeChat groups.",
+  "description": "Whale Girl is a local‑first AI companion for WeChat that runs on Windows 10 or 11. It replies to @‑mentions and its name in group chats, remembers facts from private chats, and can send stickers, voice messages, and daily diary entries. The launcher provides a single control panel and exposes a local HTTP API at 127.0.0.1:8787. Users configure a model provider such as DeepSeek, Zhipu, or any OpenAI‑compatible endpoint, and optional local servers like Ollama. The installer bundles Node.js, Python 3.12 and the .NET runtime, requiring no extra downloads.",
+  "categories": [
+    "chat",
+    "local-ai"
+  ],
+  "tasks": [
+    "ask-questions",
+    "text-to-speech"
+  ],
+  "best_for": [
+    "automating WeChat group replies",
+    "keeping a personal AI memory of chats",
+    "sending stickers and voice replies in WeChat",
+    "generating a daily Markdown diary entry",
+    "providing web‑search results within chat"
+  ],
+  "platforms": [
+    "windows",
+    "api"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/Banan1cee/whale_girl",
+  "license": "AGPL-3.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Local‑first AI companion for WeChat, runs on Windows.",
+    "source_url": "https://github.com/Banan1cee/whale_girl",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "whale_girl",
+    "wikipedia_article": null,
+    "github_repo": "Banan1cee/whale_girl",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/banan1cee/whale_girl",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
