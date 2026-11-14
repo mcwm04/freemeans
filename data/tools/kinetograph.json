@@ -1,0 +1,66 @@
+{
+  "slug": "kinetograph",
+  "name": "kinetograph",
+  "url": "https://kinetograph.dev/",
+  "tagline": "Create videos from TypeScript or HTML code without a browser",
+  "description": "Kinetograph is an open‑source video engine that renders MP4 files from TypeScript, HTML, CSS, SVG, Canvas or WebGL code. It runs locally with Node, using the GPU (Metal, Vulkan, D3D12) or CPU and does not require a browser or cloud service. The npm package includes a CLI for rendering and a Studio editor with live preview, timeline and agent chat. Agents can write or fix project code, and the tool can be used on servers or personal computers. Licensed under Apache 2.0, it is free for any use, including commercial.",
+  "categories": [
+    "video",
+    "coding"
+  ],
+  "tasks": [
+    "text-to-video"
+  ],
+  "best_for": [
+    "Developers who want to generate programmatic videos",
+    "Teams building video assets via code",
+    "AI agents creating video content",
+    "Users needing offline rendering without cloud",
+    "Creators integrating video generation into CI pipelines"
+  ],
+  "platforms": [
+    "cli",
+    "windows",
+    "macos",
+    "linux"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/0xS4N4TG/kinetograph",
+  "license": "Apache-2.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": true,
+    "works_in_pk": null,
+    "notes": "Free and open source under Apache 2.0",
+    "source_url": "https://kinetograph.dev/",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "kinetograph",
+    "wikipedia_article": null,
+    "github_repo": "0xS4N4TG/kinetograph",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "kinetograph.dev",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
