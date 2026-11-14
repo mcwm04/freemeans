@@ -1,0 +1,70 @@
+{
+  "slug": "hob",
+  "name": "hob",
+  "url": "https://www.hob.chat/",
+  "tagline": "An easier way to use AI on your own computer.",
+  "description": "Hob is a free, open‑source desktop application that runs AI models locally on Mac, Windows and Linux computers. It lets users chat with the model, edit and analyze files such as spreadsheets, documents and PDFs, run code in a sandbox, draw charts, and connect to email, calendar and other apps. All processing stays on the user's machine, so chats and files are private and can be used offline. Hob automatically selects a suitable open‑weight model for the hardware and provides a graphical interface for working with local files without needing an internet connection or an account.",
+  "categories": [
+    "chat",
+    "productivity",
+    "local-ai"
+  ],
+  "tasks": [
+    "ask-questions",
+    "summarize-text",
+    "generate-code",
+    "fill-forms",
+    "analyze-data"
+  ],
+  "best_for": [
+    "Local AI chat without internet",
+    "Analyzing spreadsheets and data files",
+    "Editing documents and PDFs",
+    "Running code snippets safely",
+    "Integrating email and calendar for automation"
+  ],
+  "platforms": [
+    "macos",
+    "windows",
+    "linux"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/FrigadeHQ/hob",
+  "license": "MIT",
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://www.hob.chat/",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "hob",
+    "wikipedia_article": null,
+    "github_repo": "FrigadeHQ/hob",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "hob.chat",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
