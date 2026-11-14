@@ -1,0 +1,62 @@
+{
+  "slug": "wan777",
+  "name": "wan777",
+  "url": "https://huggingface.co/spaces/kulkas2pintu/wan777",
+  "tagline": "A Hugging Face Space hosting an agent named wan777",
+  "description": "The wan777 space on Hugging Face is listed under Agents and shows a like count of 1.48k. It is duplicated from r3gm/wan2-2-fp8da-aoti-preview and runs on Zero with a PRO option available. No further details about its functionality, pricing, or usage limits are provided on the page. This brief overview indicates the space serves as an agent but does not describe specific capabilities. Users can view the space to explore its interface and potentially interact with the agent, though details remain unspecified. The page also mentions a PRO tier and that it runs on Zero, but no pricing or free tier information is listed.",
+  "categories": [
+    "chat"
+  ],
+  "tasks": [
+    "ask-questions"
+  ],
+  "best_for": [
+    "exploring AI agents",
+    "testing Hugging Face spaces",
+    "learning about duplicated projects",
+    "checking agent performance",
+    "experimenting with Zero runtime"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": null,
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://huggingface.co/spaces/kulkas2pintu/wan777",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "wan777",
+    "wikipedia_article": null,
+    "github_repo": null,
+    "hf_id": "spaces/kulkas2pintu/wan777",
+    "producthunt_slug": null,
+    "hn_domain": null,
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
