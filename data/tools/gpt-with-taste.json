@@ -1,0 +1,69 @@
+{
+  "slug": "gpt-with-taste",
+  "name": "gpt-with-taste",
+  "url": "https://github.com/NB-Corp/gpt-with-taste",
+  "tagline": "System instructions and source-aware steering for GPT in Codex",
+  "description": "gpt-with-taste is an open-source repository that provides a behavioral recipe compiled into native instructions and event steering for various GPT hosts. It targets the GPT reasoning family, especially GPT-6.1 Sol and GPT-6 Astra, and works with Codex, Claude Code, Kiki, Pi, OMP, and DeepSeek harnesses. Developers install it via Node.js scripts, which add prompt files to the active Codex home and optionally enable hooks for multi‑turn work. The tool enables customized judgment, execution, collaboration, and visual craft in AI‑assisted coding, allowing users to tailor GPT behavior across supported environments without needing additional packages.",
+  "categories": [
+    "coding"
+  ],
+  "tasks": [
+    "generate-code",
+    "explain-code",
+    "debug-code",
+    "review-code"
+  ],
+  "best_for": [
+    "Developers integrating GPT models into coding environments",
+    "Teams using Codex Desktop for AI‑assisted coding",
+    "Projects needing custom prompt recipes for GPT",
+    "Users of Claude Code, Kiki, Pi, or DeepSeek harnesses",
+    "Developers who want to steer GPT behavior across multiple ho"
+  ],
+  "platforms": [
+    "self-hosted",
+    "cli",
+    "linux",
+    "macos",
+    "windows"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/NB-Corp/gpt-with-taste",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/NB-Corp/gpt-with-taste",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "gpt-with-taste",
+    "wikipedia_article": null,
+    "github_repo": "NB-Corp/gpt-with-taste",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/nb-corp/gpt-with-taste",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
