@@ -1,0 +1,66 @@
+{
+  "slug": "openamika",
+  "name": "OpenAmika",
+  "url": "https://mekahime.com/openamika",
+  "tagline": "An emotionally advanced AI waifu that runs locally for free",
+  "description": "OpenAmika is an AI companion that interacts through text and voice, offering emotional conversation and role‑play. It runs entirely on the user's computer, keeping data private, and includes features like 900 ms response speed, infinite memory, and smart‑home integration. The code is released under the MIT license and can be modified for personal use. While the core runs locally for free, a semi‑local mode can connect to external language‑model APIs that may incur a few dollars per month. Commercial use of the companion's art, voice, or model is prohibited, except for limited fan‑made merchandise and social‑media credit rules.",
+  "categories": [
+    "chat",
+    "voice"
+  ],
+  "tasks": [
+    "ask-questions",
+    "role-play-practice",
+    "text-to-speech"
+  ],
+  "best_for": [
+    "daily conversation and companionship",
+    "emotional support and venting",
+    "role‑play and character interaction",
+    "language practice with spoken feedback",
+    "controlling smart‑home devices"
+  ],
+  "platforms": [
+    "web",
+    "windows"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/zeekk0/OpenAmika",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": false,
+    "works_in_pk": null,
+    "notes": "Personal use only; commercial use of art, voice, Live2D model or weights is not allowed except limited merch and social‑media rules.",
+    "source_url": "https://mekahime.com/openamika",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "OpenAmika",
+    "wikipedia_article": null,
+    "github_repo": "zeekk0/OpenAmika",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "mekahime.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
