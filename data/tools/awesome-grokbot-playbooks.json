@@ -1,0 +1,65 @@
+{
+  "slug": "awesome-grokbot-playbooks",
+  "name": "awesome-grokbot-playbooks",
+  "url": "https://github.com/sit-in/awesome-grokbot-playbooks",
+  "tagline": "A curated collection of Grok Bot templates, routines and community resources",
+  "description": "The repository provides a Chinese‑first catalog of Grok Bot playbooks, including ready‑to‑run templates, routine scripts, and a curated list of community tutorials and articles. It organizes entries by scenario, input, steps, prompts and output, and marks each with verification status. Users can import bots from the template market, set up multi‑bot teams, and manage routine quota checks. The collection also links to SDKs, CLI tools and self‑hosting guides, helping developers and teams quickly adopt Grok Bot for automation, content creation and workflow orchestration.",
+  "categories": [
+    "productivity"
+  ],
+  "tasks": [
+    "build-ai-agents",
+    "automate-workflows",
+    "search-with-sources"
+  ],
+  "best_for": [
+    "Finding ready‑to‑use Grok Bot templates",
+    "Setting up multi‑bot teams",
+    "Running routine quota checks",
+    "Accessing curated Chinese AI resources",
+    "Exploring community tutorials and articles"
+  ],
+  "platforms": [
+    "web",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/sit-in/awesome-grokbot-playbooks",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/sit-in/awesome-grokbot-playbooks",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "awesome-grokbot-playbooks",
+    "wikipedia_article": null,
+    "github_repo": "sit-in/awesome-grokbot-playbooks",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/sit-in/awesome-grokbot-playbooks",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
