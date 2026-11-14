@@ -1,0 +1,62 @@
+{
+  "slug": "coreweave-bond-yield-tops-16-as-ai-credit-stress-r",
+  "name": "CoreWeave bond yield tops 16% as AI credit stress rises",
+  "url": "https://www.cnbc.com/2026/11/06/coreweave-bond-yield-tops-16percent-as-ai-credit-stress-rises.html",
+  "tagline": "CoreWeave's bond yield exceeds 16%, showing investor concern over AI infrastructure financing.",
+  "description": "The article reports that CoreWeave's 2032 bond with a 9.625% coupon has risen above a 16% yield, indicating heightened investor worry about funding the AI data‑center boom. It notes that credit default swaps for CoreWeave spiked above 1,289 basis points before easing to around 1,155. The piece also discusses broader market trends, including rising CDS for Nvidia, Broadcom and Amazon, and forecasts for AI‑related debt issuance through 2028. Analysts warn that higher financing costs could delay or reduce AI infrastructure projects.",
+  "categories": [
+    "business"
+  ],
+  "tasks": [
+    "summarize-text"
+  ],
+  "best_for": [
+    "investors tracking AI debt",
+    "analysts monitoring bond yields",
+    "finance students studying credit risk",
+    "journalists covering AI infrastructure financing",
+    "policymakers assessing data‑center funding"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": null,
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://www.cnbc.com/2026/11/06/coreweave-bond-yield-tops-16percent-as-ai-credit-stress-rises.html",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "CoreWeave bond yield tops 16% as AI credit stress rises",
+    "wikipedia_article": null,
+    "github_repo": null,
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "cnbc.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
