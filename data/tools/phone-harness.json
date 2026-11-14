@@ -1,0 +1,70 @@
+{
+  "slug": "phone-harness",
+  "name": "Phone Harness",
+  "url": "https://phone-harness.com/",
+  "tagline": "Control iPhone and Android devices from code via an API",
+  "description": "Phone Harness provides an API that lets software agents interact with real iPhones and Android phones. Agents can tap, type, scroll, and read screen content using vision OCR or the accessibility tree. The service offers shared Android emulators and cloud iPhones on a flat subscription. New users receive $5 of credit for Android usage. It supports live viewing, persistent login state, and unlimited concurrent devices. The platform is useful for developers building AI agents, automating mobile workflows, testing apps, and handling SMS or 2FA without installing apps on the device.",
+  "categories": [
+    "automation",
+    "app-builders"
+  ],
+  "tasks": [
+    "build-ai-agents",
+    "automate-workflows"
+  ],
+  "best_for": [
+    "Testing mobile applications",
+    "Running AI agents that need phone interaction",
+    "Automating SMS and two‑factor authentication flows",
+    "Gathering data from mobile app interfaces",
+    "Providing virtual phone numbers for agents"
+  ],
+  "platforms": [
+    "web",
+    "api"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/phone-harness/mcp",
+  "license": null,
+  "free_tier": {
+    "type": "credits",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Credit applies to Android emulators at 5¢ per minute",
+    "source_url": "https://phone-harness.com/",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": {
+    "cheapest_paid_usd": 0,
+    "period": "month",
+    "source_url": "https://phone-harness.com/",
+    "verified_at": "2026-11-12"
+  },
+  "signals": {
+    "trends_term": "Phone Harness",
+    "wikipedia_article": null,
+    "github_repo": "phone-harness/mcp",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "phone-harness.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
