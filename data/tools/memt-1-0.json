@@ -1,0 +1,67 @@
+{
+  "slug": "memt-1-0",
+  "name": "MemT-1.0",
+  "url": "https://github.com/MemTensor/MemT-1.0",
+  "tagline": "Memory-augmented language model with persistent local memory for long-context tasks",
+  "description": "MemT-1.0 is a memory foundation model that adds a persistent, dynamically evolving memory block to a language model. It combines a local memory matrix with a trainable hyper memory block, allowing the model to retain and use historical information without keeping the full context. The model is available in Nano and Flash sizes and can be run on a Linux server with NVIDIA CUDA using the provided Python client and SGLang server. It is intended for developers and researchers building AI agents, long‑horizon coding assistants, or studying memory‑augmented architectures.",
+  "categories": [
+    "model-apis",
+    "local-ai",
+    "research"
+  ],
+  "tasks": [
+    "generate-code",
+    "ask-questions"
+  ],
+  "best_for": [
+    "building AI agents with persistent memory",
+    "long‑context coding assistance",
+    "research on memory‑augmented models",
+    "deploying native memory models locally",
+    "experimenting with dynamic local memory"
+  ],
+  "platforms": [
+    "linux",
+    "api",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/MemTensor/MemT-1.0",
+  "license": null,
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/MemTensor/MemT-1.0",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "MemT-1.0",
+    "wikipedia_article": null,
+    "github_repo": "MemTensor/MemT-1.0",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/memtensor/memt-1.0",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
