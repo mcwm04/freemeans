@@ -1,0 +1,64 @@
+{
+  "slug": "llama-modchip",
+  "name": "llama-modchip",
+  "url": "https://github.com/synchopate/llama-modchip",
+  "tagline": "CPU inference engine for large language models and mixture-of-experts",
+  "description": "llama-modchip is an open‑source library that enables inference of very large language models on CPUs without GPUs. It supports 284 B DeepSeek‑V4‑Flash and 30 B mixture‑of‑experts models, using custom quantization formats such as Fractal‑64 and LUT‑VQ3‑64 to reduce memory bandwidth. The repository provides benchmarks, hardware class recommendations, and support for Linux, macOS (Metal) and Windows 11. It includes features like cache‑aware KV management, speculative decoding, and CPU‑only execution, making it suitable for developers and researchers who need to run high‑capacity models locally.",
+  "categories": [
+    "local-ai"
+  ],
+  "tasks": [
+    "run-llm-locally"
+  ],
+  "best_for": [
+    "Running large language models on CPU‑only hardware",
+    "Running mixture‑of‑experts models locally",
+    "Benchmarking model performance without GPUs",
+    "Developing AI agents on personal machines",
+    "Researching quantization and inference optimizations"
+  ],
+  "platforms": [
+    "linux",
+    "macos",
+    "windows"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/synchopate/llama-modchip",
+  "license": "Apache-2.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/synchopate/llama-modchip",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "llama-modchip",
+    "wikipedia_article": null,
+    "github_repo": "synchopate/llama-modchip",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/synchopate/llama-modchip",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
