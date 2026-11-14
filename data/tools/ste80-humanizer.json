@@ -1,0 +1,62 @@
+{
+  "slug": "ste80-humanizer",
+  "name": "STE80 Humanizer",
+  "url": "https://github.com/Dodaios/ste80-humanizer",
+  "tagline": "Rewrites AI-generated text to be clearer and closer to simplified technical English.",
+  "description": "STE80 Humanizer is an open‑source agent skill that rewrites AI‑written text to make it read like a careful human wrote it. It removes common AI tell phrases and restructures sentences toward the ASD‑STE100 controlled English style, aiming for about 80% of the way to full compliance. The tool is useful for developers, technical writers, and anyone who wants AI output to be more readable without changing its meaning. It works as a skill for Claude and Cursor agents and can be run locally from the GitHub repository.",
+  "categories": [
+    "writing"
+  ],
+  "tasks": [
+    "rewrite-text"
+  ],
+  "best_for": [
+    "cleaning up AI‑generated explanations",
+    "simplifying technical documentation",
+    "making chatbot responses more readable",
+    "adapting prose to simplified technical English",
+    "removing AI tell phrases from text"
+  ],
+  "platforms": [
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/Dodaios/ste80-humanizer",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/Dodaios/ste80-humanizer",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "STE80 Humanizer",
+    "wikipedia_article": null,
+    "github_repo": "Dodaios/ste80-humanizer",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/dodaios/ste80-humanizer",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
