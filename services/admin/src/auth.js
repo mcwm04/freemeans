@@ -38,6 +38,22 @@ export function readCookie(req, name) {
 export const cookie = (name, value, maxAge) =>
   `${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${maxAge}`;
 
+/** Per-sign-in CSRF token: HMAC of the session id, so it cannot be guessed or reused after sign-out. */
+export async function csrfToken(secret, sid) {
+  const key = await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const mac = await crypto.subtle.sign('HMAC', key, enc.encode(`csrf:${sid}`));
+  return [...new Uint8Array(mac)].map((b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+/** Constant-time string comparison. */
+export function safeEqual(a, b) {
+  const x = enc.encode(String(a));
+  const y = enc.encode(String(b));
+  let diff = x.length ^ y.length;
+  for (let i = 0; i < Math.max(x.length, y.length); i++) diff |= (x[i] ?? 0) ^ (y[i] ?? 0);
+  return diff === 0;
+}
+
 export const SESSION = 'fm_session';
 export const STATE = 'fm_oauth_state';
 export const SESSION_HOURS = 8;

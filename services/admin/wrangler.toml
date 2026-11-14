@@ -23,6 +23,7 @@ ALLOWED_GITHUB_USERS = "mcwm04"
 #   npx wrangler secret put GITHUB_CLIENT_ID      (GitHub OAuth App)
 #   npx wrangler secret put GITHUB_CLIENT_SECRET
 #   npx wrangler secret put SESSION_SECRET        (any random text, 32+ characters)
+#   npx wrangler secret put DEPLOY_HOOK_URL       (optional: Cloudflare deploy hook, enables "Rebuild now")
 
 [observability]
 enabled = true

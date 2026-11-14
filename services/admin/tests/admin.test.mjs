@@ -6,7 +6,8 @@ import { PGlite } from '@electric-sql/pglite';
 import { migrate } from '../../../db/scripts/lib.mjs';
 import { createAdmin } from '../src/app.js';
 import { queueStore } from '../src/db.js';
-import { seal, unseal, SESSION } from '../src/auth.js';
+import { accountStore } from '../src/accounts.js';
+import { seal, unseal, csrfToken, SESSION } from '../src/auth.js';
 import { checkTool, wordCount } from '../src/validate.js';
 
 const SECRET = 'x'.repeat(40);
@@ -21,10 +22,11 @@ const goodTool = (over = {}) => ({
   changelog: [{ date: '2026-11-10', field: 'listed', note: 'Listed in the directory' }], ...over,
 });
 
-async function setup({ users = ['mcwm04'], ghLogin = 'mcwm04', existing = [] } = {}) {
+async function setup({ users = ['mcwm04'], ghLogin = 'mcwm04', existing = [], role = 'owner', active = true } = {}) {
   const pg = new PGlite();
   await migrate(pg);
   const store = queueStore((t, p) => pg.query(t, p));
+  const accounts = accountStore((t, p) => pg.query(t, p));
   const commits = [];
   const github = (token) => ({
     user: async () => ({ login: ghLogin }),
@@ -33,18 +35,22 @@ async function setup({ users = ['mcwm04'], ghLogin = 'mcwm04', existing = [] } =
   });
   const oauth = { authorizeUrl: (state, cb) => `https://github.com/login/oauth/authorize?state=${state}&redirect_uri=${encodeURIComponent(cb)}`, exchange: async (code) => `tok-${code}` };
   const app = createAdmin({
-    store, oauth, github, sessionSecret: SECRET, adminUrl: ADMIN, allowedUsers: users, now: () => NOW,
+    store, accounts, oauth, github, sessionSecret: SECRET, adminUrl: ADMIN, allowedUsers: users, now: () => NOW,
     siteTools: async () => [{ slug: 'ollama', name: 'Ollama', url: 'https://ollama.com', verified_at: '2026-09-01' },
       { slug: 'comfyui', name: 'ComfyUI', url: 'https://www.comfy.org', verified_at: '2026-11-09' }],
   });
-  const session = await seal(SECRET, { login: 'mcwm04', token: 'gho_secret', exp: NOW.getTime() + 3_600_000 });
+  const user = (await pg.query(`INSERT INTO admin_users (github_login, role, active) VALUES ('mcwm04', $1, $2) RETURNING id`, [role, active])).rows[0];
+  const sid = crypto.randomUUID();
+  await pg.query(`INSERT INTO admin_sessions (id, user_id, expires_at) VALUES ($1, $2, now() + interval '1 hour')`, [sid, user.id]);
+  const csrf = await csrfToken(SECRET, sid);
+  const session = await seal(SECRET, { sid, token: 'gho_secret', exp: NOW.getTime() + 3_600_000 });
   const as = (path, init = {}) => app(new Request(`${ADMIN}${path}`, { ...init, headers: { cookie: `${SESSION}=${encodeURIComponent(session)}`, ...(init.headers || {}) } }));
-  const postForm = (path, fields, origin = ADMIN) => as(path, { method: 'POST', body: new URLSearchParams(fields).toString(), headers: { origin, 'content-type': 'application/x-www-form-urlencoded' } });
+  const postForm = (path, fields, origin = ADMIN) => as(path, { method: 'POST', body: new URLSearchParams({ _csrf: csrf, ...fields }).toString(), headers: { origin, 'content-type': 'application/x-www-form-urlencoded' } });
   const add = async (fields) => (await pg.query(
     `INSERT INTO tool_candidates (url, domain, source, name, status, priority, draft, flags, evidence) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING id`,
     [fields.url, fields.domain, fields.source ?? 'hn', fields.name ?? null, fields.status ?? 'drafted', fields.priority ?? 50,
       fields.draft ? JSON.stringify(fields.draft) : null, fields.flags ?? [], fields.evidence ? JSON.stringify(fields.evidence) : null])).rows[0].id;
-  return { app, as, postForm, add, pg, commits };
+  return { app, as, postForm, add, pg, commits, csrf, sid, user };
 }
 
 test('signed-out visitors are sent to GitHub sign-in with a state cookie', async () => {
@@ -66,19 +72,22 @@ async function callback(app, { tamper = false } = {}) {
 }
 
 test('the GitHub callback signs in allowed editors only, and checks the state', async () => {
-  const ok = await callback((await setup()).app);
+  const first = await setup();
+  await first.pg.query('DELETE FROM admin_users'); // first sign-in: the bootstrap list creates the owner
+  const ok = await callback(first.app);
   assert.equal(ok.status, 303);
   const sealed = decodeURIComponent(ok.headers.get('set-cookie').split(';')[0].split('=')[1]);
   const s = await unseal(SECRET, sealed, NOW.getTime());
-  assert.equal(s.login, 'mcwm04');
+  assert.match(s.sid, /^[0-9a-f-]{36}$/);
   assert.equal(s.token, 'tok-abc');
+  assert.equal((await first.pg.query(`SELECT role FROM admin_users WHERE github_login = 'mcwm04'`)).rows[0].role, 'owner');
   assert.doesNotMatch(ok.headers.get('set-cookie'), /tok-abc/, 'token is encrypted in the cookie');
   assert.equal((await callback((await setup()).app, { tamper: true })).status, 400);
   assert.equal((await callback((await setup({ ghLogin: 'stranger' })).app)).status, 403);
 });
 
-test('a session for a user who is no longer allowed is refused', async () => {
-  const { as } = await setup({ users: ['someone-else'] });
+test('a session for a deactivated user is refused', async () => {
+  const { as } = await setup({ active: false });
   assert.equal((await as('/')).status, 303);
 });
 
@@ -87,14 +96,16 @@ test('queue lists candidates (drafted first), escapes crawled text, shows stale 
   await add({ url: 'https://evil.ai/', domain: 'evil.ai', name: '<script>alert(1)</script>', status: 'needs_manual', priority: 90 });
   await add({ url: 'https://voicekit.ai/', domain: 'voicekit.ai', draft: goodTool(), priority: 10 });
   await pg.query(`INSERT INTO job_runs (job, ok) VALUES ('crawler', true)`);
-  const res = await as('/');
+  const res = await as('/queue');
   const body = await res.text();
   assert.equal(res.status, 200);
   assert.ok(!body.includes('<script>alert(1)'), 'crawled names are escaped');
   assert.ok(body.includes('&lt;script&gt;alert(1)&lt;/script&gt;'));
   assert.ok(body.indexOf('VoiceKit') < body.indexOf('&lt;script&gt;'), 'drafted before needs manual');
-  assert.match(body, /Ollama<\/a> <small>checked 2026-09-01/);
-  assert.doesNotMatch(body, /ComfyUI<\/a> <small>checked/);
+  const home = await (await as('/')).text();
+  assert.match(home, /Ollama<\/a> <small>checked 2026-09-01/);
+  assert.doesNotMatch(home, /ComfyUI<\/a> <small>checked/);
+  assert.match(home, /crawler<\/td><td>0 h ago<\/td><td>OK/);
   assert.match(res.headers.get('content-security-policy'), /default-src 'none'/);
 });
 
@@ -141,9 +152,9 @@ test('approve refuses an existing file or an already listed site', async () => {
 });
 
 test('form posts: same-origin browsers that send Origin null are accepted, cross-site ones are not', async () => {
-  const { as, add } = await setup();
+  const { as, add, csrf } = await setup();
   const id = await add({ url: 'https://voicekit.ai/', domain: 'voicekit.ai', draft: goodTool() });
-  const post = (headers) => as(`/c/${id}/reject`, { method: 'POST', body: 'reason=duplicate', headers: { 'content-type': 'application/x-www-form-urlencoded', ...headers } });
+  const post = (headers) => as(`/c/${id}/reject`, { method: 'POST', body: `_csrf=${csrf}&reason=duplicate`, headers: { 'content-type': 'application/x-www-form-urlencoded', ...headers } });
   assert.equal((await post({ origin: 'null', 'sec-fetch-site': 'cross-site' })).status, 403, 'sandboxed cross-site form');
   assert.equal((await post({})).status, 403, 'no Origin and no Fetch Metadata');
   assert.equal((await post({ origin: 'null', 'sec-fetch-site': 'same-origin' })).status, 303, 'browser with no-referrer sends null');

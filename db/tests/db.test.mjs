@@ -16,12 +16,13 @@ async function freshDb() {
 
 test('migration creates every table and is idempotent', async () => {
   const db = await freshDb();
-  assert.deepEqual(await migrate(db), ['001_init.sql', '002_directory.sql', '003_review_queue.sql', '004_eligibility.sql', '005_learning.sql']);
+  assert.deepEqual(await migrate(db), ['001_init.sql', '002_directory.sql', '003_review_queue.sql', '004_eligibility.sql', '005_learning.sql', '006_admin_accounts.sql', '007_review_notes.sql', '008_admin_settings.sql']);
   assert.deepEqual(await migrate(db), []);
   const { rows } = await db.query(
     `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' AND table_type = 'BASE TABLE' ORDER BY table_name`,
   );
   assert.deepEqual(rows.map((r) => r.table_name), [
+    'admin_audit', 'admin_login_failures', 'admin_sessions', 'admin_settings', 'admin_users',
     'badges', 'catalog_versions', 'job_runs', 'limit_rules', 'resources', 'schema_migrations',
     'signal_backfills', 'signal_snapshots', 'sources', 'sponsorships', 'tool_candidates',
     'tool_clicks_daily', 'trending_scores', 'vendor_claims', 'waitlist', 'watch_phrases',
@@ -118,7 +119,7 @@ test('002 can run on a database that already has 001 applied (the live Neon case
   copyFileSync(new URL('../migrations/001_init.sql', import.meta.url), join(dir001, '001_init.sql'));
   assert.deepEqual(await migrate(db, dir001), ['001_init.sql']);
   await db.query(`INSERT INTO waitlist (email, consent_at) VALUES ('old@example.com', now())`);
-  assert.deepEqual(await migrate(db), ['002_directory.sql', '003_review_queue.sql', '004_eligibility.sql', '005_learning.sql']);
+  assert.deepEqual(await migrate(db), ['002_directory.sql', '003_review_queue.sql', '004_eligibility.sql', '005_learning.sql', '006_admin_accounts.sql', '007_review_notes.sql', '008_admin_settings.sql']);
   const { rows } = await db.query(`SELECT lists FROM waitlist WHERE email = 'old@example.com'`);
   assert.deepEqual(rows[0].lists, ['waitlist']);
 });
@@ -162,7 +163,7 @@ test('004 runs on a database that already has 001, 002 and 003 with the live see
   await db.query(`INSERT INTO catalog_versions (version, resource_count) VALUES ('old', 1)`);
   await db.query(`INSERT INTO resources (id, provider, name, kind, tier_type, last_verified, record, catalog_version)
                   VALUES ('groq.x', 'Groq', 'X', 'llm_api', 'free', '2026-11-01', '{}', 'old')`);
-  assert.deepEqual(await migrate(db), ['004_eligibility.sql', '005_learning.sql']);
+  assert.deepEqual(await migrate(db), ['004_eligibility.sql', '005_learning.sql', '006_admin_accounts.sql', '007_review_notes.sql', '008_admin_settings.sql']);
   const { rows } = await db.query(`SELECT status, audiences, country_mode, countries FROM resources WHERE id = 'groq.x'`);
   assert.deepEqual(rows[0], { status: 'active', audiences: [], country_mode: 'global', countries: [] });
 });
@@ -296,7 +297,7 @@ test('005 runs on a database that already has 001 to 004 and keeps existing badg
                   VALUES ('google.x', 'Google', 'X', 'ai_subscription', 'trial', '2026-11-01', '{}', 'old')`);
   await db.query(`INSERT INTO badges (resource_id, type, source_url) VALUES ('google.x', 'auto_renews_paid', 'https://example.com')`);
   await assert.rejects(db.query(`INSERT INTO badges (resource_id, type, source_url) VALUES ('google.x', 'paid_certificate', 'https://example.com')`));
-  assert.deepEqual(await migrate(db), ['005_learning.sql']);
+  assert.deepEqual(await migrate(db), ['005_learning.sql', '006_admin_accounts.sql', '007_review_notes.sql', '008_admin_settings.sql']);
   await db.query(`INSERT INTO badges (resource_id, type, source_url) VALUES ('google.x', 'paid_certificate', 'https://example.com')`);
   const { rows } = await db.query(`SELECT type FROM badges WHERE resource_id = 'google.x' ORDER BY type`);
   assert.deepEqual(rows.map((r) => r.type), ['auto_renews_paid', 'paid_certificate']);

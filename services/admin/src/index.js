@@ -3,6 +3,7 @@
 import { createAdmin } from './app.js';
 import { githubOAuth } from './auth.js';
 import { queueStore } from './db.js';
+import { accountStore } from './accounts.js';
 
 let cache;
 let tools = { at: 0, list: [] };
@@ -23,8 +24,10 @@ async function appFor(env) {
   const { neon } = await import('@neondatabase/serverless');
   const sql = neon(env.DATABASE_URL);
   const siteUrl = env.SITE_URL || 'https://freemeans.com';
+  const query = async (text, params) => ({ rows: await sql.query(text, params) });
   cache = createAdmin({
-    store: queueStore(async (text, params) => ({ rows: await sql.query(text, params) })),
+    store: queueStore(query),
+    accounts: accountStore(query),
     oauth: githubOAuth({ clientId: env.GITHUB_CLIENT_ID, clientSecret: env.GITHUB_CLIENT_SECRET }),
     sessionSecret: env.SESSION_SECRET,
     adminUrl: env.ADMIN_URL || 'https://admin.freemeans.com',
@@ -32,6 +35,11 @@ async function appFor(env) {
     repo: env.GITHUB_REPO || 'mcwm04/freemeans',
     siteUrl,
     siteTools: () => siteTools(siteUrl),
+    // Optional: the Cloudflare deploy hook for the "Rebuild now" button.
+    rebuild: env.DEPLOY_HOOK_URL ? async () => {
+      const res = await fetch(env.DEPLOY_HOOK_URL, { method: 'POST' });
+      if (!res.ok) throw new Error(`the deploy hook answered ${res.status}`);
+    } : null,
   });
   return cache;
 }
