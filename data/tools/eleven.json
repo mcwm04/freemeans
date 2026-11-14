@@ -1,0 +1,66 @@
+{
+  "slug": "eleven",
+  "name": "Eleven",
+  "url": "https://eleven.chizi.app/",
+  "tagline": "Decompile and explore Mac, Windows, Linux, Android apps and GPU shaders locally.",
+  "description": "Eleven lets users open and decompile binaries such as macOS, iOS, Windows, Linux programs, Android apps, GPU shaders and machine‑learning models. It shows each function in pseudocode, assembly, control‑flow graph and hex, and integrates with AI agents like Claude, Codex, Gemini, Cursor, OpenCode and Aster for explanations, patches and chat. Users can add notes, rename symbols, apply byte patches, compare builds, and debug with lldb. The tool runs locally on macOS (Apple silicon), Windows (x64) and Linux (x64) and works offline after initial downloads. It is aimed at security researchers, developers reviewing dependencies, and anyone curious about how an application works.",
+  "categories": [
+    "coding"
+  ],
+  "tasks": [
+    "explain-code",
+    "debug-code",
+    "review-code"
+  ],
+  "best_for": [
+    "Analyzing unknown binaries",
+    "Checking third‑party library code",
+    "Learning how an app works",
+    "Patching functions safely",
+    "Debugging compiled programs"
+  ],
+  "platforms": [
+    "macos",
+    "windows",
+    "linux"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/Zfinix/eleven",
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://eleven.chizi.app/",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "Eleven",
+    "wikipedia_article": null,
+    "github_repo": "Zfinix/eleven",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "chizi.app",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
