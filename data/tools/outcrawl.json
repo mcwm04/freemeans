@@ -1,0 +1,79 @@
+{
+  "slug": "outcrawl",
+  "name": "Outcrawl",
+  "url": "https://outcrawl.ai/",
+  "tagline": "Web infrastructure for AI agents with free monthly credits",
+  "description": "Outcrawl provides web infrastructure for AI agents, offering five tools—scrape, crawl, search, browsers, and agents—through a single API. Users can turn any web page into clean markdown or JSON, crawl entire sites, search the web with results already read, run real browsers in the cloud, or describe a task in plain English for an agent to complete. The service supplies 1,000 free credits each month, enough for roughly 1,000 pages or 16 hours of browser time, without requiring a payment card. Credits are billed per page or per minute of browser time, and higher plans reduce the cost per credit.",
+  "categories": [
+    "model-apis",
+    "automation",
+    "data"
+  ],
+  "tasks": [
+    "scrape-web-data",
+    "search-with-sources",
+    "automate-workflows",
+    "build-ai-agents",
+    "llm-api"
+  ],
+  "best_for": [
+    "Turning web pages into clean structured data",
+    "Crawling entire websites for indexing",
+    "Running real browsers in the cloud for automation",
+    "Giving agents plain‑English tasks to execute on the web",
+    "Monitoring pages for changes and notifying services"
+  ],
+  "platforms": [
+    "web",
+    "api",
+    "cli"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/outcrawlai/scout",
+  "license": null,
+  "free_tier": {
+    "type": "credits",
+    "quota": {
+      "value": 1000,
+      "unit": "credits",
+      "period": "month"
+    },
+    "trial_days": null,
+    "card_required": false,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "about 1,000 pages or 16 hours of browser time",
+    "source_url": "https://outcrawl.ai/",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": {
+    "cheapest_paid_usd": 49,
+    "period": "month",
+    "source_url": "https://outcrawl.ai/pricing",
+    "verified_at": "2026-11-12"
+  },
+  "signals": {
+    "trends_term": "Outcrawl",
+    "wikipedia_article": null,
+    "github_repo": "outcrawlai/scout",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "outcrawl.ai",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
