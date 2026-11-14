@@ -1,0 +1,62 @@
+{
+  "slug": "this-dx7-cartridge-does-not-exist",
+  "name": "This DX7 Cartridge Does Not Exist",
+  "url": "https://synthanatomy.com/2026/11/ai-is-turning-apples-app-review-process-into-a-nightmare-for-developers.html",
+  "tagline": "AI generates endless DX7 patches for free",
+  "description": "This DX7 Cartridge Does Not Exist is a web service that creates a complete DX7 cartridge containing 32 new FM synthesis sounds with a single click. An artificial‑intelligence model trained on hand‑crafted DX7 patches generates the sounds on the fly. The generated cartridge files work with the Dexed synthesizer on Windows, macOS and Linux, as well as with Rockrelay Synth FM on Android. It is aimed at musicians, producers, and sound designers who need fresh DX7 presets without manually programming them.",
+  "categories": [
+    "music"
+  ],
+  "tasks": [
+    "generate-sound-effects"
+  ],
+  "best_for": [
+    "musicians looking for new DX7 presets",
+    "producers needing fresh FM sounds",
+    "DX7 enthusiasts wanting AI‑generated patches",
+    "Dexed synth users seeking compatible cartridges",
+    "sound designers exploring AI‑generated FM tones"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": null,
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://synthanatomy.com/2020/06/a-website-artificial-intelligence-will-help-you-get-infinite-dx7-cartridges.html",
+    "verified_at": "2026-11-14"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "This DX7 Cartridge Does Not Exist",
+    "wikipedia_article": null,
+    "github_repo": null,
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "synthanatomy.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-14",
+  "changelog": [
+    {
+      "date": "2026-11-14",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
