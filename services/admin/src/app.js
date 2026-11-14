@@ -133,15 +133,11 @@ export function createAdmin({
     if (form.get('action') === 'reject') {
       const reason = form.get('reason');
       if (!REASONS.has(reason)) return queue(s, { ok: false, html: 'Pick a reason.' });
-      let done = 0;
-      for (const id of ids.slice(0, MAX_BULK_REJECT)) {
-        const cand = await store.get(id);
-        if (!cand || !OPEN.has(cand.status)) continue;
-        await store.reject(id, reason, s.login);
-        await accounts.audit({ actor: s, action: 'queue.reject', targetType: 'candidate', targetId: id, detail: { reason, bulk: true }, ip });
-        done++;
-      }
-      return queue(s, { ok: true, html: `Rejected ${done}. The crawler will not suggest those sites again.` });
+      // Two queries however many are selected: Cloudflare's free plan allows 50 subrequests per request.
+      const closed = await store.rejectMany(ids.slice(0, MAX_BULK_REJECT), reason, s.login);
+      if (closed.length) await accounts.auditMany({ actor: s, action: 'queue.reject', targetType: 'candidate', items: closed.map((id) => ({ id, detail: { reason, bulk: true } })), ip });
+      const extra = ids.length > MAX_BULK_REJECT ? ` Only the first ${MAX_BULK_REJECT} were handled.` : '';
+      return queue(s, { ok: true, html: `Rejected ${closed.length}. The crawler will not suggest those sites again.${extra}` });
     }
     if (form.get('action') !== 'approve') return queue(s, { ok: false, html: 'Unknown action.' });
     if (form.get('confirm') !== '1') return queue(s, { ok: false, html: 'Tick "Yes, publish" to approve drafts.' });
@@ -149,8 +145,13 @@ export function createAdmin({
     const listedTools = await siteTools().catch(() => []);
     const published = [];
     const skipped = [];
-    for (const id of ids.slice(0, MAX_BULK_APPROVE)) {
-      const cand = await store.get(id);
+    // One query reads every candidate and one writes every result, so the request makes about
+    // 2 GitHub calls per published tool plus a fixed handful of others (free plan limit: 50).
+    const wanted = ids.slice(0, MAX_BULK_APPROVE);
+    const found = new Map((await store.getMany(wanted)).map((c) => [c.id, c]));
+    const done = [];
+    for (const id of wanted) {
+      const cand = found.get(id);
       const label = cand ? (cand.draft?.name || cand.domain) : `#${id}`;
       if (!cand || !OPEN.has(cand.status) || !cand.draft) { skipped.push(`${label}: no draft to publish`); continue; }
       const tool = cand.draft;
@@ -163,12 +164,15 @@ export function createAdmin({
         if (dup) { skipped.push(`${label}: already listed as ${dup.name}`); continue; }
         const { commitUrl } = await gh.createFile(path, JSON.stringify(ordered(tool), null, 2) + '\n',
           `Add tool: ${tool.name}\n\nApproved in the editor console by @${s.login} (candidate ${id}, source: ${cand.source}, bulk).`);
-        await store.approve(id, tool.slug, s.login, tool);
-        await accounts.audit({ actor: s, action: 'queue.approve', targetType: 'candidate', targetId: id, detail: { slug: tool.slug, name: tool.name, commit: commitUrl || null, bulk: true }, ip });
+        done.push({ id, slug: tool.slug, draft: tool, detail: { slug: tool.slug, name: tool.name, commit: commitUrl || null, bulk: true } });
         published.push(tool.name);
       } catch (e) {
         skipped.push(`${label}: ${e.message}`);
       }
+    }
+    if (done.length) {
+      await store.approveMany(done, s.login);
+      await accounts.auditMany({ actor: s, action: 'queue.approve', targetType: 'candidate', items: done.map((d) => ({ id: d.id, detail: d.detail })), ip });
     }
     const extra = ids.length > MAX_BULK_APPROVE ? ` Only the first ${MAX_BULK_APPROVE} were tried.` : '';
     return queue(s, {
