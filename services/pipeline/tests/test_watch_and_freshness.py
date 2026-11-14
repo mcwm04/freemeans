@@ -5,7 +5,7 @@ from pathlib import Path
 from source_check import __main__ as cli
 from source_check.check import Page, check_catalog, summary
 from source_check.extract import find_phrase, page_text
-from source_check.freshness import offers_to_recheck
+from source_check.freshness import offers_to_recheck, offers_without_watch
 from source_check.report import markdown, record
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -117,7 +117,7 @@ def test_cli_checks_eligibility_watch_phrases_and_writes_the_recheck_count(tmp_p
     elig.write_text(json.dumps({"version": "e", "resources": [gone, ended, offer("z.unverified", status="unverified")]}))
     gh = tmp_path / "gh"
     monkeypatch.setattr(cli, "check_catalog", lambda c: check_catalog(c, fetch=pages({URL: "<p>nothing here</p>" + "<p>filler</p>" * 50}), allowed=allow_all, pause=0))
-    assert cli.main(["--catalog", str(seed), "--tools", "", "--eligibility", str(elig), "--out-dir", str(tmp_path / "out"), "--date", "2026-11-11", "--github-output", str(gh)]) == 0
+    assert cli.main(["--catalog", str(seed), "--tools", "", "--eligibility", str(elig), "--learning", "", "--out-dir", str(tmp_path / "out"), "--date", "2026-11-11", "--github-output", str(gh)]) == 0
     out = gh.read_text()
     assert "changes=true" in out and "missing=2" in out, "ended offers are not watched"
     assert "recheck=1" in out
@@ -132,3 +132,70 @@ def test_real_eligibility_file_loads_and_every_watch_url_is_a_listed_source():
         for w in r.get("watch", []):
             assert w["source_url"] in urls, r["id"]
     assert offers_to_recheck(data["resources"], "2026-11-11"), "the unverified offers should be listed"
+
+
+# --- learning.json and the "no watch phrase" list (L5) ------------------------------------
+
+def course(rid="demo.course", **kw):
+    r = offer(rid, **kw)
+    r["kind"] = "course"
+    r["learning"] = {"format": "self_paced", "certificate": "free"}
+    return r
+
+
+def test_offers_without_watch_lists_live_offers_with_no_phrase_only():
+    watched = offer("a.watched")
+    bare = offer("b.bare", watch=())
+    unver = offer("c.unverified", watch=(), status="unverified")
+    ended = offer("d.ended", watch=(), status="ended")
+    api_tier = {"id": "e.api", "limit_rules": []}
+    out = offers_without_watch([watched, bare, unver, ended, api_tier])
+    assert [u.resource_id for u in out] == ["b.bare"]
+    assert out[0].file == "data/catalog/eligibility.json"
+
+
+def test_report_lists_unwatched_offers_in_a_collapsed_block():
+    res = run([offer()], "<p>December 31, 2026</p>" + "<p>filler</p>" * 50)
+    un = offers_without_watch([offer("b.bare", watch=(), source_file="data/catalog/learning.json")])
+    md = markdown(res, "2026-11-13", "t", [], un)
+    assert "Offers with no watch phrase | 1" in md
+    assert "<details><summary>1 offers and courses have no watch phrase</summary>" in md
+    assert "`b.bare`" in md and "File: `data/catalog/learning.json`" in md and "</details>" in md
+    assert "no watch phrase" not in markdown(res, "2026-11-13", "t", [], [])
+    assert json.loads(record(res, "2026-11-13", "t", [], un))["unwatched"][0]["resource_id"] == "b.bare"
+
+
+def test_cli_reads_learning_json_watch_phrases_recheck_and_unwatched(tmp_path, monkeypatch):
+    seed = tmp_path / "seed.json"
+    seed.write_text(json.dumps({"version": "s", "resources": []}))
+    learning = tmp_path / "learning.json"
+    gone = course("x.gone")
+    bare = course("y.bare", watch=())
+    unver = course("z.unverified", status="unverified", watch=())
+    learning.write_text(json.dumps({"version": "l", "resources": [gone, bare, unver]}))
+    gh = tmp_path / "gh"
+    monkeypatch.setattr(cli, "check_catalog", lambda c: check_catalog(c, fetch=pages({URL: "<p>nothing here</p>" + "<p>filler</p>" * 50}), allowed=allow_all, pause=0))
+    assert cli.main(["--catalog", str(seed), "--tools", "", "--eligibility", "", "--learning", str(learning), "--out-dir", str(tmp_path / "out"),
+                     "--date", "2026-11-13", "--github-output", str(gh)]) == 0
+    out = gh.read_text()
+    assert "changes=true" in out and "missing=1" in out, "the course's watch phrase is gone from its page"
+    assert "recheck=1" in out, "the unverified course is on the re-check list"
+    assert "unwatched=1" in out, "only the live course without a phrase"
+    latest = json.loads((tmp_path / "out/latest.json").read_text())
+    assert {r["resource_id"] for r in latest["results"]} == {"x.gone"}
+    assert latest["unwatched"][0]["resource_id"] == "y.bare" and latest["unwatched"][0]["file"] == "data/catalog/learning.json"
+    assert "File: `data/catalog/learning.json`" in (tmp_path / "out/latest.md").read_text()
+
+
+def test_real_learning_file_loads_with_sources_for_every_watch_phrase():
+    data = json.loads((ROOT / "data/catalog/learning.json").read_text(encoding="utf-8"))
+    watched = 0
+    for r in data["resources"]:
+        urls = {s["url"] for s in r["sources"]}
+        for w in r.get("watch", []):
+            assert w["source_url"] in urls, r["id"]
+            watched += 1
+    assert watched >= 6
+    recheck = offers_to_recheck(data["resources"], "2026-11-13")
+    assert [x.resource_id for x in recheck] == ["vu.netacad"], "only the unverified course needs a hand check today"
+    assert {u.resource_id for u in offers_without_watch(data["resources"])} >= {"cisco.netacad-free", "freecodecamp.certifications", "kaggle.learn"}

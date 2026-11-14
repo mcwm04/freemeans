@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 from .check import check_catalog, summary
-from .freshness import offers_to_recheck
+from .freshness import offers_to_recheck, offers_without_watch
 from .report import markdown, record
 from .tools import tools_as_resources
 
@@ -24,6 +24,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--out-dir", default="../../data/source-checks")
     p.add_argument("--tools", default="../../data/tools", help="directory tool files (M3); '' to skip")
     p.add_argument("--eligibility", default="../../data/catalog/eligibility.json", help="eligibility offers (watch phrases, re-check list); '' to skip")
+    p.add_argument("--learning", default="../../data/catalog/learning.json", help="free courses and certifications (watch phrases, re-check list); '' to skip")
     p.add_argument("--date", default=dt.date.today().isoformat())
     p.add_argument("--github-output", default=os.environ.get("GITHUB_OUTPUT"))
     args = p.parse_args(argv)
@@ -32,22 +33,24 @@ def main(argv: list[str] | None = None) -> int:
     if args.tools:
         catalog = {**catalog, "resources": catalog["resources"] + tools_as_resources(Path(args.tools))}
     offers: list[dict] = []
-    if args.eligibility and Path(args.eligibility).is_file():
-        elig = json.loads(Path(args.eligibility).read_text(encoding="utf-8"))
-        offers = [{**r, "source_file": "data/catalog/eligibility.json"} for r in elig["resources"]]
-        # Ended offers are kept for the Myths page; nobody needs their pages watched.
-        catalog = {**catalog, "resources": catalog["resources"] + [r for r in offers if r.get("status") != "ended"]}
+    for arg, rel in ((args.eligibility, "data/catalog/eligibility.json"), (args.learning, "data/catalog/learning.json")):
+        if arg and Path(arg).is_file():
+            data = json.loads(Path(arg).read_text(encoding="utf-8"))
+            offers += [{**r, "source_file": rel} for r in data["resources"]]
+    # Ended offers are kept for the Myths page; nobody needs their pages watched.
+    catalog = {**catalog, "resources": catalog["resources"] + [r for r in offers if r.get("status") != "ended"]}
     recheck = offers_to_recheck(offers, args.date)
+    unwatched = offers_without_watch(offers)
     results = check_catalog(catalog)
     s = summary(results)
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
 
-    report = markdown(results, args.date, catalog.get("version", "?"), recheck)
+    report = markdown(results, args.date, catalog.get("version", "?"), recheck, unwatched)
     changed = s.get("missing", 0) > 0
     # The latest run is always written (useful as a CI artifact); the dated report only when
     # something needs review, so the repo history shows exactly the runs that mattered.
-    (out / "latest.json").write_text(record(results, args.date, catalog.get("version", "?"), recheck), encoding="utf-8")
+    (out / "latest.json").write_text(record(results, args.date, catalog.get("version", "?"), recheck, unwatched), encoding="utf-8")
     (out / "latest.md").write_text(report, encoding="utf-8")
     if changed:
         (out / f"{args.date}.md").write_text(report, encoding="utf-8")
@@ -58,6 +61,7 @@ def main(argv: list[str] | None = None) -> int:
             fh.write(f"changes={'true' if changed else 'false'}\n")
             fh.write(f"missing={s.get('missing', 0)}\n")
             fh.write(f"recheck={len(recheck)}\n")
+            fh.write(f"unwatched={len(unwatched)}\n")
             fh.write(f"report={(out / (args.date + '.md') if changed else out / 'latest.md').resolve()}\n")
     return 0
 
