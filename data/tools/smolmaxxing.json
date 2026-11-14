@@ -1,0 +1,67 @@
+{
+  "slug": "smolmaxxing",
+  "name": "smolmaxxing",
+  "url": "https://hyperion-ai.com/products/smolmaxxing",
+  "tagline": "Run the biggest language model on the smallest hardware.",
+  "description": "smolmaxxing is an engineering project that patches llama.cpp to let low‑power devices such as TV boxes, old tablets, single‑board computers and phones run large language models. It uses custom kernels, memory‑efficient formats and streams model weights from flash, enabling 8 B to 35 B parameter models to operate with as little as 1 GB of RAM. The tool provides ready‑made model files on Hugging Face and scripts to build larger models on‑device. It is aimed at developers and hobbyists who want to experiment with large models on constrained hardware without relying on cloud services.",
+  "categories": [
+    "local-ai"
+  ],
+  "tasks": [
+    "ask-questions",
+    "generate-code",
+    "explain-code"
+  ],
+  "best_for": [
+    "Running large language models on TV boxes",
+    "Using old tablets for AI chat",
+    "Deploying models on single‑board computers",
+    "Testing mixture‑of‑experts models on phones",
+    "Developing custom kernels for ARM devices"
+  ],
+  "platforms": [
+    "android",
+    "ios",
+    "linux",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/hyperionaidev/smolmaxxing",
+  "license": null,
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://hyperion-ai.com/products/smolmaxxing",
+    "verified_at": "2026-11-14"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "smolmaxxing",
+    "wikipedia_article": null,
+    "github_repo": "hyperionaidev/smolmaxxing",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "hyperion-ai.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-14",
+  "changelog": [
+    {
+      "date": "2026-11-14",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
