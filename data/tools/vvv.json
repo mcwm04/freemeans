@@ -1,0 +1,65 @@
+{
+  "slug": "vvv",
+  "name": "vvv",
+  "url": "https://vibevision.video/",
+  "tagline": "Create video templates that can be reused with different photos and copy",
+  "description": "Vibe Vision Video provides a skill that agents like Claude Code, Codex, Cursor and others can install to generate short videos from reusable templates. Users select a template (wedding, comedy, doodle, etc.), supply photos, names, dates, copy and music, and the skill measures the reference video, rebuilds it with the new assets, checks timing and format, and returns a rendered video and an editable project. A hosted MCP server lets any client browse templates, fetch packages and guides without an account. Community members can also share their own templates. The tool is aimed at developers, video creators and anyone who wants to automate personalized video production.",
+  "categories": [
+    "video"
+  ],
+  "tasks": [
+    "text-to-video",
+    "edit-videos"
+  ],
+  "best_for": [
+    "Creating wedding highlight videos",
+    "Generating short social media clips",
+    "Customizing video templates with personal photos",
+    "Automating video production for AI agents",
+    "Sharing community video templates"
+  ],
+  "platforms": [
+    "web",
+    "api",
+    "cli"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/actionow-ai/vvv",
+  "license": "MIT",
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "The hosted MCP server is free with no account required.",
+    "source_url": "https://vibevision.video/",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "vvv",
+    "wikipedia_article": null,
+    "github_repo": "actionow-ai/vvv",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "vibevision.video",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
