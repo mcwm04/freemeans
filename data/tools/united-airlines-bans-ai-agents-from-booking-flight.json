@@ -1,0 +1,62 @@
+{
+  "slug": "united-airlines-bans-ai-agents-from-booking-flight",
+  "name": "United Airlines bans AI agents from booking flights",
+  "url": "https://www.cbsnews.com/news/united-airlines-bans-ai-agents-booking-flights/",
+  "tagline": "United Airlines blocks AI assistants from making flight reservations",
+  "description": "United Airlines announced it will prohibit personal AI agents from booking flights or performing other actions such as check‑in on behalf of travelers, citing security risks and possible violations of federal rules. The airline says sharing account credentials with third‑party AI assistants could expose sensitive information and lead to unintended purchases or changes to MileagePlus miles. United also warns that AI‑driven check‑in could breach regulations requiring in‑person luggage verification. The policy restricts access within United’s digital platforms and through travel agencies, directing customers to use United’s own website, mobile app, or approved aggregators like Kayak and Google Flights. Other carriers are taking different approaches, with some allowing AI access to flight inventory.",
+  "categories": [
+    "business"
+  ],
+  "tasks": [
+    "ask-questions"
+  ],
+  "best_for": [
+    "travelers checking airline booking policies",
+    "airline industry analysts monitoring AI restrictions",
+    "companies ensuring compliance with airline rules",
+    "developers building travel‑booking assistants",
+    "consumer advocacy groups tracking airline practices"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": null,
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://www.cbsnews.com/news/united-airlines-bans-ai-agents-booking-flights/",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "United Airlines bans AI agents from booking flights",
+    "wikipedia_article": null,
+    "github_repo": null,
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "cbsnews.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
