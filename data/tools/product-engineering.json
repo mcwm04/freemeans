@@ -1,0 +1,68 @@
+{
+  "slug": "product-engineering",
+  "name": "product-engineering",
+  "url": "https://www.productcompass.pm/p/product-engineering-skills",
+  "tagline": "Free collection of 43 product engineering skills for PMs, founders, and designers.",
+  "description": "Product Engineering is an open‑source collection of 43 skills that guide users through the full product lifecycle, from market research to release and growth. The skills work with AI coding agents such as Claude, Codex, or Cursor, allowing non‑technical product managers, founders, and designers to build, test, and launch SaaS applications without writing code. The repository provides install instructions, auto‑activating most skills, and integrates with Claude Desktop. It includes steps for research, planning, building, reviewing, and monitoring, and offers free hosting examples like staygreen.io. The collection is freely available on GitHub.",
+  "categories": [
+    "productivity",
+    "business",
+    "coding"
+  ],
+  "tasks": [
+    "search-with-sources",
+    "brainstorm-ideas",
+    "plan-tasks",
+    "analyze-data"
+  ],
+  "best_for": [
+    "Product managers building AI‑powered products",
+    "Founders creating product roadmaps",
+    "Designers needing product analytics",
+    "Teams automating product development steps",
+    "Non‑technical users launching SaaS apps"
+  ],
+  "platforms": [
+    "web",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/phuryn/product-engineering",
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "100% free",
+    "source_url": "https://www.productcompass.pm/p/product-engineering-skills",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "product-engineering",
+    "wikipedia_article": null,
+    "github_repo": "phuryn/product-engineering",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "productcompass.pm",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
