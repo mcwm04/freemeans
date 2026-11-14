@@ -51,13 +51,18 @@
     "hn_query": null
   },
   "alternatives": [],
-  "status": "published",
+  "status": "removed",
   "listed_at": "2026-11-12",
   "changelog": [
     {
       "date": "2026-11-12",
       "note": "Listed in the directory",
       "field": "listed"
+    },
+    {
+      "date": "2026-11-14",
+      "field": "status",
+      "note": "Removed: the listed URL is a personal blog post"
     }
   ],
   "affiliate_url": null,
