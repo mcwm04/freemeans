@@ -1,4 +1,4 @@
-# Source check · 2026-11-13
+# Source check · 2026-11-14
 
 Catalog `0.1.0-seed`. Each limit's source page was fetched once and searched for the number on file.
 
@@ -6,7 +6,7 @@ Catalog `0.1.0-seed`. Each limit's source page was fetched once and searched for
 | --- | ---: |
 | Possibly changed | 1 |
 | Could not read the page | 2 |
-| Still matches | 44 |
+| Still matches | 45 |
 | Not published | 4 |
 | Offers to re-check by hand | 3 |
 
