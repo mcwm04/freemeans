@@ -1,6 +1,6 @@
 {
   "slug": "sapper-v2",
-  "name": "sapper-v2",
+  "name": "sapper-v2 (nvwabase)",
   "url": "https://github.com/N1nEmAn/nvwabase",
   "tagline": "Open‑source CLI for shared memory and coordination of multi‑agent AI workflows",
   "description": "sapper-v2 is an open‑source framework that provides the History pillar of the Nüwa Foundation. It implements a layered fact‑intent graph stored as JSON files, which serves as shared working memory for long‑horizon multi‑agent AI projects. The CLI (fgc) lets users create AI individuals, dispatch sub‑agents, record facts, and run autonomous loops without external dependencies. Features include concurrency‑safe graph updates, semantic search over past work, and visualisation of the graph as an interactive HTML DAG. It is aimed at developers building autonomous AI workflows such as pentesting, research, or any task that benefits from coordinated agents.",
@@ -62,6 +62,11 @@
       "date": "2026-11-13",
       "note": "Listed in the directory",
       "field": "listed"
+    },
+    {
+      "date": "2026-11-14",
+      "field": "name",
+      "note": "Renamed to tell it apart from the separate sapper-v2 project"
     }
   ],
   "affiliate_url": null,
