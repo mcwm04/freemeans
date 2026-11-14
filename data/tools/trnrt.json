@@ -1,0 +1,72 @@
+{
+  "slug": "trnrt",
+  "name": "trnrt",
+  "url": "https://runanywhere.ai/blog/glm-5-3-flash-trainium2-nki-megakernels",
+  "tagline": "RunAnywhere hosts GLM-5.3-Flash via CLI and API with an OpenAI‑compatible endpoint.",
+  "description": "trnrt is a service that lets developers and researchers access the 320‑billion‑parameter GLM‑5.3‑Flash language model. Users can interact through the Wally command‑line interface or an API key that works with any OpenAI‑compatible client. The platform provides zero data retention by default and tracks usage against prepaid credits. It also offers on‑device SDKs for iOS, Android, web, and desktop, enabling integration of the model into apps without a separate account. The underlying engine code is open source under Apache‑2.0, allowing inspection and customization.",
+  "categories": [
+    "model-apis"
+  ],
+  "tasks": [
+    "ask-questions",
+    "generate-code"
+  ],
+  "best_for": [
+    "Developers needing API access to large language models",
+    "Researchers testing GLM‑5.3‑Flash performance",
+    "Teams building AI‑powered applications with a CLI",
+    "Projects requiring OpenAI‑compatible endpoints",
+    "Applications that need zero data retention"
+  ],
+  "platforms": [
+    "web",
+    "api",
+    "cli",
+    "ios",
+    "android"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/RunanywhereAI/trnrt",
+  "license": "Apache-2.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://docs.runanywhere.ai",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": {
+    "cheapest_paid_usd": 0.021,
+    "period": "once",
+    "source_url": "https://runanywhere.ai/blog/glm-5-3-flash-trainium2-nki-megakernels",
+    "verified_at": "2026-11-13"
+  },
+  "signals": {
+    "trends_term": "trnrt",
+    "wikipedia_article": null,
+    "github_repo": "RunanywhereAI/trnrt",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "runanywhere.ai",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
