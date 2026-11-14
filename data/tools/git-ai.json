@@ -1,0 +1,67 @@
+{
+  "slug": "git-ai",
+  "name": "git-ai",
+  "url": "https://www.anthropic.com/research/redesigning-source-control",
+  "tagline": "Scion is Anthropic's in-house version control system built for always‑online AI agents.",
+  "description": "Scion is a source control system created by Anthropic to handle a massive monorepo used by AI agents. It replaces git with a client‑server model where the server performs history queries, merges, rebases and other operations, while clients keep only a small local cache. The design assumes clients are always online, reducing data transfer and storage needs. Scion also exposes source‑control queries via an API, enabling automated tools, CI jobs and research workloads to access repository information without a full local copy. It is intended for large‑scale engineering teams that rely heavily on AI‑generated code and need high‑throughput code merging and analysis.",
+  "categories": [
+    "coding",
+    "productivity"
+  ],
+  "tasks": [
+    "generate-code",
+    "explain-code",
+    "debug-code",
+    "review-code",
+    "search-with-sources"
+  ],
+  "best_for": [
+    "large monorepos",
+    "AI agent code generation pipelines",
+    "continuous integration at scale",
+    "automated code search and blame",
+    "high‑frequency code merges"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/feder-cr/git-ai",
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://www.anthropic.com/research/redesigning-source-control",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "git-ai",
+    "wikipedia_article": null,
+    "github_repo": "feder-cr/git-ai",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "anthropic.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
