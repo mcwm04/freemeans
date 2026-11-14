@@ -1,0 +1,70 @@
+{
+  "slug": "lampline",
+  "name": "Lampline",
+  "url": "https://github.com/C4rohan/Lampline",
+  "tagline": "Build AI phone agents on your own computer and test every change with an AI caller.",
+  "description": "Lampline is an open‑source platform for creating AI phone agents that run locally. It lets developers import Dialogflow CX agents, write tests in YAML, and evaluate real phone calls using an AI caller. The tool works without API keys, can run on a laptop, GPU box, or on‑prem server, and supports any LLM model via Ollama or cloud providers. It provides a CLI (vk), Docker support, and a web UI for managing calls, speech‑to‑text and text‑to‑speech. Lampline aims at teams that need privacy, no telemetry, and the ability to customize voice agents without cloud dependencies.",
+  "categories": [
+    "voice",
+    "local-ai",
+    "productivity"
+  ],
+  "tasks": [
+    "text-to-speech",
+    "transcribe-audio",
+    "build-ai-agents"
+  ],
+  "best_for": [
+    "Developers building phone‑based AI agents",
+    "Testing Dialogflow CX agents locally",
+    "Running voice AI without cloud API keys",
+    "Privacy‑focused voice applications",
+    "Teams needing on‑prem AI call testing"
+  ],
+  "platforms": [
+    "web",
+    "cli",
+    "windows",
+    "macos",
+    "linux"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/C4rohan/Lampline",
+  "license": "Apache-2.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Runs free with no API keys.",
+    "source_url": "https://github.com/C4rohan/Lampline",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "Lampline",
+    "wikipedia_article": null,
+    "github_repo": "C4rohan/Lampline",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/c4rohan/lampline",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
