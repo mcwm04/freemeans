@@ -1,0 +1,68 @@
+{
+  "slug": "ask-consulting",
+  "name": "ASK Consulting",
+  "url": "https://askconsulting.io/",
+  "tagline": "Detect hidden failures in sales automation",
+  "description": "ASK Consulting offers a service that audits automated lead‑handling steps for small businesses and sales teams. It traces where requests actually go, identifies when an AI intake step fails, and explains why leads are missed. The service provides a written report of broken steps and a plan to rebuild them. It is aimed at companies that rely on automated workflows for lead capture and need visibility into silent failures that can affect revenue. The initial offering is a free 30‑minute consultation to assess what is breaking and estimate the work required.",
+  "categories": [
+    "automation",
+    "business"
+  ],
+  "tasks": [
+    "debug-code",
+    "analyze-data"
+  ],
+  "best_for": [
+    "small businesses with automated lead handling",
+    "sales teams using AI intake steps",
+    "companies needing audit of automation failures",
+    "teams wanting to trace dropped requests",
+    "businesses seeking a free consultation on broken steps"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/assafkip/claudemy",
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": {
+      "value": 30,
+      "unit": "minutes",
+      "period": "once"
+    },
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Free 30‑minute consultation",
+    "source_url": "https://askconsulting.io/",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "ASK Consulting",
+    "wikipedia_article": null,
+    "github_repo": "assafkip/claudemy",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "askconsulting.io",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
