@@ -1,0 +1,64 @@
+{
+  "slug": "sapper-v2-2",
+  "name": "sapper-v2",
+  "url": "https://github.com/N1nEmAn/sapper-v2",
+  "tagline": "An autonomous multi-agent orchestration harness designed for security pentesting and cooperative tasks.",
+  "description": "sapper-v2 is an autonomous multi-agent orchestration harness designed for security pentesting and cooperative workflows. Rather than functioning as a single AI agent, it coordinates a legion of agents working together through scheduling, labor division, inter-agent communication, and self-healing. Users can swap out underlying agent CLIs, such as Claude Code, Codex, or DeepSeek, as well as the language models behind each role. In this setup, a commander agent assesses the environment and dispatches instructions, generals and soldiers execute tasks in parallel, and a watchdog maintains system stability. All learned context is retained in a shared fact graph.",
+  "categories": [
+    "automation",
+    "coding"
+  ],
+  "tasks": [
+    "automate-workflows",
+    "build-ai-agents"
+  ],
+  "best_for": [
+    "Autonomous security pentesting",
+    "Capture the flag (CTF) security competitions",
+    "Multi-agent coordination and orchestration",
+    "Long-horizon cooperative research or engineering workflows"
+  ],
+  "platforms": [
+    "cli",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/N1nEmAn/sapper-v2",
+  "license": "MIT",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/N1nEmAn/sapper-v2",
+    "verified_at": "2026-11-14"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "sapper-v2",
+    "wikipedia_article": null,
+    "github_repo": "N1nEmAn/sapper-v2",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/n1neman/sapper-v2",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-14",
+  "changelog": [
+    {
+      "date": "2026-11-14",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
