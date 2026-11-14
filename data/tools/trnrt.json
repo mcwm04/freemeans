@@ -57,13 +57,18 @@
     "hn_query": null
   },
   "alternatives": [],
-  "status": "published",
+  "status": "removed",
   "listed_at": "2026-11-13",
   "changelog": [
     {
       "date": "2026-11-13",
       "note": "Listed in the directory",
       "field": "listed"
+    },
+    {
+      "date": "2026-11-14",
+      "field": "status",
+      "note": "Removed: the listed URL is a blog post, not the service itself"
     }
   ],
   "affiliate_url": null,
