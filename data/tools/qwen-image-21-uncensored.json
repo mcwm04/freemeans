@@ -1,0 +1,56 @@
+{
+  "slug": "qwen-image-21-uncensored",
+  "name": "qwen-image-21-uncensored",
+  "url": "https://huggingface.co/spaces/a-test-user-in-the-wrold/qwen-image-21-uncensored",
+  "tagline": "Generates images from text prompts using the Qwen-Image-21 model.",
+  "description": "The qwen-image-21-uncensored Space on Hugging Face is a duplicated version of vclnhihihi/qwen-image-21-uncensored. It currently shows 316 likes and lists 12 files in its App Files section. The Space is marked as paused, and attempts to fetch metadata from the HF Docker repository are shown. Users who wish to use the Space are instructed to go to the community tab and ask the author(s) to restart it. No additional functionality details are provided on the page. The interface includes agents and a pause control.",
+  "categories": [
+    "image"
+  ],
+  "tasks": [
+    "text-to-image"
+  ],
+  "best_for": [],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": null,
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://huggingface.co/spaces/a-test-user-in-the-wrold/qwen-image-21-uncensored",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "qwen-image-21-uncensored",
+    "wikipedia_article": null,
+    "github_repo": null,
+    "hf_id": "spaces/a-test-user-in-the-wrold/qwen-image-21-uncensored",
+    "producthunt_slug": null,
+    "hn_domain": null,
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
