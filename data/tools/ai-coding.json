@@ -1,0 +1,65 @@
+{
+  "slug": "ai-coding",
+  "name": "AI-Coding",
+  "url": "https://liuda30201.github.io/AI-Coding/",
+  "tagline": "A directory of free AI coding service links and bonus credits",
+  "description": "AI-Coding is a web directory that lists free access points and promotional bonuses for popular AI coding tools such as Claude Code, GPT, Codex, and Cursor. It provides registration links, invitation codes, and details on current rewards like DoCode's newcomer credit. The site aggregates public API status and notices from each service, helping developers quickly find and claim free coding assistance resources. It is intended for programmers looking for cost‑free AI coding support and for anyone wanting to stay updated on available incentives.",
+  "categories": [
+    "coding"
+  ],
+  "tasks": [
+    "generate-code",
+    "explain-code",
+    "debug-code",
+    "review-code"
+  ],
+  "best_for": [
+    "Finding free AI coding APIs",
+    "Getting registration bonuses for coding AI services",
+    "Accessing Claude Code, Codex, and Cursor via free links",
+    "Discovering current promotions for AI coding platforms",
+    "Navigating to AI coding tools with invite codes"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/liuda30201/AI-Coding",
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Aggregates free quotas and bonuses from various AI coding services.",
+    "source_url": "https://liuda30201.github.io/AI-Coding/",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "AI-Coding",
+    "wikipedia_article": null,
+    "github_repo": "liuda30201/AI-Coding",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "liuda30201.github.io",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
