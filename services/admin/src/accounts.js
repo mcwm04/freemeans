@@ -83,6 +83,14 @@ export function accountStore(query) {
          VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7)`,
         [actor?.login ?? null, actor?.role ?? null, action, targetType, targetId == null ? null : String(targetId), JSON.stringify(detail), ip]);
     },
+    /** Many audit rows of the same action in one query. `items` is [{ id, detail }]. */
+    async auditMany({ actor, action, targetType, items, ip = null }) {
+      if (!items.length) return;
+      await query(
+        `INSERT INTO admin_audit (actor_login, actor_role, action, target_type, target_id, detail, ip)
+         SELECT $1, $2, $3, $4, x.id, x.detail::jsonb, $5 FROM unnest($6::text[], $7::text[]) AS x(id, detail)`,
+        [actor?.login ?? null, actor?.role ?? null, action, targetType, ip, items.map((i) => String(i.id)), items.map((i) => JSON.stringify(i.detail ?? {}))]);
+    },
     async listAudit({ actor = null, action = null, limit = 200 } = {}) {
       const { rows } = await query(
         `SELECT id, at, actor_login, actor_role, action, target_type, target_id, detail, ip FROM admin_audit

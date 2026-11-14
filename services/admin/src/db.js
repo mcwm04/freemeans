@@ -44,6 +44,30 @@ export function queueStore(query) {
       ]);
       return { clicks7: clicks.rows[0].d7, clicks30: clicks.rows[0].d30, daily: daily.rows, waitlist7: waitlist.rows[0].n };
     },
+    /** All candidates with these ids in one query. */
+    async getMany(ids) {
+      if (!ids.length) return [];
+      const { rows } = await query(`SELECT ${COLS} FROM tool_candidates WHERE id = ANY($1)`, [ids]);
+      return rows.map(row);
+    },
+    /** Rejects every open candidate in `ids` in one query and returns the ids it closed. */
+    async rejectMany(ids, reason, login) {
+      if (!ids.length) return [];
+      const { rows } = await query(
+        `UPDATE tool_candidates SET status = CASE WHEN $2 = 'duplicate' THEN 'duplicate' ELSE 'rejected' END, reject_reason = $2,
+           reviewed_by = $3, reviewed_at = now(), updated_at = now()
+         WHERE id = ANY($1) AND status IN ('drafted', 'needs_manual', 'new') RETURNING id`, [ids, reason, login]);
+      return rows.map((r) => Number(r.id));
+    },
+    /** Marks many candidates approved in one query. `items` is [{ id, slug, draft }]. */
+    async approveMany(items, login) {
+      if (!items.length) return;
+      await query(
+        `UPDATE tool_candidates t SET status = 'approved', published_slug = v.slug, draft = v.draft::jsonb, reviewed_by = $4,
+           reviewed_at = now(), updated_at = now()
+         FROM unnest($1::bigint[], $2::text[], $3::text[]) AS v(id, slug, draft) WHERE t.id = v.id`,
+        [items.map((i) => i.id), items.map((i) => i.slug), items.map((i) => JSON.stringify(i.draft)), login]);
+    },
     async setNote(id, note) {
       await query('UPDATE tool_candidates SET review_note = $2, updated_at = now() WHERE id = $1', [id, note || null]);
     },
