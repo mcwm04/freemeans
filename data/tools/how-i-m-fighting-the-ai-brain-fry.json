@@ -1,0 +1,66 @@
+{
+  "slug": "how-i-m-fighting-the-ai-brain-fry",
+  "name": "How I'm fighting the AI brain fry",
+  "url": "https://sergeykuhne.com/blog/fighting-ai-brain-fry",
+  "tagline": "A git‑based queue that organizes AI‑generated coding tasks",
+  "description": "The system stores each AI‑generated ticket as a markdown file in a Git repository alongside the related code. An automated agent cycles through the board, researching new tickets, building those marked safe, running tests and browser checks, and verifying deployments. Sensitive changes are built on a branch and require human approval before merging. A viewer page, rebuilt from Git each cycle, shows the whole board and a review page per ticket, allowing the user to make decisions without scrolling through terminals. The chosen action is written back to the ticket in Git, keeping the context and reducing mental load for developers using Claude Code or Codex.",
+  "categories": [
+    "productivity",
+    "coding"
+  ],
+  "tasks": [
+    "plan-tasks",
+    "automate-workflows",
+    "build-ai-agents"
+  ],
+  "best_for": [
+    "Developers using Claude or Codex",
+    "Teams handling many AI code suggestions",
+    "People needing a persistent task board for AI output",
+    "Engineers wanting git‑backed context for AI interactions",
+    "Anyone looking to reduce mental load from AI assistants"
+  ],
+  "platforms": [
+    "web",
+    "cli"
+  ],
+  "open_source": false,
+  "repo_url": null,
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://sergeykuhne.com/blog/fighting-ai-brain-fry",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "How I'm fighting the AI brain fry",
+    "wikipedia_article": null,
+    "github_repo": null,
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "sergeykuhne.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
