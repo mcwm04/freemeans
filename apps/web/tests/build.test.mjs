@@ -111,7 +111,10 @@ const htmlPages = () => {
   walk(dist);
   return out;
 };
-const meta = (html, re) => (html.match(re) || [])[1];
+// Length limits are about the text people and search engines see, so decode entities first:
+// "How I&#39;m ..." is 1 character shorter per apostrophe than its HTML source.
+const decode = (s) => s?.replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+const meta = (html, re) => decode((html.match(re) || [])[1]);
 
 test('every indexable page is in sitemap.xml, and only those', () => {
   const locs = new Set([...read('sitemap.xml').matchAll(/<loc>https:\/\/freemeans\.com([^<]+)<\/loc>/g)].map((m) => m[1]));
