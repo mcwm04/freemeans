@@ -12,7 +12,8 @@ const taxonomy = JSON.parse(readFileSync(resolve(data, 'taxonomy.json'), 'utf8')
 const tools = readdirSync(resolve(data, 'tools')).filter((f) => f.endsWith('.json'))
   .map((f) => JSON.parse(readFileSync(resolve(data, 'tools', f), 'utf8'))).filter((t) => t.status === 'published');
 const read = (p) => readFileSync(resolve(dist, p), 'utf8');
-const esc = (s) => s.replace(/&/g, '&amp;').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+// Same escaping as the site: & first, then < > ' ". A description such as "the model reads <tool_call> blocks" must match.
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&#39;').replace(/"/g, '&quot;');
 const ld = (html) => JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(html)[1])['@graph'];
 
 test('M1: one page per published tool, with the free tier card, source and date', () => {
