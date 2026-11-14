@@ -1,0 +1,67 @@
+{
+  "slug": "antirion",
+  "name": "antirion",
+  "url": "https://antirion.ai/",
+  "tagline": "Open-source AI gateway that routes and manages LLM calls",
+  "description": "Antirion is an open-source AI gateway written in Rust. It runs as a single binary with an embedded admin console and can be deployed on Linux, Docker, Kubernetes, or as a self‑hosted service. The gateway translates between OpenAI, Anthropic, Gemini, Bedrock and any compatible server, allowing existing SDKs and tools to call any provider by changing the base URL. It provides routing, retries, rate limits, budgets, guardrails, logging and caching for every LLM request, all without a paid tier.",
+  "categories": [
+    "model-apis",
+    "local-ai"
+  ],
+  "tasks": [
+    "llm-api",
+    "run-llm-locally"
+  ],
+  "best_for": [
+    "Routing LLM calls across multiple providers",
+    "Applying rate limits and spending budgets",
+    "Adding guardrails such as PII redaction",
+    "Running an AI gateway within your own infrastructure",
+    "Integrating with existing OpenAI‑compatible SDKs"
+  ],
+  "platforms": [
+    "api",
+    "linux",
+    "self-hosted",
+    "web"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/eliasbiondo/antirion",
+  "license": "Apache-2.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://antirion.ai/",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "antirion",
+    "wikipedia_article": null,
+    "github_repo": "eliasbiondo/antirion",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "antirion.ai",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
