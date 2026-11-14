@@ -1,0 +1,63 @@
+{
+  "slug": "kubai-icons",
+  "name": "kubai-icons",
+  "url": "https://icons.kubai.design/",
+  "tagline": "Open-source animated SVG icons for React, Vue and the web.",
+  "description": "Kubai Icons provides a library of layered SVG icons that animate on hover. Each icon is an individual ES module and can be used in plain JavaScript, React, Vue or as static SVG files. The icons adapt to a single accent color and include variants such as badges and slashed versions. The library is open-source and can be installed via npm, with updates delivered through package releases. It is suitable for developers adding interactive icons to web applications or designers needing animated assets.",
+  "categories": [
+    "design"
+  ],
+  "tasks": [
+    "design-ui-mockups",
+    "make-graphics"
+  ],
+  "best_for": [
+    "Adding animated icons to React projects",
+    "Integrating hover icons in Vue applications",
+    "Using static SVG icons in plain HTML pages",
+    "Providing icon assets for design tools",
+    "Creating interactive UI components with animated icons"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/kubai087/kubai-icons",
+  "license": null,
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://icons.kubai.design/",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "kubai-icons",
+    "wikipedia_article": null,
+    "github_repo": "kubai087/kubai-icons",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "kubai.design",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
