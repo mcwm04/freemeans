@@ -1,0 +1,75 @@
+{
+  "slug": "axuse",
+  "name": "axuse",
+  "url": "https://ax-use.com/",
+  "tagline": "AI can browse the web, read pages, click and fill forms on your computer and Android phone.",
+  "description": "axuse is a free add‑on that lets large language model agents use a real browser on your computer. It can read web pages, click links, fill in forms and extract data while keeping all activity on your device. The tool works with Claude, Codex, Cursor and any MCP agent, and runs on macOS and Windows via a Chrome or Edge extension. An Android companion, axdroid, enables the same capabilities on phones. No screenshots or data are sent to the provider, and the browser window is visible to the user. It is aimed at researchers, sales, HR, and anyone who wants to automate web tasks safely.",
+  "categories": [
+    "automation",
+    "productivity"
+  ],
+  "tasks": [
+    "search-with-sources",
+    "fill-forms",
+    "scrape-web-data",
+    "automate-workflows"
+  ],
+  "best_for": [
+    "Researchers gathering sources from multiple websites",
+    "Sales teams comparing competitor pricing",
+    "HR reviewing job postings and requirements",
+    "Personal errands like finding store hours or phone numbers",
+    "Automating data entry in web applications"
+  ],
+  "platforms": [
+    "web",
+    "windows",
+    "macos",
+    "android",
+    "browser-extension"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/ctoldigital/axuse",
+  "license": null,
+  "free_tier": {
+    "type": "forever_free",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Personal free plan works with Claude, Codex, Cursor and any MCP agent.",
+    "source_url": "https://ax-use.com/",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": {
+    "cheapest_paid_usd": 3,
+    "period": "once",
+    "source_url": "https://ax-use.com/",
+    "verified_at": "2026-11-12"
+  },
+  "signals": {
+    "trends_term": "axuse",
+    "wikipedia_article": null,
+    "github_repo": "ctoldigital/axuse",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "ax-use.com",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
