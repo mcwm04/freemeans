@@ -1,0 +1,67 @@
+{
+  "slug": "dsh-see-now",
+  "name": "dsh-see-now",
+  "url": "https://github.com/SAOS-3624/dsh-see-now",
+  "tagline": "Real‑time screen capture plugin that filters and stitches frames for AI models",
+  "description": "dsh-see-now is an open‑source plugin for the DSH AI agent that captures your screen, webcam or video file, evaluates each frame for visual change, and only forwards frames that differ significantly. Selected frames are combined into a single image containing multiple frames, reducing token usage for downstream LLM vision models. It works on Windows, macOS and Linux and can be installed via DSH's web or desktop profiles. The plugin is licensed under Apache‑2.0, allowing personal, internal, commercial and SaaS use without additional fees.",
+  "categories": [
+    "productivity",
+    "local-ai"
+  ],
+  "tasks": [
+    "make-graphics",
+    "automate-workflows"
+  ],
+  "best_for": [
+    "AI assistants that need visual context while you work",
+    "Creating composite screenshots for documentation",
+    "Reducing token costs for vision‑enabled LLMs",
+    "Monitoring screen changes during presentations",
+    "Capturing key frames from video streams for analysis"
+  ],
+  "platforms": [
+    "windows",
+    "macos",
+    "linux",
+    "web"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/SAOS-3624/dsh-see-now",
+  "license": "Apache-2.0",
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": true,
+    "works_in_pk": null,
+    "notes": "Apache License 2.0 allows personal, internal, closed‑source, SaaS and redistribution without charge.",
+    "source_url": "https://github.com/SAOS-3624/dsh-see-now",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "dsh-see-now",
+    "wikipedia_article": null,
+    "github_repo": "SAOS-3624/dsh-see-now",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/saos-3624/dsh-see-now",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
