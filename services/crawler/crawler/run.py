@@ -17,6 +17,7 @@ from .store import Store
 
 REPO = Path(__file__).resolve().parents[3]
 FAILURE_LIMIT = 0.30
+DEFER_STOP = 4                 # stop drafting after this many sites in a row turned away by busy providers
 FREE_TYPES = {"forever_free", "credits", "open_source"}
 
 
@@ -44,6 +45,7 @@ class Stats:
     needs_manual: int = 0
     rejected: dict[str, int] = field(default_factory=dict)
     failed: int = 0
+    deferred: int = 0              # LLM rate-limited or overloaded; stays queued for the next run
     attempted: int = 0
     numbers_blanked: int = 0
     problems: list[str] = field(default_factory=list)
@@ -61,7 +63,7 @@ class Stats:
         lines = [f"## Discovery crawler: {head}", "",
                  f"Found **{self.found}** · queued **{self.queued}** · already known **{self.skipped_known}**",
                  f"Drafted **{self.drafted}** · needs manual **{self.needs_manual}** · failed **{self.failed}** · "
-                 f"numbers blanked by the check **{self.numbers_blanked}**"]
+                 f"deferred (LLM busy) **{self.deferred}** · numbers blanked by the check **{self.numbers_blanked}**"]
         if self.rejected:
             lines.append("Rejected automatically: " + ", ".join(f"{k} {v}" for k, v in sorted(self.rejected.items())))
         if self.llm:
@@ -94,7 +96,9 @@ def run_discover(http: Http, store: Store, now: dt.datetime, stats: Stats, enabl
 def run_draft(store: Store, fetcher: Fetcher, drafter: Drafter, taxonomy: dict, today: dt.date, stats: Stats,
               limit: int = 40) -> None:
     _, taken = published()
-    for row in store.next_batch(limit):
+    rows = list(store.next_batch(limit))
+    strikes = 0
+    for done, row in enumerate(rows, 1):
         row.attempts += 1
         fetched = fetcher.fetch_tool(row.url)
         if fetched.status != "ok":
@@ -113,13 +117,26 @@ def run_draft(store: Store, fetcher: Fetcher, drafter: Drafter, taxonomy: dict, 
                                    source_ref=row.source_ref, hint={"name": row.name, "category": row.category},
                                    taxonomy=taxonomy, taken=taken, today=today)
         except NoProvider as e:
-            stats.failed += 1
-            stats.problems.append(f"{row.domain}: LLM: {e}")
+            msg = str(e)
             row.attempts -= 1                      # not the candidate's fault: retry next run
             store.save(row)
-            if "no LLM key" in str(e):
+            stats.problems.append(f"{row.domain}: LLM: {msg}")
+            if "no LLM key" in msg:
+                stats.failed += 1
+                break
+            if "not JSON" in msg:                  # a provider answered badly: counts as a real failure
+                stats.failed += 1
+                strikes = 0
+                continue
+            # Providers are rate-limited or overloaded. That is a free-tier limit, not a broken run:
+            # leave the site queued, and stop early once several in a row are turned away.
+            stats.deferred += 1
+            strikes += 1
+            if strikes >= DEFER_STOP:
+                stats.problems.append(f"LLM providers exhausted; stopped early, {len(rows) - done} left for the next run")
                 break
             continue
+        strikes = 0
         stats.llm[result["provider"]] = stats.llm.get(result["provider"], 0) + 1
         rec = result["record"]
         taken.add(rec["slug"])

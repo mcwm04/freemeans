@@ -52,7 +52,11 @@ def urllib_transport(url: str, headers: dict) -> Response:
                 return Response(res.status, None, f"not JSON: {e}"[:200], hdrs)
     except urllib.error.HTTPError as e:
         hdrs = {k.lower(): v for k, v in (e.headers or {}).items()}
-        return Response(e.code, None, f"HTTP {e.code}", hdrs)
+        try:                                  # GitHub explains its 403s in the body; keep the reason
+            detail = " ".join(json.loads(e.read().decode("utf-8", "replace")).get("message", "").split())[:160]
+        except Exception:
+            detail = ""
+        return Response(e.code, None, f"HTTP {e.code}" + (f" {detail}" if detail else ""), hdrs)
     except Exception as e:  # DNS, timeout, TLS
         return Response(None, None, f"{type(e).__name__}: {e}"[:200])
 
@@ -104,7 +108,10 @@ class Http:
 
 def _is_rate_limit(res: Response) -> bool:
     """GitHub answers 403 with x-ratelimit-remaining: 0 when the hourly budget is spent."""
-    return (res.headers or {}).get("x-ratelimit-remaining") == "0"
+    h = res.headers or {}
+    # Secondary ("abuse") limits come without x-ratelimit-remaining: 0 but with retry-after or a message.
+    return (h.get("x-ratelimit-remaining") == "0" or "retry-after" in h
+            or "rate limit" in (res.error or "").lower())
 
 
 def _retry_after(res: Response, default: float) -> float:
