@@ -1,0 +1,66 @@
+{
+  "slug": "namiagent",
+  "name": "NamiAgent",
+  "url": "https://namiai.tech/agent/",
+  "tagline": "A tutorial series for hand‑coding AI agents with open‑source examples",
+  "description": "NamiAgent is a step‑by‑step tutorial that teaches how to write AI agents from scratch. It covers core components such as loops, tool systems, permissions, context management, skills, chat integration, scheduling, and more. The series also adds mainstream capabilities like memory, planning, and sub‑agents, and dissects popular agents such as Claude, Codex, Pi, Grok Bot, DeepSeek Harness, OpenClaw, and Hermes. All accompanying code for each lesson is open‑source on GitHub and includes a local web interface for viewing the agent’s execution in a browser. The material is aimed at developers who want to understand and build custom agents.",
+  "categories": [
+    "coding",
+    "chat"
+  ],
+  "tasks": [
+    "generate-code",
+    "explain-code",
+    "debug-code"
+  ],
+  "best_for": [
+    "Learning to build AI agents from scratch",
+    "Understanding agent architectures and components",
+    "Studying implementations of mainstream agents",
+    "Accessing open‑source code examples for each lesson",
+    "Implementing custom agents for chat platforms"
+  ],
+  "platforms": [
+    "web",
+    "self-hosted"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/aa1143/NamiAgent",
+  "license": null,
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": "Code is open source on GitHub",
+    "source_url": "https://namiai.tech/agent/",
+    "verified_at": "2026-11-13"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "NamiAgent",
+    "wikipedia_article": null,
+    "github_repo": "aa1143/NamiAgent",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "namiai.tech",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-13",
+  "changelog": [
+    {
+      "date": "2026-11-13",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
