@@ -1,0 +1,70 @@
+{
+  "slug": "qwenputer",
+  "name": "qwenputer",
+  "url": "https://github.com/divagr18/qwenputer",
+  "tagline": "A language model with a built-in RISC‑V CPU that runs C and MicroPython code internally.",
+  "description": "qwenputer is an experimental model that embeds a 32‑bit RISC‑V CPU directly into the weights of Qwen3.5‑4B. The CPU uses the model's Gated DeltaNet layers as RAM and can execute C and MicroPython code during the model's forward passes. It is not a separate tool; the model reads <tool_call> blocks, runs the code on the internal CPU, and writes the result token by token. The repository provides a stock Qwen3_5ForCausalLM loader and a driver that boots the CPU with firmware. Researchers and developers can use it to explore integrated computation in language models or to run code without external sandboxes.",
+  "categories": [
+    "local-ai",
+    "coding",
+    "model-apis"
+  ],
+  "tasks": [
+    "generate-code",
+    "explain-code",
+    "run-llm-locally"
+  ],
+  "best_for": [
+    "researchers studying integrated CPUs in LLMs",
+    "developers testing code execution inside a model",
+    "educators demonstrating language models as computers",
+    "AI engineers benchmarking model performance",
+    "hobbyists experimenting with RISC‑V inside an LLM"
+  ],
+  "platforms": [
+    "linux",
+    "macos",
+    "windows",
+    "self-hosted",
+    "cli"
+  ],
+  "open_source": true,
+  "repo_url": "https://github.com/divagr18/qwenputer",
+  "license": null,
+  "free_tier": {
+    "type": "open_source",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://github.com/divagr18/qwenputer",
+    "verified_at": "2026-11-12"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "qwenputer",
+    "wikipedia_article": null,
+    "github_repo": "divagr18/qwenputer",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "github.com/divagr18/qwenputer",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-12",
+  "changelog": [
+    {
+      "date": "2026-11-12",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
