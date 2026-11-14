@@ -1,0 +1,66 @@
+{
+  "slug": "poki",
+  "name": "poki",
+  "url": "https://poki.bot/",
+  "tagline": "Control iPhone apps and system functions via iMessage, Telegram, or terminal",
+  "description": "Poki is an autonomous iPhone agent that can run tasks on a real iPhone. It reads the device’s accessibility tree, lets a language model decide actions, and sends native touch and input events. Verified runs are compiled into reusable routes that speed up similar tasks. Users connect their iPhone to a Mac, sign in with a model account, and send commands through iMessage, Telegram, a terminal CLI, or the Poki iOS app. Poki integrates with Claude Code, Codex and other MCP clients, allowing developers to incorporate iPhone control into existing workflows.",
+  "categories": [
+    "automation",
+    "productivity"
+  ],
+  "tasks": [
+    "automate-workflows",
+    "build-ai-agents"
+  ],
+  "best_for": [
+    "Automating repetitive iPhone actions",
+    "Integrating iPhone control into developer pipelines",
+    "Running agents via iMessage or Telegram",
+    "Testing iOS apps on a physical device",
+    "Creating self‑learning routes for frequent tasks"
+  ],
+  "platforms": [
+    "ios",
+    "macos",
+    "cli"
+  ],
+  "open_source": false,
+  "repo_url": "https://github.com/JosssphZhou/poki",
+  "license": null,
+  "free_tier": {
+    "type": "none",
+    "quota": null,
+    "trial_days": null,
+    "card_required": null,
+    "signup_required": null,
+    "watermark": null,
+    "commercial_use": null,
+    "works_in_pk": null,
+    "notes": null,
+    "source_url": "https://poki.bot/",
+    "verified_at": "2026-11-11"
+  },
+  "pricing": null,
+  "signals": {
+    "trends_term": "poki",
+    "wikipedia_article": null,
+    "github_repo": "JosssphZhou/poki",
+    "hf_id": null,
+    "producthunt_slug": null,
+    "hn_domain": "poki.bot",
+    "hn_query": null
+  },
+  "alternatives": [],
+  "status": "published",
+  "listed_at": "2026-11-11",
+  "changelog": [
+    {
+      "date": "2026-11-11",
+      "note": "Listed in the directory",
+      "field": "listed"
+    }
+  ],
+  "affiliate_url": null,
+  "sponsor": null,
+  "verified_vendor": false
+}
